@@ -1,0 +1,288 @@
+%% Présentation de l'INRIA %%
+@online{PlanCalcul,
+  author = {Wikipédia},
+  note   = {[online]},
+  title  = {Plan Calcul},
+  url    = {https://fr.wikipedia.org/wiki/Plan_Calcul}
+}
+
+@online{inria_history,
+  author = {Institut National de Recherche en Informatique et Automatique},
+  note   = {[online]},
+  title  = {Notre Histoire},
+  url    = {https://www.inria.fr/fr/notre-histoire}
+}
+
+@online{inria_microsoft,
+  author = {Microsoft},
+  note   = {[online]},
+  title  = {Inria Joint Center},
+  url    = {https://www.microsoft.com/en-us/research/collaboration/inria-joint-centre/}
+}
+
+@online{NumPex,
+  author = {Agence Nationale de la Recherche},
+  note   = {[online]},
+  title  = {Numérique pour l’Exascale (NumPEx)},
+  url    = {https://anr.fr/fr/france-2030/programmes-et-equipements-prioritaires-de-recherche-pepr/numerique-pour-lexascale-numpex/}
+}
+
+%% Definition of the subject %%
+@phdthesis{these_DNN,
+  TITLE = {{Apprentissage continu : S'attaquer {\`a} l'oubli foudroyant des r{\'e}seaux de neurones profonds gr{\^a}ce aux m{\'e}thodes {\`a} rejeu de donn{\'e}es}},
+  AUTHOR = {Lesort, Timoth{\'e}e},
+  URL = {https://theses.hal.science/tel-02906138},
+  NUMBER = {2020IPPAE003},
+  SCHOOL = {{Institut Polytechnique de Paris}},
+  YEAR = {2020},
+  MONTH = Jun,
+  KEYWORDS = {Deep Learning ; Continual Learning ; Generative Replay. ; Replay Processes ; Robotics ; Apprentissage profond ; Apprentissage Continu ; R{\'e}g{\'e}n{\'e}ration ; M{\'e}thodes de Rejeu ; Robotique},
+  TYPE = {Theses},
+  PDF = {https://theses.hal.science/tel-02906138v1/file/90535_LESORT_2020_archivage.pdf},
+  HAL_ID = {tel-02906138},
+  HAL_VERSION = {v1},
+}
+
+@article{ann_1943,
+added-at = {2008-02-26T11:58:58.000+0100},
+author = {Mcculloch, Warren and Pitts, Walter},
+biburl = {https://www.bibsonomy.org/bibtex/26fbacb0ae04bc17d296d9265dfc90dff/schaul},
+citeulike-article-id = {2380493},
+description = {idsia},
+interhash = {3e8e0d06f376f3eb95af89d5a2f15957},
+intrahash = {6fbacb0ae04bc17d296d9265dfc90dff},
+journal = {Bulletin of Mathematical Biophysics},
+keywords = {evolutionary},
+pages = {127--147},
+priority = {2},
+timestamp = {2008-02-26T12:00:58.000+0100},
+title = {A Logical Calculus of Ideas Immanent in Nervous Activity},
+volume = 5,
+year = 1943
+}
+
+@misc{adam,
+      title={Adam: A Method for Stochastic Optimization}, 
+      author={Diederik P. Kingma and Jimmy Ba},
+      year={2017},
+      eprint={1412.6980},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/1412.6980}, 
+}
+
+@misc{Google_translation_2016,
+title={Google's Neural Machine Translation System: Bridging the Gap between Human and Machine Translation},
+author={Yonghui Wu and Mike Schuster and Zhifeng Chen and Quoc V. Le and Mohammad Norouzi and Wolfgang Macherey and Maxim Krikun and Yuan Cao and Qin Gao and Klaus Macherey and Jeff Klingner and Apurva Shah and Melvin Johnson and Xiaobing Liu and Łukasz Kaiser and Stephan Gouws and Yoshikiyo Kato and Taku Kudo and Hideto Kazawa and Keith Stevens and George Kurian and Nishant Patil and Wei Wang and Cliff Young and Jason Smith and Jason Riesa and Alex Rudnick and Oriol Vinyals and Greg Corrado and Macduff Hughes and Jeffrey Dean},
+year={2016},
+eprint={1609.08144},
+archivePrefix={arXiv},
+primaryClass={cs.CL},
+url={https://arxiv.org/abs/1609.08144},
+}
+
+
+@inproceedings{attention_2017,
+ author = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N and Kaiser, \L ukasz and Polosukhin, Illia},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {I. Guyon and U. Von Luxburg and S. Bengio and H. Wallach and R. Fergus and S. Vishwanathan and R. Garnett},
+ pages = {},
+ publisher = {Curran Associates, Inc.},
+ title = {Attention is All you Need},
+ url = {https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf},
+ volume = {30},
+ year = {2017}
+}
+
+@ARTICLE{review_llm,
+author={Raiaan, Mohaimenul Azam Khan and Mukta, Md. Saddam Hossain and Fatema, Kaniz and Fahad, Nur Mohammad and Sakib, Sadman and Mim, Most Marufatul Jannat and Ahmad, Jubaer and Ali, Mohammed Eunus and Azam, Sami},
+journal={IEEE Access},
+title={A Review on Large Language Models: Architectures, Applications, Taxonomies, Open Issues and Challenges},
+year={2024},
+volume={12},
+number={},
+pages={26839-26874},
+keywords={Cognition;Artificial intelligence;Transformers;Training;Taxonomy;Task analysis;Surveys;Natural language processing;Question answering (information retrieval);Information analysis;Linguistics;Large language models (LLM);natural language processing (NLP);artificial intelligence;transformer;pre-trained models;taxonomy;application},
+doi={10.1109/ACCESS.2024.3365742}}
+
+@misc{bert_2019,
+title={BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding},
+author={Jacob Devlin and Ming-Wei Chang and Kenton Lee and Kristina Toutanova},
+year={2019},
+eprint={1810.04805},
+archivePrefix={arXiv},
+primaryClass={cs.CL},
+url={https://arxiv.org/abs/1810.04805},
+}
+
+@misc{chatgpt_hallucinations,
+      title={A Multitask, Multilingual, Multimodal Evaluation of ChatGPT on Reasoning, Hallucination, and Interactivity}, 
+      author={Yejin Bang and Samuel Cahyawijaya and Nayeon Lee and Wenliang Dai and Dan Su and Bryan Wilie and Holy Lovenia and Ziwei Ji and Tiezheng Yu and Willy Chung and Quyet V. Do and Yan Xu and Pascale Fung},
+      year={2023},
+      eprint={2302.04023},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2302.04023}, 
+}
+
+@article{autoDNN_Talbi,
+author = {Talbi, El-Ghazali},
+title = {Automated Design of Deep Neural Networks: A Survey and Unified Taxonomy},
+year = {2021},
+issue_date = {March 2022},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {54},
+number = {2},
+issn = {0360-0300},
+url = {https://doi.org/10.1145/3439730},
+doi = {10.1145/3439730},
+journal = {ACM Comput. Surv.},
+month = {03},
+articleno = {34},
+numpages = {37},
+keywords = {optimization, network architecture search, machine learning, hyperparameter optimization, deep neural networks, Metaheuristics}
+}
+
+
+@online{whatis_QC,
+  author = {WhatIs},
+  note   = {[online]},
+  title  = {Whats is quality control (QC)},
+  url    = {https://www.techtarget.com/whatis/definition/quality-control-QC}
+}
+
+@misc{timeLLM_2024,
+      title={Time-LLM: Time Series Forecasting by Reprogramming Large Language Models}, 
+      author={Ming Jin and Shiyu Wang and Lintao Ma and Zhixuan Chu and James Y. Zhang and Xiaoming Shi and Pin-Yu Chen and Yuxuan Liang and Yuan-Fang Li and Shirui Pan and Qingsong Wen},
+      year={2024},
+      eprint={2310.01728},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2310.01728}, 
+}
+
+@misc{HPO_tribes_2024,
+title={Hyperparameter Optimization for Large Language Model Instruction-Tuning},
+author={Christophe Tribes and Sacha Benarroch-Lelong and Peng Lu and Ivan Kobyzev},
+year={2024},
+eprint={2312.00949},
+archivePrefix={arXiv},
+primaryClass={cs.CL},
+url={https://arxiv.org/abs/2312.00949},
+}
+
+@misc{Klein_Pruning_2024,
+      title={Structural Pruning of Pre-trained Language Models via Neural Architecture Search}, 
+      author={Aaron Klein and Jacek Golebiowski and Xingchen Ma and Valerio Perrone and Cedric Archambeau},
+      year={2024},
+      eprint={2405.02267},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2405.02267}, 
+}
+
+@misc{hu2021loralowrankadaptationlarge,
+title={LoRA: Low-Rank Adaptation of Large Language Models},
+author={Edward J. Hu and Yelong Shen and Phillip Wallis and Zeyuan Allen-Zhu and Yuanzhi Li and Shean Wang and Lu Wang and Weizhu Chen},
+year={2021},
+eprint={2106.09685},
+archivePrefix={arXiv},
+primaryClass={cs.CL},
+url={https://arxiv.org/abs/2106.09685},
+}
+
+@misc{hu2023llmadaptersadapterfamilyparameterefficient,
+      title={LLM-Adapters: An Adapter Family for Parameter-Efficient Fine-Tuning of Large Language Models}, 
+      author={Zhiqiang Hu and Lei Wang and Yihuai Lan and Wanyu Xu and Ee-Peng Lim and Lidong Bing and Xing Xu and Soujanya Poria and Roy Ka-Wei Lee},
+      year={2023},
+      eprint={2304.01933},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2304.01933}, 
+}
+
+@online{ChatGPT,
+  author = {OpenAI},
+  note   = {[online]},
+  title  = {Introducing ChatGPT},
+  year = {2022},
+  url    = {https://openai.com/index/chatgpt/}
+}
+
+@article{dubey2024llama,
+  title={The llama 3 herd of models},
+  author={Dubey, Abhimanyu and Jauhri, Abhinav and Pandey, Abhinav and Kadian, Abhishek and Al-Dahle, Ahmad and Letman, Aiesha and Mathur, Akhil and Schelten, Alan and Yang, Amy and Fan, Angela and others},
+  journal={arXiv preprint arXiv:2407.21783},
+  year={2024}
+}
+
+@inproceedings{NEURIPS2022_9949e690,
+author = {Javaheripi, Mojan and de Rosa, Gustavo and Mukherjee, Subhabrata and Shah, Shital and Religa, Tomasz and Teodoro Mendes, Caio Cesar and Bubeck, Sebastien and Koushanfar, Farinaz and Dey, Debadeepta},
+booktitle = {Advances in Neural Information Processing Systems},
+editor = {S. Koyejo and S. Mohamed and A. Agarwal and D. Belgrave and K. Cho and A. Oh},
+pages = {24254--24267},
+publisher = {Curran Associates, Inc.},
+title = {LiteTransformerSearch: Training-free Neural Architecture Search for Efficient Language Models},
+url = {https://proceedings.neurips.cc/paper_files/paper/2022/file/9949e6906be6448230cdba9a4cb2d564-Paper-Conference.pdf},
+volume = {35},
+year = {2022}
+}
+
+@article{elsken2019neural,
+  title={Neural architecture search: A survey},
+  author={Elsken, Thomas and Metzen, Jan Hendrik and Hutter, Frank},
+  journal={Journal of Machine Learning Research},
+  volume={20},
+  number={55},
+  pages={1--21},
+  year={2019}
+}
+
+@article{Gao_Xu_Shi_Ren_Yu_Liang_Jiang_Li_2022, title={AutoBERT-Zero: Evolving BERT Backbone from Scratch}, volume={36}, url={https://ojs.aaai.org/index.php/AAAI/article/view/21311}, DOI={10.1609/aaai.v36i10.21311},  number={10}, journal={Proceedings of the AAAI Conference on Artificial Intelligence}, author={Gao, Jiahui and Xu, Hang and Shi, Han and Ren, Xiaozhe and Yu, Philip L. H. and Liang, Xiaodan and Jiang, Xin and Li, Zhenguo}, year={2022}, month={06}, pages={10663-10671} }
+
+@article{Liu_2023,
+   title={A Survey on Evolutionary Neural Architecture Search},
+   volume={34},
+   ISSN={2162-2388},
+   url={http://dx.doi.org/10.1109/TNNLS.2021.3100554},
+   DOI={10.1109/tnnls.2021.3100554},
+   number={2},
+   journal={IEEE Transactions on Neural Networks and Learning Systems},
+   publisher={Institute of Electrical and Electronics Engineers (IEEE)},
+   author={Liu, Yuqiao and Sun, Yanan and Xue, Bing and Zhang, Mengjie and Yen, Gary G. and Tan, Kay Chen},
+   year={2023},
+   month=feb, pages={550–570} }
+
+@misc{liu2019dartsdifferentiablearchitecturesearch,
+title={DARTS: Differentiable Architecture Search},
+author={Hanxiao Liu and Karen Simonyan and Yiming Yang},
+year={2019},
+eprint={1806.09055},
+archivePrefix={arXiv},
+primaryClass={cs.LG},
+url={https://arxiv.org/abs/1806.09055},
+}
+
+@article{wei2021finetuned,
+  title={Finetuned language models are zero-shot learners},
+  author={Wei, Jason and Bosma, Maarten and Zhao, Vincent Y and Guu, Kelvin and Yu, Adams Wei and Lester, Brian and Du, Nan and Dai, Andrew M and Le, Quoc V},
+  journal={arXiv preprint arXiv:2109.01652},
+  year={2021}
+}
+
+@article{zhang2023instruction,
+title={Instruction tuning for large language models: A survey},
+author={Zhang, Shengyu and Dong, Linfeng and Li, Xiaoya and Zhang, Sen and Sun, Xiaofei and Wang, Shuhe and Li, Jiwei and Hu, Runyi and Zhang, Tianwei and Wu, Fei and others},
+journal={arXiv preprint arXiv:2308.10792},
+year={2023}
+}
+
+@book{hutter2019automated,
+  title={Automated machine learning: methods, systems, challenges},
+  author={Hutter, Frank and Kotthoff, Lars and Vanschoren, Joaquin},
+  year={2019},
+  publisher={Springer Nature}
+}
+}
+
