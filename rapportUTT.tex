@@ -100,7 +100,7 @@
     {
         \setcounter{tocdepth}{1}
         \renewcommand{\contentsname}{Summary}
-        %\tableofcontents
+        \tableofcontents
     }
     
     \clearpage
@@ -115,16 +115,18 @@
         %\addcontentsline{toc}{chapter}{\listfigurename}
         \markleft{Tables and figures}    
     }
+    \clearpage
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
     
     %% --------------------- Glossaire et acronymes ----------------------
     {
         % Tableaux et figures
         \phantomsection
-
-        \printglossaries
-        %\addcontentsline{toc}{chapter}{Tables and Figures}
-        %\markleft{Glossaries and Acronyms}
+        \addcontentsline{toc}{chapter}{Glossary and Acronyms}
+        
+        \printglossary
+        \printacronyms
+        \markleft{Glossary and Acronyms}
     }
     \clearpage
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
@@ -134,9 +136,9 @@
 
     \pagenumbering{arabic}
     %% --------------------- Import part of the file ----------------------
-    %\import{latex-files/}{0_1_Intro.tex}
+    \import{latex-files/}{0_1_Intro.tex}
     \clearpage
-    %\import{latex-files/}{1_inria.tex}
+    \import{latex-files/}{1_inria.tex}
     \import{latex-files/}{2_def_sujet.tex}
     \import{latex-files}{3_approach.tex}
     \import{latex-files}{4_results.tex}
