@@ -1,0 +1,33 @@
+\chapter{Results}
+\label{chap:results}
+This chapter presents the outcomes of the proposed methods described in the preceding chapter and provides a reflective analysis of the findings. Additionally, it explores how these results contribute to the broader scientific community, including efforts toward publication. The chapter concludes by outlining potential directions for extending this research in future work.
+
+\section{Experiment Results}
+\label{sec:exp_results}
+The experimental results from Chapter 3 validate the efficacy of the proposed approaches for hyperparameter optimization (HPO) in fine-tuning Large Language Models (LLMs). Key performance metrics, including accuracy on benchmark datasets (e.g., MMLU, GLUE), computational efficiency, and scalability, demonstrate that the hybrid approach combining Bayesian Optimization (BO) and Partition-based methods achieves competitive results while significantly reducing evaluation costs.
+
+The analysis highlights the following:
+\begin{itemize}
+    \item Bayesian Optimization effectively balances exploration and exploitation, enabling faster convergence in continuous hyperparameter spaces.
+    \item The Partition-based method complements BO by parallelizing the search process, enhancing scalability for larger hyperparameter spaces.
+    \item Techniques such as Low-Rank Adaptation (LoRA) and multi-fidelity evaluations improve computational efficiency without compromising performance.
+\end{itemize}
+
+Tables and figures (e.g., Table XX, Figure YY) illustrate these findings, providing a comparative evaluation of the proposed methods against baseline approaches such as grid search and random search. Although the results are promising, limitations are noted, including sensitivity to hyperparameter initialization and computational overhead in scenarios with extensive partitioning schemes.
+
+\section{Article Publication}
+\label{sec:article}
+The aforementioned results have led to the drafting of a research article aimed at disseminating the findings within the academic community. Publishing the article serves as a means of contributing to the broader field of optimization and machine learning research.
+
+The written article has been submitted to the International Conference on Optimization \& Learning (OLA2025). As of the submission of this report, the paper is under review, and the outcome is awaited.
+
+\section{If This Work Were to Be Continued}
+\label{sec:further_work}
+While this research represents significant progress, several avenues remain for future exploration:
+\begin{itemize}
+    \item \textbf{Extending the Search Space:} Expand the range of hyperparameters to include advanced configurations, such as specialized LoRA parameters and task-specific pre-training strategies.
+    \item \textbf{Integrating Advanced Techniques:} Investigate the use of cutting-edge approaches, such as reinforcement learning-based optimization or meta-learning, to improve generalization across diverse datasets.
+    \item \textbf{Scaling Beyond Current Limits:} Enhance the framework to accommodate even larger LLMs and datasets by leveraging distributed computing infrastructures and more sophisticated partitioning strategies.
+\end{itemize}
+
+These directions offer a clear path for further building upon the contributions of this work, ensuring its continued relevance in addressing emerging challenges in the field of LLM fine-tuning and optimization.
