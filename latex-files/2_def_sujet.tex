@@ -235,17 +235,12 @@ Two populars problem of this fields emerged in the last years : \textbf{\acrfull
 \label{sec : autodnn_pbm}
 The general \acrshort{autodnn} optimization problem can be defined, like article \cite{talbi_automated_2021}, with a quadruplet $\alpha = (V,E,\lambda_V, \lambda_\alpha)$, where $V$ is a set of nodes denoting the neurons, $E$ is a set of edges (i.e. connections) between neurons, $\lambda_V$ the feature set of operations and $\lambda_\alpha$ the optimization features set of the \acrshort{dnn}. Given the space of all datasets $D$, the space of models $M$, and the search space of architectures $A$.
 
-A first optimization problem can be defined as the training of the \acrshort{dnn}, following the objective function $\Theta : A \times D \xrightarrow{} M$. The training is then defined as equation \ref{eq : dnn_opt} with $L$ representing the loss function, and $d_{train}$ a subset of an input dataset $d$. 
+For reminder, namely $(x,y)$ the input-output pair, $f(x,\omega)=\hat{y}$ the predicted output and $\mathcal{L}(\hat{y},y)$ the loss function of the model. Subsequently to the optimization problem of section \ref{sec:dnn}, $\omega^*$ is the optimal parameters of the model.
+
+Following the first optimization problem, a second is expressed as the \acrshort{autodnn} problem, with equation \ref{eq : autodnn_form}. In this equation, $f$ is the objective function, often the negative loss function or the accuracy. 
 
 \begin{equation}
-    \Theta(\alpha,d) = \text{arg min}_{m_a\in M_a}L(m_a,d_{train})
-    \label{eq : dnn_opt}
-\end{equation}
-
-Following the first optimization problem, the second is expressed as the \acrshort{autodnn} problem, with equation \ref{eq : autodnn_form}. In this equation, $f$ is the objective function, often the negative loss function or the accuracy. 
-
-\begin{equation}
-    a^* = \text{arg max}_{a\in A}f(\Theta (a, d_{train}), d_{valid}= \text{arg max}_{a \in A} f(a).
+    a^* \in \text{arg max}_{a\in A}f(\Theta (a, d_{train}), d_{valid}= \text{arg max}_{a \in A} f(a).
     \label{eq : autodnn_form}
 \end{equation}
 
@@ -255,7 +250,7 @@ The \acrshort{autodnn} problem is characterized, is the worst case, by theses pr
     \item \textbf{Expensive black-box objective function :} this problem is a black-box function, i.e. the function cannot be analytically formulated, and so is derivative-free. The evaluation of a solution can take minutes to days, and even days, constraining the number of evaluations. These properties constrains optimization algorithms.  
 \end{itemize}
 
-\acrshort{autodnn} is an extremely broad field, and it's important to define precisely the specific problem we are treating. Following the notation of article \cite{elsken_neural_2019} about \acrshort{nas} problems, theses problems are structured according to three fields : \Gls{search_space}, \Gls{search_strat} and \Gls{perf_est}. The \textbf{\gls{search_space}} consists of all variables, and theirs properties (range, type ...). The \textbf{\gls{search_strat}} is about the optimization algorithms, defined more thoroughly in section \ref{sec : opt_algo}. The \textbf{\gls{perf_est}} is the definition of the loss function as expressed in equation \ref{eq : dnn_opt}, and all linked attributes (e.g. datasets choice). This part can also includes approach like multi-fidelity, modifying the evaluation along iterations.
+\acrshort{autodnn} is an extremely broad field, and it's important to define precisely the specific problem we are treating. Following the notation of article \cite{elsken_neural_2019} about \acrshort{nas} problems, theses problems are structured according to three fields : \Gls{search_space}, \Gls{search_strat} and \Gls{perf_est}. The \textbf{\gls{search_space}} consists of all variables, and theirs properties (range, type ...). The \textbf{\gls{search_strat}} is about the optimization algorithms, defined more thoroughly in section \ref{sec : opt_algo}. The \textbf{\gls{perf_est}} is the definition of the loss function as expressed in equation \ref{eq : ann_opt}, and all linked attributes (e.g. datasets choice). This part can also includes approach like multi-fidelity, modifying the evaluation along iterations.
 
 
 
@@ -283,14 +278,14 @@ The \acrshort{nas} problem is a sub-problem of the \acrshort{autodnn} problem, w
     \label{fig:nas}
 \end{figure}
 
-The methods to solve \acrshort{nas} for \acrshort{llm} are quite diverse. Some methods, such as \cite{XX}, encode topology into a continuous space, broadening the range of possible optimization techniques. Further details will be addressed in Section \ref{sec : opt_algo}, but it is worth mentioning derivative-based methods like \cite{liu_darts_2019}, which apply such techniques to \acrshort{nas}.
+The methods to solve \acrshort{nas} for \acrshort{llm} are quite diverse. Some methods encode topology into a continuous space, broadening the range of possible optimization techniques. Further details will be addressed in Section \ref{sec : opt_algo}, but it is worth mentioning derivative-based methods like \cite{liu_darts_2019}, which apply such techniques to \acrshort{nas}.
 
 %%-------------------- SUBSECTION : HPO ---------------------%%
 \subsection{Hyper-parameter optimization}
+\label{sec : hpo}
+Like \acrshort{nas}, \acrshort{hpo} can be defined as a sub-field of \acrshort{automl}, even if \acrshort{hpo} by itself is tackled since the 1990s \cite{feurer_hyperparameter_2019}. In \acrfull{dnn}, \glspl{hyperparameter} can be defined as configuration settings that govern the structure of the networks and the process of training. As opposed to parameters (or weights), \glspl{hyperparameter} are not learning directly from the data during the training. They are typically set before training begins and remain fixed throughout the process.
 
-Like \acrshort{nas}, \acrshort{hpo} can be defined as a sub-field of \acrshort{automl}, even if \acrshort{hpo} by itself is tackled since the 1990s \cite{hutter2019automated}. In \acrfull{dnn}, \glspl{hyperparameter} can be defined as configuration settings that govern the structure of the networks and the process of training. As opposed to parameters (or weights), \glspl{hyperparameter} are not learning directly from the data during the training. They are typically set before training begins and remain fixed throughout the process.
-
-Most of the time, \glspl{hyperparameter} are chosen by humans, w.r.t. their expertise. \acrshort{hpo} is the process of choosing the best \glspl{hyperparameter} for a specific problem (a quadruplet $a$ as defined in \ref{sec : autodnn_pbm}). However, manually selecting \glspl{hyperparameter} is often inefficient and prone to suboptimal configurations, especially as models grow in complexity. Automated \acrshort{hpo} methods aim to address these challenges by systematically exploring the \gls{search_space} to identify configurations that maximize performance or minimize error for a given task.
+Most of the time, \glspl{hyperparameter} are chosen by humans, w.r.t. their expertise. \acrshort{hpo} is the process of automating the choice of the best \glspl{hyperparameter} for a specific problem (a quadruplet $a$ as defined in \ref{sec : autodnn_pbm}). However, manually selecting \glspl{hyperparameter} is often inefficient and prone to suboptimal configurations, especially as models grow in complexity. Automated \acrshort{hpo} methods aim to address these challenges by systematically exploring the \gls{search_space} to identify configurations that maximize performance or minimize error for a given task.
 
 The significance of \acrshort{hpo} grows with the increasing complexity of modern \acrshort{dnn} architectures. As models become larger and datasets more diverse, the choice of \glspl{hyperparameter} can significantly impact both model accuracy and computational efficiency. Moreover, \acrshort{hpo} plays a critical role in enabling the deployment of models in resource-constrained environments, where trade-offs between accuracy and efficiency must be carefully balanced. Future sections will detail methodologies and frameworks designed to tackle \acrshort{hpo} effectively in various contexts.
 
@@ -299,48 +294,70 @@ The significance of \acrshort{hpo} grows with the increasing complexity of moder
 %%-------------------- SUBSECTION : Optimization Algorithms---------------------%%
 \subsection{Optimization Algorithms taxonomy}
 \label{sec : opt_algo}
-\FloatBarrier
 
-Global optimization refers to the field of mathematical and computational methods designed to find the best solution to a problem within a defined domain, particularly when the objective function is complex, non-linear, or multi-modal. Traditional methods often struggled with problems involving multiple local optima or discontinuities. 
 
-To address these challenges, the field has evolved to include more robust techniques, such as metaheuristics, surrogate modeling, and hybrid approaches. 
+Global optimization refers to the field of mathematical and computational methods designed to find the best solution to a problem within a defined domain, particularly when the objective function is complex, non-linear, or multi-modal. Traditional methods often struggled with problems involving multiple local optima or discontinuities. The search space $\mathcal X$ is generally a subspace of the real space $\mathbb{R}^n$, where $n$ is the dimensionality of the problem.
 
-These methods aim to efficiently navigate vast and complex search spaces, balancing the trade-off between exploration (searching new regions) and exploitation (refining known good solutions). In the context of hyperparameter optimization (HPO), global optimization plays a crucial role in systematically identifying configurations that maximize model performance while minimizing computational costs. The subsequent sections categorize and detail these optimization methods. 
-\\ ADD A FIGURE BY PARAGRAPH WITH A 1D OR 2D FUNCTION AND WRITE HERE THE FUNCTION.
+Optimization methods aim to efficiently navigate vast and complex search spaces, balancing the trade-off between \textit{exploration} (searching new regions) and \textit{exploitation} (refining known good solutions). In the context of hyperparameter optimization (HPO), global optimization plays a crucial role in systematically identifying configurations that maximize model performance while minimizing computational costs. The subsequent sections categorize and detail these optimization methods. 
+
+\begin{equation}
+    f(x) = (x_1^2 + x_2 - 11)^2 + (x_1 + x_2^2 - 7)^2
+    \label{eq : himmelblau}
+\end{equation}
+
+In the next paragraphs, I will present a taxonomy of global optimization methods, w.r.t. their relevance in the \acrshort{hpo} problem. Equation \ref{eq : himmelblau} represent the \textit{himmelblau} function, a well-known non-convex function with multiple local optima. It will be used as an example in the following sections if relevant. 
+
+
+
 
 \paragraph{Exploratory Methods} 
 Basic approaches such as \acrfull{gs} (Grid Search) and \acrfull{rs} (Random Search) provide straightforward solutions for hyperparameter optimization (HPO). \acrshort{gs} systematically evaluates all possible combinations of hyperparameters within a predefined grid, making it simple to implement and interpret. However, this approach becomes computationally intractable in high-dimensional hyperparameter spaces due to the exponential increase in the number of configurations. On the other hand, \acrshort{rs} selects hyperparameters randomly from the search space, offering a more scalable alternative to \acrshort{gs} while maintaining simplicity. Despite its limitations, \acrshort{rs} is often used as a baseline or guideline to compare with more sophisticated optimization methods.
 
-\begin{figure}
+
+\begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\linewidth]{assets/img/chap_2/plots/random_search.jpg}
-    \caption{Random and Grid Search on Himmelblau 2D function}
-    \label{fig:rs_gs_eg}
-\end{figure}
-\FloatBarrier
+    \begin{subfigure}{.5\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{assets/img/chap_2/plots/grid_search.png}
+      \caption{Grid Search}
+      \label{fig:grid_search}
+    \end{subfigure}%
+    \begin{subfigure}{.5\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{assets/img/chap_2/plots/random_search.png}
+      \caption{Random Search}
+      \label{fig:random_search}
+    \end{subfigure}
+    \caption{Exploratory Methods on Himmelblau 2D function}
+    \label{fig:exploratory}
+    \end{figure}
+
+Figure \ref{fig:exploratory} show the results of the \acrshort{gs} and \acrshort{rs} on the \textit{himmelblau} function, with a given budget of 25 evaluations. Con of \acrshort{gs} is the curse of dimensionality, since with a grid of size $s$, the number of configurations to evaluate is $d^n$. \acrshort{rs} is less dependent on the dimensionality since the number of configurations to evaluate is only fixed by the budget. With search space including a lot of good solutions in the space, \acrshort{rs} can achieve efficient performance.
 
 \paragraph{Metaheuristic Approaches}  
 
-Metaheuristic methods, including simulated annealing and evolutionary algorithms (EA), are designed to search more efficiently within large hyperparameter spaces by mimicking natural or physical processes. Simulated annealing is inspired by the cooling process of metals, where the algorithm explores the search space by gradually reducing the probability of accepting worse solutions. This allows it to escape local optima and converge to a globally optimal solution over time. Evolutionary algorithms, on the other hand, draw inspiration from biological evolution, employing operators such as mutation, crossover, and selection to iteratively improve a population of candidate solutions. These approaches are particularly useful for complex, non-convex hyperparameter spaces where simpler methods like \acrshort{gs} or \acrshort{rs} might struggle.
+Metaheuristic methods, including \acrfull{sa} and \acrfull{ea}, are designed to search more efficiently within large hyperparameter spaces by mimicking natural or physical processes. \acrshort{sa} is inspired by the cooling process of metals, where the algorithm explores the search space by gradually reducing the probability of accepting worse solutions. This allows it to escape local optima and converge to a globally optimal solution over time. \acrshort{ea}, on the other hand, draw inspiration from biological evolution, employing operators such as mutation, crossover, and selection to iteratively improve a population of candidate solutions.
+
+Metaheuristic can be classed on two main categories, population-based and solution-based. The first one like \acrshort{ga} are methods working on a population of candidate solutions, while the second one like \acrshort{sa} or \acrfull{ils} are methods working on a single solution. These approaches are particularly useful for complex, non-convex hyperparameter spaces where simpler methods like \acrshort{gs} or \acrshort{rs} might struggle.
+
 
 \paragraph{Partition-Based Optimization}  
- 
 
 Partition-based optimization methods aim to divide the hyperparameter search space into smaller, manageable subspaces, focusing the search on the most promising regions. These techniques dynamically refine the partitions based on previous evaluations, progressively narrowing down the search space. Examples include methods like Hyperband, which uses successive halving to allocate resources adaptively across configurations, and bandit-based approaches that efficiently balance exploration and exploitation. Partition-based methods are especially effective when dealing with large search spaces and limited computational budgets.
 
-\begin{figure}
+\begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\linewidth]{assets/img/chap_2/plots/soo.jpg}
+    %\includegraphics[width=0.5\linewidth]{assets/img/chap_2/plots/soo.jpg}
     \caption{Example of a Partition Based Optimization on 2D himmelblau}
     \label{fig:soo_ex}
 \end{figure}
 
-\FloatBarrier
+
 \paragraph{Surrogate-Model Based Optimization}  
 Surrogate models, such as those employed in Bayesian Optimization (BO), offer a powerful framework for hyperparameter optimization. Instead of directly evaluating the objective function for every configuration, which can be computationally expensive, surrogate models approximate the objective function based on a limited number of evaluations. Gaussian Processes (GP), commonly used in BO, provide a probabilistic model of the objective function, capturing uncertainty and guiding the search toward the most promising regions of the hyperparameter space. Other surrogate models, such as tree-structured Parzen estimators (TPE), are also effective in optimizing complex, high-dimensional spaces. These methods are particularly advantageous when each evaluation of the objective function (e.g., training a machine learning model) is time-consuming or resource-intensive.
-\begin{figure}
+\begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\linewidth]{assets/img/chap_2/plots/gaussian_process.jpg}
+    %\includegraphics[width=0.5\linewidth]{assets/img/chap_2/plots/gaussian_process.jpg}
     \caption{Gaussian Process example}
     \label{fig:gp_eg}
 \end{figure}
