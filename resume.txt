@@ -1,0 +1,5 @@
+Ce stage s'est déroulé à l'INRIA Lille, au sein de l'équipe de recherche BONUS. Les objectifs de ce stage étaient d'explorer l'application des algorithmes d'optimisation au sujet d'actualité des réseaux neuronaux : Les grands modèles de langage (GML). En particulier, j'ai travaillé sur l'optimisation des hyper-paramètres (HPO) appliquée au fine-tuning des GML. Le travail a été divisé en trois étapes :
+- Définition du sujet : explorer la littérature spécifique pour comprendre les enjeux et le fonctionnement.
+- Mise en œuvre des algorithmes : développer des algorithmes HPO et les relier au fine-tuning des GML.
+- Expériences : affiner l'implémentation au fur et à mesure des résultats, pour obtenir des résultats pertinents.
+Ce semestre a été une première immersion dans la recherche et les domaines académiques, me permettant de nourrir et d'affiner mon projet professionnel.

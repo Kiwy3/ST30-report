@@ -1,0 +1,182 @@
+% !TeX root = ./rapportUTT.tex
+% !BIB TS-program = biber
+
+\documentclass{rUTT}
+% Pour retirer le thème couleur UTT,
+%   Commenter la ligne précédente
+%   Décommenter la ligne dessous
+%\documentclass[noUTTcolors]{rUTT}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Quelques trucs à savoir pour modifier en paix :
+% TOC = Table of Contents
+% LOF / LOT = List Of Figures / List Of Tables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%git@github.com:n3rada/ScribUTT.git
+% Si on est on mode rapport de stage :
+% Pour la confidentialité
+
+
+
+
+
+\Entreprise{Inria Lille} % Nom de l'entreprise / organisme / institution
+\Lieu{172 avenue de Bretagne, 59000 Lille}
+\REntre{El-Ghazali Talbi}
+
+% Mots clés du Thésaurus ou mots clés pour les metadatas du pdf
+\Kone{Recherche appliquée} % Nature de l'activité
+\Ktwo{Transport et Télécommunications} % Branche d'activité économique
+\Kthree{Informatique} % Domaines technologiques
+\Kfourth{Optimisation mathématique} % Application Physique directe
+\Kfive{Logiciels - Recherche}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+% Résumé du stage
+\newcommand{\titletext}{
+
+    This internship took place at INRIA Lille, inside the BONUS research team. The aims of this internship were to explore the applications of optimization algorithms to the current hot topic of Neural networks: \acrfull{llm}. In particular, I worked on \acrfull{hpo} applied to \acrshort{llm} fine-tuning. The work was split in three stages: 
+    \begin{itemize}
+    \item Definition of the subject: explore the specific literature to understand stakes and how it works.
+    \item Implementation of the algorithms: develop HPO algorithms and link them to LLM fine-tuning.
+    \item Experiments: refine the implementation along the results, to obtain relevant outcomes.
+    \end{itemize}
+    This semester was a first immersion in the research and academic fields, allowing me to nourish my professional project. 
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Intership information
+\Semestre{Fall 2024}
+\UE{Industrial Engineering \break Systems Optimization and Safety}
+\date{Fall 2024}
+\author{{\sc DAVOUSE} Nathan}
+\RPeda{{\sc MAKBOUL} Salma} % Responsable pédagogique
+% Title of the internship
+\newcommand{\jobposition}{End-of-studies internship ST30}
+\title{Optimization and fine tuning of Large Langage Models (LLM)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%% Pour les métadonnées
+% Fonctionne, seulement il y a un warning à cause des "\\" dans le title
+% A tester ! Pour voir les infos du pdf on fait pdfinfo sous linux
+% https://ctan.gutenberg.eu.org/macros/latex/contrib/hyperref/doc/hyperref-doc.pdf#subsection.3.7
+\hypersetup{
+    pdfauthor = {\theauthor}, % Auteur : pdfauthor = {\theauthor}
+    pdftitle = {\thetitle}, % Titre : pdftitle = {Titre du document}
+    pdfkeywords = {\theKone, \theKtwo, \theKthree, \theKfourth,\theKfive}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+% Specific input : Glossary...
+\input{latex-files/9_1.glossary}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+    \frontpageSTB % Pour le modèle rapports de Stages des Branches / Master
+
+    {
+        \myILB
+    }
+    % page blanche après page de garde pour impression recto verso
+    
+    \pagestyle{UTT} 
+    \justifying 
+
+
+    \pagenumbering{gobble} % on n'affiche pas les numéros de page
+    \import{latex-files/}{0_0_remerciements.tex} % Toujours avant le sommaire !
+
+    \clearpage
+
+    %% --------------------- Sommaire ----------------------
+    {
+        \setcounter{tocdepth}{1}
+        \renewcommand{\contentsname}{Summary}
+        %\tableofcontents
+    }
+    
+    \clearpage
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    %% --------------------- Tableaux et figures ----------------------
+    {
+        \phantomsection
+        %\listoftables
+        \addcontentsline{toc}{chapter}{Tables and Figures}
+        %\listoffigures
+        %\addcontentsline{toc}{chapter}{\listfigurename}
+        \markleft{Tables and figures}    
+    }
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
+    
+    %% --------------------- Glossaire et acronymes ----------------------
+    {
+        % Tableaux et figures
+        \phantomsection
+
+        \printglossaries
+        %\addcontentsline{toc}{chapter}{Tables and Figures}
+        %\markleft{Glossaries and Acronyms}
+    }
+    \clearpage
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
+
+    
+    
+
+    \pagenumbering{arabic}
+    %% --------------------- Import part of the file ----------------------
+    %\import{latex-files/}{0_1_Intro.tex}
+    \clearpage
+    %\import{latex-files/}{1_inria.tex}
+    \import{latex-files/}{2_def_sujet.tex}
+    \import{latex-files}{3_approach.tex}
+    \import{latex-files}{4_results.tex}
+    \import{latex-files}{5_refl.tex}
+    \clearpage
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
+    
+    %% --------------------- Conclusion ----------------------
+    \import{latex-files/}{conclusion.tex}
+    \label{LastPage}
+    \clearpage
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+
+    
+    %% --------------------- Bibliographie ----------------------
+    {
+        \pagenumbering{gobble} % On n'affiche pas les numéros de page
+        \phantomsection % hyperlinks will target the correct page
+        \markboth{References}{}
+        \raggedright % pour éviter certaines erreurs rares d'affichage
+        \sloppy
+        %\nocite{*} % pour faire apparaître tout du fichier bib
+        \printbibliography[title={References},heading=bibintoc]
+    }
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+    
+    \clearpage
+
+    %\tripleS
+    %\pagenumbering{Roman} % On numérote en romain pour les annexes
+
+    % Annexes !
+    %\import{latex-files/annexes/}{annexes.tex}
+
+    %\clearpage
+    % Toujours avoir la table des matières en dernier ! Ici figure tout, même les annexes
+    % Commenter/supprimer pour enlever la table des matières
+    %\myfinaltoc
+    % On laisse une page blanche à la fin pour l'impression, c'est plus joli
+    %\clearpage
+    %\myemptypage
+
+\end{document}
