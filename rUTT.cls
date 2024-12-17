@@ -206,7 +206,7 @@
   sortlocale=auto,
   seconds=true,
   bibencoding=auto,
-  sorting=none % Sorting by name, title and years
+  sorting=nyt % Sorting by name, title and years
 ]{biblatex}
 
 \addbibresource{latex-files/bibliography.bib}
@@ -446,7 +446,7 @@ boxsep=4pt, left=0pt,right=0pt,top=0pt,bottom=0pt,colframe=white,colback=lightgr
 %%% paragraph ( Niveau 5 )
 \titleformat{\paragraph} % command
 [block]
-{\hspace{1.27cm}\normalfont\large\bfseries\itshape\raggedright\color{bleuRoiUTT}} % format
+{\hspace{1.27cm}\normalfont\large\bfseries\raggedright\color{bleuRoiUTT}} % format
 {\theparagraph} % label
 {0.5em} % Spacing between label and title
 {#1} % before code
