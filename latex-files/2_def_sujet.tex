@@ -121,7 +121,7 @@ This topology is the base of \acrshort{llm}, with diversification on the number 
 
 \subsection{Fine-Tuning}
 \label{sec:fine_tune}
-As of today, the training of \acrshort{llm} is split is two phases : the pre-training and the \gls{fine_tuning}. The \textbf{Pre-training} is computationally very expensive, and only few companies can made one from scratch (OpenAI, Meta, Mistral ...). It also need an enormous corpus of data, often kept hidden from public. Model after pre-training are called \acrfull{gpt} model or foundation model. At this point, \acrshort{llm} are able to answer a prompt correctly, with a general amount of knowledge, but not to excel in a specific task.\\
+As of today, the training of \acrshort{llm} is split is two phases : the pre-training and the \gls{fine_tuning}. The \textbf{Pre-training} is computationally very expensive, and only few companies can made one from scratch (OpenAI, Meta, Mistral ...). It also need an enormous corpus of data, often kept hidden from public. Model after pre-training are called \acrfull{gpt} model or foundation model. At this point, \acrshort{llm} are able to answer a prompt correctly, with a general amount of knowledge, but not to excel in a specific task.
 
 \begin{table}[h!]
     \centering
@@ -144,14 +144,37 @@ As of today, the training of \acrshort{llm} is split is two phases : the pre-tra
 
 
 
-After pre-training, the next stage, known as \textbf{\Gls{fine_tuning}}, is a lighter but equally crucial step that adapts the general knowledge in the model to perform well on specialized tasks. Fine-tuning is often applied to refine the \acrshort{llm} responses by training it on domain-specific datasets or to improve its performance on specific tasks, such as medical diagnosis, legal document analysis, or customer service automation. Research, including studies like \cite{wei_finetuned_2022}, suggests that fine-tuning not only helps with task-specific adaptation but also enhances the model's generalization abilities. This process enables the model to transfer the foundational knowledge it learned in pre-training more effectively across a variety of prompts, making it more robust and adaptable. The table \ref{tab:pretrain_vs_finetune} summarize difference between \gls{fine_tuning} and \gls{pre-training}.
+After pre-training, the next stage, known as \textbf{\Gls{fine_tuning}}, is a lighter but equally crucial step that adapts the general knowledge in the model to perform well on specialized tasks. Figure \ref{fig:pretrain_finetune} and table \ref{tab:pretrain_vs_finetune} illustrate the scope of the fine-tuning process, in opposition to the pre-training process.
+
+\begin{figure}[h]
+    \centering
+    \input{assets/img/chap_2/pre-training.tex}
+    \caption{Pre-Training and Fine-Tuning Framework}
+    \label{fig:pretrain_finetune}
+\end{figure}
+
+Fine-tuning is often applied to refine the \acrshort{llm} responses by training it on domain-specific datasets or to improve its performance on specific tasks, such as medical diagnosis, legal document analysis, or customer service automation. Research, including studies like \cite{wei_finetuned_2022}, suggests that fine-tuning not only helps with task-specific adaptation but also enhances the model's generalization abilities. This process enables the model to transfer the foundational knowledge it learned in pre-training more effectively across a variety of prompts, making it more robust and adaptable. The table \ref{tab:pretrain_vs_finetune} summarize difference between \gls{fine_tuning} and \gls{pre-training}.
+
+
 
 \Gls{instruction-tuning} is the process of \gls{fine_tuning} a pre-trained \acrshort{llm} using datasets composed of instruction-response pairs. The goal is to enhance the model's ability to follow natural language instructions effectively. This involves training the model to generate precise, contextually relevant, and human-aligned responses to a variety of prompts. \Gls{instruction-tuning} often uses datasets containing diverse tasks and instructions, enabling the model to generalize across different domains. 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PEFT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph{\acrfull{peft}}
-\acrshort{peft} can be defined as the set of techniques used to reduce the cost of \gls{fine_tuning}. Since \gls{fine_tuning} aims to be affordable, and usable on consumer-grade hardware, methods must be computation efficient. 2 approachs are used for this : \acrfull{lora}  and Adapter layers.
 
-The \textbf{\acrshort{lora} approach} is based on the \acrshort{lora} article \cite{hu_lora_2021}, and includes all methods derived from this : QLora, Lora+... \acrshort{lora} use Rank Factorization of a matrix, to save the weight matrix $W$ with 2 reduced weight matrices $A$ and $B$ with $W = B.A$, with $W \in \mathbb{R}^{n*p}, A \in \mathbb{R}^{r*p} , B \in \mathbb{R}^{n*r}, r$ being the rank of the matrices factorization. \Gls{fine_tuning} with \acrshort{lora} consist of training only theses matrices, and then merge them to the model, resulting in equation \ref{eq : lora}
+\acrshort{peft} methods are aiming to reduce the cost of \gls{fine_tuning}, and make it more accessible to a wider range of users. Article \cite{han_parameter-efficient_2024} make an exhaustive review of \acrshort{peft}, and is the base of this paragraph. The two main approaches to \acrshort{peft} are \textit{additive} and \textit{reparameterization} methods.
+
+The \textit{additive} approach aims to add news weights or layers to the models, and train only theses weights. Popular method  use \textit{adapter} layers, adding layer between layers of the model, as shown in figure \ref{fig:adapter}. One con of this approach is the rise of the inference time implied by the addition of these layers to the model.
+
+
+\begin{figure}[h]
+    \centering
+    \input{assets/img/chap_2/adapter.tex}
+    \caption{illustration of adapter layer}
+    \label{fig:adapter}
+\end{figure}
+
+The \textit{reparameterization} approach provide a proxy for model weights, to train this proxy and then merge it with the original model. The most popular method is \acrfull{lora}, based on article \cite{hu_lora_2021}. This method use the intrinsic rank of the weight matrix $W$, to factorize the matrix $W$ into 2 matrices $A$ and $B$ with $W = B.A$, with $W \in \mathbb{R}^{n*p}, A \in \mathbb{R}^{r*p} , B \in \mathbb{R}^{n*r}, r$ being the rank of the matrices factorization, as expressed in equation \ref{eq : lora}.
 
 \begin{equation}
     \begin{split}
@@ -162,23 +185,27 @@ The \textbf{\acrshort{lora} approach} is based on the \acrshort{lora} article \c
     \label{eq : lora}
 \end{equation}
 
-The pros of this is the inference that aren't penalized since the model is composed of the same number of weights after the merging. Other pro it that multiple \gls{fine_tuning} can be effected and they can then be merged when it's needed from a same base, saving only the low-rank version of the weights. One con is that it add hyperparameters, but it will be tackled in nexts sections. 
+Figure \ref{fig:lora} show the illustration of the \gls{lora} layer, with $A$ and $B$ being the factorization of the weight matrix. The pros of this is the inference that aren't penalized since the model is composed of the same number of weights after the merging. Other pro it that multiple \gls{fine_tuning} can be effected and they can then be merged when it's needed from a same base, saving only the low-rank version of the weights. One con is that it add hyperparameters, but it will be tackled in nexts sections.
 
-The \textbf{Adapter layer} approach is to add an feed-forward layer between two layers and train them to efficiently enhance the model capabilities. The default of using this is that it's increasing the inference for generating predictions, one a the key metrics of \acrshort{llm}.
+\begin{figure}[h]
+    \centering
+    \input{assets/img/chap_2/lora.tex}
+    \caption{illustration of lora layer}
+    \label{fig:lora}
+\end{figure}
 
-In the litterature, somes articles before the emergence of \acrshort{llm} are using the \gls{fine_tuning} of \glspl{hyperparameter} like \acrfull{hpo}, but in this work, it will solely mean the second phase of \acrshort{llm} training.
+In the litterature, somes articles before the emergence of \acrshort{llm} are using the terms "\gls{fine_tuning}" as the choice of \glspl{hyperparameter} like \acrfull{hpo}, but in this work, it will solely mean the second phase of \acrshort{llm} training.
 
 
 \subsection{Review and taxonomy of LLMs}
 \label{sec:llm_review}
-Exhaustive review of LLMs can be found, like the article \cite{review_llm}, with details on training, datasets, architectures... On this part, I will focus on key concept and details needed to achieve sufficient understanding for this report. 
+Exhaustive review of LLMs can be found, like the article \cite{raiaan_review_2024}, with details on training, datasets, architectures... On this part, I will focus on key concept and details needed to achieve sufficient understanding for this report.
 
 \paragraph{LLMs Taxonomy}
 For this taxonomy, the criteria chosen is the downstream tasks, and the corresponding part of the Transformers Architecture used for this.\\
-\textbf{Encoder-only} : LLMs using only the encoder side of the \textit{Transformers} are used to do text analysis or word classification (i.e. extract noun or verb of a sentence). The most famous one is BERT\cite{devlin_bert_2019} or its variation, an open source model by Google\\
-\textbf{Decoder-only} : these models are used for generative tasks, using prompts to lead it's generation. 
-Generative Pre-Trained (GPT) model, with it's web service ChatGPT \cite{ChatGPT} is a decoder-only model, and has strongly contribute to the renowned of the LLMs. We can also cite Llama \cite{dubey2024llama} family models, open-source foundation models.\\
-\textbf{Encoder-Decoder} : model using standard Transformers are mainly used for translation, one of the first aim of NLP model, or summarize a text. BART or T5 models are fairly known model for this.
+\textbf{Encoder-only} : LLMs using only the encoder side of the \textit{Transformers} are used to do text analysis or word classification (i.e. extract noun or verb of a sentence). The most famous one is BERT\cite{devlin_bert_2019} or its variations, an open source model by Google.\\
+\textbf{Decoder-only} : these models are used for generative tasks, using prompts to lead it's generation. Generative Pre-Trained (GPT) models, with it's web service ChatGPT \cite{openai_gpt-4_2024} is a decoder-only model, and has strongly contribute to the renowned of the LLMs. We can also cite Llama \cite{grattafiori_llama_2024} family models, open-source foundation models.\\
+\textbf{Encoder-Decoder} : model using standard Transformers are mainly used for translation, one of the first aim of NLP model, or summarize a text. BART\cite{lewis_bart_2020} or T5\cite{raffel_exploring_2020} models are fairly known model for this.
 
 The relevance of this taxonomy come from the compatibility of different optimization method with these three types of models. Different types of models won't be used and train in the same way, and won't have the same hyperparameters. 
 
@@ -187,7 +214,7 @@ In this part, I will briefly expose open issues concerning LLMs : \\
 \textbf{Debiaising data corpus:} generative AI base it's representation on dataset, so it tend to reproduce the biaises of the corpus. For example, if we ask ChatGPT to generate 10 name of engineer, we have low probability of having parity.\\
 \textbf{Interpretability :} using neural network in general, but especially LLMs, we can't explain why it works, or why a specific generation happens, so it has limited use.\\
 \textbf{Efficiency and energy consumption :} the result-oriented search tend to only focus on accuracy, rather than energy consumption for a given result. This lead to an over and over-increase of the verticale networks size, and corresponding energy consumption to train and deploy it.\\
-\textbf{Hallucinations\cite{chatgpt_hallucinations} :} when asking something to the model that does not have the answer, it tend to create a false answer from scratch, and be confident on it. It lower the confidence on the generation. 
+\textbf{Hallucinations\cite{bang_multitask_2023} :} when asking something to the model that does not have the answer, it tend to create a false answer from scratch, and be confident on it. It lower the confidence on the generation. 
 
 
 %%--------------------SECTION : autoML---------------------%%
@@ -195,7 +222,7 @@ In this part, I will briefly expose open issues concerning LLMs : \\
 \label{sec:autodnn}
 \acrfull{autodnn}, as defined in \cite{talbi_automated_2021}, refers to the automation of the design and optimization of deep neural network models. This concept is linked with \acrfull{automl}, but focus solely on \acrshort{dnn}. The contribution of \acrshort{autodnn} is multiples : 
 \begin{itemize}
-    \item Excluding humain of the loop, to find new solutions 
+    \item Taking the human out of the loop, to find solutions outside of human expertise and way of thinking
     \item Ease the deployment of \acrshort{dnn} models, to lessen the needs of expertise
     \item Ensuring reliability and performance of the solution, with a data-driven approach
 \end{itemize}
