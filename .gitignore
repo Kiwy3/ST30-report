@@ -13,7 +13,7 @@
 .*.lb
 
 packages
-
+*.ist
 ## Intermediate documents:
 *.dvi
 *.xdv
