@@ -85,26 +85,30 @@
 % encoder input
 \node (enc_plus) [sum, below of = enc_base,yshift=-0.1cm]{\Large $+$};
 \node (in_embed) [embed, below of = enc_plus,align=center, yshift = -0.2cm]{Input \\ Embedding};
-\node (encoding1) [encoding,left of = enc_plus, align = center, xshift = -0.5cm]{Positional \\ Encoding};
+\node (encoding1) [encoding,left of = enc_plus, align = center, xshift = -1.5cm, yshift=-0.2cm]{Positional \\ Encoding};
 \node (input) [below of = in_embed, yshift = -0.3cm]{Input};
 
 % Decoder Input
 \node (dec_plus) [sum, below of = dec_base,yshift=-0.1cm]{\Large $+$};
 \node (out_embed) [embed, below of = dec_plus,align=center, yshift = -0.2cm]{Ouput \\ Embedding};
-\node (encoding2) [encoding,right of = dec_plus, align = center, xshift = 0.5cm]{Positional \\ Encoding};
+\node (encoding2) [encoding,right of = dec_plus, align = center, xshift = 1.5cm, yshift=-0.2cm]{Positional \\ Encoding};
 \node (output) [below of = out_embed, yshift = -0.3cm, align = center]{Ouputs \\ (shifted right)};
 
 %outputs
-\node (linear) [linear, above of = norm3, yshift = 0.2cm]{Linear};
+\node (linear) [linear, above of = norm3, yshift = 0.3cm]{Linear};
 \node (softmax) [softmax, above of = linear]{Softmax};
-\node (out) [above of = softmax,align = center]{Output \\ Probabilities};
+\node (out) [above of = softmax,align = center, yshift=0.2cm]{Output \\ Probabilities};
 
 
 % I/O arrow
 \draw[arrow] (input) -- (in_embed);
 \draw[arrow] (in_embed) -- (enc_plus);
-\draw[arrow] (input) -- ([xshift = -0.4cm, yshift = -0.2cm]in_embed.west) -- (encoding1);
-\draw[arrow] (output) -- ([xshift = 0.4cm, yshift = -0.2cm]out_embed.east) -- (encoding2);
+
+
+\draw[arrow] (input.west) -- ([ yshift = -0.8cm]encoding1.south) -- (encoding1);
+\draw[arrow] (output.east) -- ([ yshift = -0.8cm]encoding2.south) -- (encoding2);
+
+
 \draw[arrow] (output) -- (out_embed);
 \draw[arrow] (out_embed) -- (dec_plus);
 \draw[arrow] (encoding1) -- (enc_plus);
@@ -117,7 +121,7 @@
 \draw[arrow] (out.north) -- ([yshift = 0.5cm]out.north);
 
 % Encoder and Decoder Legend
-\node [left of = enc_base,xshift= -1.5cm]{\textbf{Encoder}};
-\node [right of = dec_base,xshift= 1.5cm]{\textbf{Decoder}};
+\node [left of = enc_base,xshift= -2cm]{\textbf{Encoder}};
+\node [right of = dec_base,xshift= 2cm]{\textbf{Decoder}};
 
 \end{tikzpicture}
