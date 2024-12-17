@@ -1,0 +1,375 @@
+\chapter{Subject Definition}
+\label{chap:subject_def}
+
+\epigraph{Scientific inquiry starts with observation. The more one can see, the more one can investigate.}{Martin Chalfie}
+
+In a research internship, or indeed in any research activity, it's crucial to properly define the subject of the research, and to extract a precise problematic. That's why, during my first few weeks as an intern, and in this chapter of the report, I've endeavored to define this framework. To do so, I begin by recalling the subject as defined in my agreement: 
+
+\noindent\hrulefill\\
+
+\acrshort{nas} for \acrshort{llm} architectures is computationally prohibitive. In this work, we will investigate the use of efficient optimization algorithms (example: parallel fractal optimization) to reduce the latency of real-world commercial web-scale text prediction system. The goal of this work is to solve the \acrshort{nas} problem to find an architecture that when trained with data D and training algorithm A, produces a model that has similar accuracy but significantly reduced latency.
+The tasks composting this work are summarized below:
+\begin{itemize}
+    \item Modeling and analysis of the \acrshort{nas} problem
+    \item Solving of the problem using original and high-performance optimization algorithms
+    \item Application to well known \acrshort{llm} such as GPT
+    \item Application to logistics/transports problems
+\end{itemize}
+\noindent\hrulefill\\
+
+
+
+From there, to understand fully the problems, it's important to define what are \acrshort{llm}, and what are the stakes of this fields. Then, we will take a look about the application to manufacturing or logistics contexts. Alike we will look at the \acrshort{autodnn} fields, with focus to \acrshort{nas} and \acrshort{hpo} problems, to locate the further work in a global litterature. With this, I can finally close this part with a precise search problematic, to drive my contribution.
+
+%%--------------------SECTION : LLM---------------------%%
+\section{\acrfull{llm}}
+\label{sec:llm}
+\acrshort{llm} can be defined as Neural Networks using the \Gls{transformer} bloc for \acrfull{nlp} problems. For the next parts, it's important to understand the architecture of the \acrshort{llm}, after a brief reminder about \acrshort{dnn}. Due to computation limitation, a lot of research contribution are about the \Gls{fine_tuning}, defined in \ref{sec:fine_tune}. To pursue to the next section, I will finish with a light review and taxonomy of \acrshort{llm}. 
+
+%%--------------------SUBSECTION : DNN---------------------%%
+\subsection{\acrfull{dnn}}
+\label{sec:dnn}
+Like many fields, \acrshort{dnn} comes from biology-inspired design. In 1943,  Warren Mcculloch and Walter Pitts introduced the idea of logical calculus and computation, based on neural network, in article \cite{mcculloch_logical_1943}. The \acrfull{ann} aims to reproduce the cells of the brain to make a reasoning : the brain neuron is a node using a function to "activate" and the synapse is edge linking neurons to each others.  
+
+
+The figure \ref{fig:artifical_neuron} show the structure of an artifical neuron, including the trainable weights $\omega_n$ and the bias $b$. The output of the neuron can be write as : $\hat{y} = f(x,\omega) =  \sigma(\sum_i^n x_i \omega_i +b)$, with $x_n$ the input, and $\sigma(.)$ the activation function.
+
+\begin{figure}[h]
+    \centering
+    \input{assets/img/chap_2/art_neuron}
+    \caption{Illustration of an artifical neuron\cite{these_DNN}}
+    \label{fig:artifical_neuron}
+\end{figure}
+
+
+The activation function is the key of the \acrshort{ann}. The function need to make an output adapted to the use case (e.g. value between 0 and 1 for a probability), and differentiable to be able to use gradient-based optimization, the most efficient optimization method when possible. Approaches using \acrfull{ea} to update weights were studied \cite{X,X}, and called \textit{meta-learning}, but were deprecated by gradient-based methods. 
+
+With notation of figure \ref{fig:artifical_neuron}, and $\omega$ being the matrix of all parameters, the training of the \acrshort{ann} can be expressed as equation \ref{eq : ann_opt}. The loss $\mathcal L$ is the expression of the difference between the wanted output $y$ and the predicted output $\hat y$. Many formulas can be used the compute the loss, such as cross-entropy \cite{X} or \acrfull{mse}.
+
+\begin{equation}
+    \omega \in \arg \min_{\omega \in \mathbb R^n} \mathcal L(\hat{y},y)
+    \label{eq : ann_opt}
+\end{equation}
+
+The optimization of equation \ref{eq : ann_opt} is done using gradient descent, and especially \acrfull{sgd}. For each parameter, the gradient is expressed as \ref{eq : Gradient_descent}. Based on this, the parameter is updated with $\omega_{i} \gets \omega_i - \eta * \Delta_{\omega_i}$
+\begin{equation}
+    \Delta_{\omega_i}=\Delta_{\omega_i}(x,y)=\frac{\partial \mathcal L(f(x,\omega),y)}{\partial \omega_i}
+\label{eq : Gradient_descent}
+\end{equation}
+
+To accelerate the gradient descent, some optimization algorithm like \acrfull{adam} \cite{kingma_adam_2017} use the momentum of the function, replacing $\Delta \omega_i$ with $m_t = \beta m_{t-1}+(1-\beta)[\Delta \omega_i]$. In this formula, $m_t$ is the moment of the function $L$ at the instant $t$, and $\beta = [\beta_1, \beta_2]$ an hyperparameters of the method, with $\beta_i \in \{0,1\}$. In this internship, I will mostly use \acrshort{adam} or \acrshort{sgd}. 
+With larger and larger networks, along diversity of neural cells, neural networks achieved to be the \acrfull{sota} in many tasks : classification, computer vision, prediction, \acrshort{nlp} ...
+%%--------------------SUBSECTION : Self Attention Mechanism---------------------%%
+\subsection{Self Attention Mechanism}
+\label{sec:self_att}
+
+
+To understand how \acrshort{llm} works, it's crucial to understand the self attention mechanism. The key feature of \acrshort{llm} is the understanding of the context of a words to perform a prediction, or even a translation. Using \acrfull{mha}, the \textit{transformers} cells will define the importance of each words for the prediction of the next one. On the example of figure \ref{fig:self_att}, to predict the word "garden", the important words are "children" and "playing". The multiplicity of the attention head allow to understand different context with each, like the color on the example. 
+
+\begin{figure}
+    \centering
+    \input{assets/img/chap_2/self_attention}
+    \caption{Illustration of self attention}
+    \label{fig:self_att}
+\end{figure}
+
+
+To perform this feat, Vaswani in article \cite{vaswani_attention_2017} present the scaled dot-product attention, used to build \acrshort{mha}. \Glspl{transformer} use a scaled dot-product attention, shown in figure \ref{fig:mha}, between a queries(Q)/Keys(K) pair, and a value (V) vector. With $d_k$ the dimension of the queries and keys,the attention function can be written as $Attention = \text{softmax} ( \frac{Q K^T}{\sqrt{d_k}})V$.
+
+\begin{figure}
+    \centering
+    \input{assets/img/chap_2/mha}
+    \caption{\acrfull{mha} illustration }
+    \label{fig:mha}
+\end{figure}
+
+The 3 linear cells are matrices multiplications between an input vector of size $d_i$ to a matrices $W^i \in \mathbb{R}{d_{model} . d_i}$, with $i \in {Q,K,V,O}$ ($O$ being the output vector). These matrices are the trainable weights of the Multi-Head Attention, and will be train along the rest of the network. The \acrshort{mha} output can be write as : 
+
+\begin{equation}
+\begin{split}
+ Multihead (Q,K,V) = Concat (head_1,...,head_h)W^O\\
+with \ head_i = Attention (Q W_i^Q,K W_i^K,V W_i^V)
+\end{split}
+\label{eq : MHA}  
+\end{equation}
+
+The softmax function is often used to extract probabilities, since it give values between 0 and 1, and that is take into account every values in order that the sum of softmax value is one. It can be written as : $\displaystyle
+softmax(x_i) = \frac{e^{x_i}}{\sum_{j=1}^n e^{x_j}}$.
+
+%%--------------------SUBSECTION : LLM architecture---------------------%%
+
+\subsection{LLM Architecture}
+\label{sec:llm_arch}
+For many years, \acrshort{nlp} problems were approached by statistical and rules models, but they weren't able to capture the context of a whole sentence to generate a word. In 2016, Google published \textit{Google's Neural Machine Translation System} \cite{Google_translation_2016}, a \acrfull{lstm} neural network, trained on a big corpus of text datas, making it like the first \acrlong{llm}. This was an important break-through, and a proof-of-concept that the neural networks can be the key of \acrshort{nlp} Problems.
+
+Once we looked at the \acrshort{mha} in section \ref{sec:self_att}, we can take a step back and look at the whole \gls{transformer} architecture, figure \ref{fig:Transformers}. The first step of it is the Embedding, transforming words and sentences into token based on statistical distribution. Along with it, the positional encoding allow the model to keep the position of the token inside the model. A sinusoidal function is used for this, to stay on a relative position and not an absolute.
+
+\begin{figure}
+    \centering
+    \input{assets/img/chap_2/transformer}
+    \caption{\Glspl{transformer} topology (inspired by \cite{vaswani_attention_2017}}
+    \label{fig:enc_dec}
+\end{figure}
+
+At left is the \textbf{Encoder}, a stack of $N=6$  identical layers, made of two sub-layer. One is the \acrshort{mha}, and the other is a standard Feed-Forward Layer. Normalisation layer are added between each layers, to avoid exploding gradients. At the left is the \textbf{Decoder}, also a stack of $N=6$ layers. In addition of the two sub-layer of the encoder, the encoder add a second \acrshort{mha}, using the outputs of the encoder and the output of the first decoder's \acrshort{mha}.The masking of the first decoder's \acrshort{mha} is used to only take into account previous word, and not generate word based on next words, since it won't be possible for text generation.
+
+After attention cells, a linear transformation (like inside the \acrshort{mha}) and a softmax are used, in order to have probabilities output of the right dimension size. With this, the model can generate words based on the highest probability of generation. 
+
+
+\subsection{Fine-Tuning}
+\label{sec:fine_tune}
+As of today, the training of \acrshort{llm} is split is two phases : the pre-training and the \gls{fine_tuning}. The \textbf{Pre-training} is computationally very expensive, and only few companies can made one from scratch (OpenAI, Meta, Mistral ...). It also need an enormous corpus of data, often kept hidden from public. Model after pre-training are called \acrfull{gpt} model or foundation model. At this point, \acrshort{llm} are able to answer a prompt correctly, with a general amount of knowledge, but not to excel in a specific task.\\
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Aspect} & \textbf{Pre-Training} & \textbf{Fine-Tuning} \\
+        \hline
+        Objective & General-purpose learning & Task/domain adaptation \\
+        \hline
+        Dataset & Large, diverse & Small, specific \\
+        \hline
+        Scale & High resource demand & Relatively efficient \\
+        \hline
+        Duration & Weeks to months & Hours to days \\
+        \hline
+    \end{tabular}
+    \caption{Comparison Between Pre-Training and Fine-Tuning for LLMs}
+    \label{tab:pretrain_vs_finetune}
+\end{table}
+
+
+
+After pre-training, the next stage, known as \textbf{\Gls{fine_tuning}}, is a lighter but equally crucial step that adapts the general knowledge in the model to perform well on specialized tasks. Fine-tuning is often applied to refine the \acrshort{llm} responses by training it on domain-specific datasets or to improve its performance on specific tasks, such as medical diagnosis, legal document analysis, or customer service automation. Research, including studies like \cite{wei_finetuned_2022}, suggests that fine-tuning not only helps with task-specific adaptation but also enhances the model's generalization abilities. This process enables the model to transfer the foundational knowledge it learned in pre-training more effectively across a variety of prompts, making it more robust and adaptable. The table \ref{tab:pretrain_vs_finetune} summarize difference between \gls{fine_tuning} and \gls{pre-training}.
+
+\Gls{instruction-tuning} is the process of \gls{fine_tuning} a pre-trained \acrshort{llm} using datasets composed of instruction-response pairs. The goal is to enhance the model's ability to follow natural language instructions effectively. This involves training the model to generate precise, contextually relevant, and human-aligned responses to a variety of prompts. \Gls{instruction-tuning} often uses datasets containing diverse tasks and instructions, enabling the model to generalize across different domains. 
+
+\paragraph{\acrfull{peft}}
+\acrshort{peft} can be defined as the set of techniques used to reduce the cost of \gls{fine_tuning}. Since \gls{fine_tuning} aims to be affordable, and usable on consumer-grade hardware, methods must be computation efficient. 2 approachs are used for this : \acrfull{lora}  and Adapter layers.
+
+The \textbf{\acrshort{lora} approach} is based on the \acrshort{lora} article \cite{hu_lora_2021}, and includes all methods derived from this : QLora, Lora+... \acrshort{lora} use Rank Factorization of a matrix, to save the weight matrix $W$ with 2 reduced weight matrices $A$ and $B$ with $W = B.A$, with $W \in \mathbb{R}^{n*p}, A \in \mathbb{R}^{r*p} , B \in \mathbb{R}^{n*r}, r$ being the rank of the matrices factorization. \Gls{fine_tuning} with \acrshort{lora} consist of training only theses matrices, and then merge them to the model, resulting in equation \ref{eq : lora}
+
+\begin{equation}
+    \begin{split}
+    W = W_0 + \Delta W = W_0 + B.A \\
+    s.t. \quad W,W_0,\Delta W \in \mathbb{R}^{n*p},\\
+    A \in \mathbb{R}^{r*p} \text{ and } B \in \mathbb{R}^{n*r}
+    \end{split}
+    \label{eq : lora}
+\end{equation}
+
+The pros of this is the inference that aren't penalized since the model is composed of the same number of weights after the merging. Other pro it that multiple \gls{fine_tuning} can be effected and they can then be merged when it's needed from a same base, saving only the low-rank version of the weights. One con is that it add hyperparameters, but it will be tackled in nexts sections. 
+
+The \textbf{Adapter layer} approach is to add an feed-forward layer between two layers and train them to efficiently enhance the model capabilities. The default of using this is that it's increasing the inference for generating predictions, one a the key metrics of \acrshort{llm}.
+
+In the litterature, somes articles before the emergence of \acrshort{llm} are using the \gls{fine_tuning} of \glspl{hyperparameter} like \acrfull{hpo}, but in this work, it will solely mean the second phase of \acrshort{llm} training.
+
+
+\subsection{Review and taxonomy of LLMs}
+Exhaustive review of LLMs can be found, like the article \cite{review_llm}, with details on training, datasets, architectures... On this part, I will focus on key concept and details needed to achieve sufficient understanding for this report. 
+
+\paragraph{LLMs Taxonomy}
+For this taxonomy, the criteria chosen is the downstream tasks, and the corresponding part of the Transformers Architecture used for this.\\
+\textbf{Encoder-only} : LLMs using only the encoder side of the \textit{Transformers} are used to do text analysis or word classification (i.e. extract noun or verb of a sentence). The most famous one is BERT\cite{devlin_bert_2019} or its variation, an open source model by Google\\
+\textbf{Decoder-only} : these models are used for generative tasks, using prompts to lead it's generation. 
+Generative Pre-Trained (GPT) model, with it's web service ChatGPT \cite{ChatGPT} is a decoder-only model, and has strongly contribute to the renowned of the LLMs. We can also cite Llama \cite{dubey2024llama} family models, open-source foundation models.\\
+\textbf{Encoder-Decoder} : model using standard Transformers are mainly used for translation, one of the first aim of NLP model, or summarize a text. BART or T5 models are fairly known model for this.
+
+The relevance of this taxonomy come from the compatibility of different optimization method with these three types of models. Different types of models won't be used and train in the same way, and won't have the same hyperparameters. 
+
+\paragraph{LLMs review}
+In this part, I will briefly expose open issues concerning LLMs : \\
+\textbf{Debiaising data corpus:} generative AI base it's representation on dataset, so it tend to reproduce the biaises of the corpus. For example, if we ask ChatGPT to generate 10 name of engineer, we have low probability of having parity.\\
+\textbf{Interpretability :} using neural network in general, but especially LLMs, we can't explain why it works, or why a specific generation happens, so it has limited use.\\
+\textbf{Efficiency and energy consumption :} the result-oriented search tend to only focus on accuracy, rather than energy consumption for a given result. This lead to an over and over-increase of the verticale networks size, and corresponding energy consumption to train and deploy it.\\
+\textbf{Hallucinations\cite{chatgpt_hallucinations} :} when asking something to the model that does not have the answer, it tend to create a false answer from scratch, and be confident on it. It lower the confidence on the generation. 
+
+
+%%--------------------SECTION : autoML---------------------%%
+\section{Auto-DNN}
+\label{sec:autodnn}
+\acrfull{autodnn}, as defined in \cite{talbi_automated_2021}, refers to the automation of the design and optimization of deep neural network models. This concept is linked with \acrfull{automl}, but focus solely on \acrshort{dnn}. The contribution of \acrshort{autodnn} is multiples : 
+\begin{itemize}
+    \item Excluding humain of the loop, to find new solutions 
+    \item Ease the deployment of \acrshort{dnn} models, to lessen the needs of expertise
+    \item Ensuring reliability and performance of the solution, with a data-driven approach
+\end{itemize}
+
+Two populars problem of this fields emerged in the last years : \textbf{\acrfull{nas}} and \textbf{\acrfull{hpo}}. In this part, I will briefly expose the general formulation of the \acrshort{autodnn} problem, and then focus on presenting \acrshort{nas} and \acrshort{hpo} specificities. 
+
+
+%%-------------------- SUBSECTION : Problem Formulation---------------------%%
+\subsection{Problem Formulation}
+\label{sec : autodnn_pbm}
+The general \acrshort{autodnn} optimization problem can be defined, like article \cite{talbi_automated_2021}, with a quadruplet $\alpha = (V,E,\lambda_V, \lambda_\alpha)$, where $V$ is a set of nodes denoting the neurons, $E$ is a set of edges (i.e. connections) between neurons, $\lambda_V$ the feature set of operations and $\lambda_\alpha$ the optimization features set of the \acrshort{dnn}. Given the space of all datasets $D$, the space of models $M$, and the search space of architectures $A$.
+
+A first optimization problem can be defined as the training of the \acrshort{dnn}, following the objective function $\Theta : A \times D \xrightarrow{} M$. The training is then defined as equation \ref{eq : dnn_opt} with $L$ representing the loss function, and $d_{train}$ a subset of an input dataset $d$. 
+
+\begin{equation}
+    \Theta(\alpha,d) = \text{arg min}_{m_a\in M_a}L(m_a,d_{train})
+    \label{eq : dnn_opt}
+\end{equation}
+
+Following the first optimization problem, the second is expressed as the \acrshort{autodnn} problem, with equation \ref{eq : autodnn_form}. In this equation, $f$ is the objective function, often the negative loss function or the accuracy. 
+
+\begin{equation}
+    a^* = \text{arg max}_{a\in A}f(\Theta (a, d_{train}), d_{valid}= \text{arg max}_{a \in A} f(a).
+    \label{eq : autodnn_form}
+\end{equation}
+
+The \acrshort{autodnn} problem is characterized, is the worst case, by theses properties : 
+\begin{itemize}
+    \item \textbf{\acrfull{mvop}} : Variables can be continuous (e.g. learning rate), discrete ordinal (e.g number of layers or neurons) or discrete categorical (e.g. type of activation function). The search space of the problem contains conditionnality, i.e. the size of a variables may depend on other variable (e.g. the number of neurons depend on the number of layers). These properties requires specific optimization methods, or conversion of variables.
+    \item \textbf{Expensive black-box objective function :} this problem is a black-box function, i.e. the function cannot be analytically formulated, and so is derivative-free. The evaluation of a solution can take minutes to days, and even days, constraining the number of evaluations. These properties constrains optimization algorithms.  
+\end{itemize}
+
+\acrshort{autodnn} is an extremely broad field, and it's important to define precisely the specific problem we are treating. Following the notation of article \cite{elsken_neural_2019} about \acrshort{nas} problems, theses problems are structured according to three fields : \Gls{search_space}, \Gls{search_strat} and \Gls{perf_est}. The \textbf{\gls{search_space}} consists of all variables, and theirs properties (range, type ...). The \textbf{\gls{search_strat}} is about the optimization algorithms, defined more thoroughly in section \ref{sec : opt_algo}. The \textbf{\gls{perf_est}} is the definition of the loss function as expressed in equation \ref{eq : dnn_opt}, and all linked attributes (e.g. datasets choice). This part can also includes approach like multi-fidelity, modifying the evaluation along iterations.
+
+
+
+%%-------------------- SUBSECTION : NAS ---------------------%%
+\subsection{\acrfull{nas}}
+\label{sec : nas}
+
+The \acrshort{nas} problem is a sub-problem of the \acrshort{autodnn} problem, where the search space is the topology \( G \) as defined in the preceding section. For an exhaustive survey of \acrshort{nas}, one can refer to the article by T. Elsken, *Neural Architecture Search: A Survey* \cite{elsken_neural_2019}. Figure \ref{fig:nas} presents the generic workflow of \acrshort{nas}. My contribution in this part focuses on \acrshort{nas} applied to \acrshort{llm}. Due to computational demands, the problem can be addressed using two approaches:
+
+\begin{itemize}
+    
+
+    \item \textbf{Building from Scratch}:\\
+    A classical approach to \acrshort{nas} involves building the architecture from scratch. However, the primary drawback of this method is the significant computational cost, making it accessible only to a limited number of organizations. A remarkable example of this is Google's development of the \textbf{AutoBERT-Zero} model \cite{gao_autobert-zero_2022}. This approach involves discovering an entirely new topology, including new transformer-based structures.\\
+    To mitigate the computational cost, one can constrain the \gls{search_space}. For instance, the number of layers can be fixed, with modifications made to their internal components, or pre-built layers can be fixed, allowing experimentation with their arrangement.
+
+    \item \textbf{Pruning}:\\
+    Pruning involves reducing the size of a model by selecting parts of the topology while aiming to minimize performance degradation. A notable example of this is presented in \cite{klein_structural_2023}, which uses \textbf{weight sharing} methods, such as the approach proposed in \cite{pham_efficient_2018}.
+\end{itemize}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{assets/img/chap_2/NAS-high-level.png}
+    \caption{Neural Architecture Search Workflow}
+    \label{fig:nas}
+\end{figure}
+
+The methods to solve \acrshort{nas} for \acrshort{llm} are quite diverse. Some methods, such as \cite{XX}, encode topology into a continuous space, broadening the range of possible optimization techniques. Further details will be addressed in Section \ref{sec : opt_algo}, but it is worth mentioning derivative-based methods like \cite{liu_darts_2019}, which apply such techniques to \acrshort{nas}.
+
+%%-------------------- SUBSECTION : HPO ---------------------%%
+\subsection{Hyper-parameter optimization}
+
+Like \acrshort{nas}, \acrshort{hpo} can be defined as a sub-field of \acrshort{automl}, even if \acrshort{hpo} by itself is tackled since the 1990s \cite{hutter2019automated}. In \acrfull{dnn}, \glspl{hyperparameter} can be defined as configuration settings that govern the structure of the networks and the process of training. As opposed to parameters (or weights), \glspl{hyperparameter} are not learning directly from the data during the training. They are typically set before training begins and remain fixed throughout the process.
+
+Most of the time, \glspl{hyperparameter} are chosen by humans, w.r.t. their expertise. \acrshort{hpo} is the process of choosing the best \glspl{hyperparameter} for a specific problem (a quadruplet $a$ as defined in \ref{sec : autodnn_pbm}). However, manually selecting \glspl{hyperparameter} is often inefficient and prone to suboptimal configurations, especially as models grow in complexity. Automated \acrshort{hpo} methods aim to address these challenges by systematically exploring the \gls{search_space} to identify configurations that maximize performance or minimize error for a given task.
+
+The significance of \acrshort{hpo} grows with the increasing complexity of modern \acrshort{dnn} architectures. As models become larger and datasets more diverse, the choice of \glspl{hyperparameter} can significantly impact both model accuracy and computational efficiency. Moreover, \acrshort{hpo} plays a critical role in enabling the deployment of models in resource-constrained environments, where trade-offs between accuracy and efficiency must be carefully balanced. Future sections will detail methodologies and frameworks designed to tackle \acrshort{hpo} effectively in various contexts.
+
+
+
+%%-------------------- SUBSECTION : Optimization Algorithms---------------------%%
+\subsection{Optimization Algorithms taxonomy}
+\label{sec : opt_algo}
+\FloatBarrier
+
+Global optimization refers to the field of mathematical and computational methods designed to find the best solution to a problem within a defined domain, particularly when the objective function is complex, non-linear, or multi-modal. Traditional methods often struggled with problems involving multiple local optima or discontinuities. 
+
+To address these challenges, the field has evolved to include more robust techniques, such as metaheuristics, surrogate modeling, and hybrid approaches. 
+
+These methods aim to efficiently navigate vast and complex search spaces, balancing the trade-off between exploration (searching new regions) and exploitation (refining known good solutions). In the context of hyperparameter optimization (HPO), global optimization plays a crucial role in systematically identifying configurations that maximize model performance while minimizing computational costs. The subsequent sections categorize and detail these optimization methods. 
+\\ ADD A FIGURE BY PARAGRAPH WITH A 1D OR 2D FUNCTION AND WRITE HERE THE FUNCTION.
+
+\paragraph{Exploratory Methods} 
+Basic approaches such as \acrfull{gs} (Grid Search) and \acrfull{rs} (Random Search) provide straightforward solutions for hyperparameter optimization (HPO). \acrshort{gs} systematically evaluates all possible combinations of hyperparameters within a predefined grid, making it simple to implement and interpret. However, this approach becomes computationally intractable in high-dimensional hyperparameter spaces due to the exponential increase in the number of configurations. On the other hand, \acrshort{rs} selects hyperparameters randomly from the search space, offering a more scalable alternative to \acrshort{gs} while maintaining simplicity. Despite its limitations, \acrshort{rs} is often used as a baseline or guideline to compare with more sophisticated optimization methods.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{assets/img/chap_2/plots/random_search.jpg}
+    \caption{Random and Grid Search on Himmelblau 2D function}
+    \label{fig:rs_gs_eg}
+\end{figure}
+\FloatBarrier
+
+\paragraph{Metaheuristic Approaches}  
+
+Metaheuristic methods, including simulated annealing and evolutionary algorithms (EA), are designed to search more efficiently within large hyperparameter spaces by mimicking natural or physical processes. Simulated annealing is inspired by the cooling process of metals, where the algorithm explores the search space by gradually reducing the probability of accepting worse solutions. This allows it to escape local optima and converge to a globally optimal solution over time. Evolutionary algorithms, on the other hand, draw inspiration from biological evolution, employing operators such as mutation, crossover, and selection to iteratively improve a population of candidate solutions. These approaches are particularly useful for complex, non-convex hyperparameter spaces where simpler methods like \acrshort{gs} or \acrshort{rs} might struggle.
+
+\paragraph{Partition-Based Optimization}  
+ 
+
+Partition-based optimization methods aim to divide the hyperparameter search space into smaller, manageable subspaces, focusing the search on the most promising regions. These techniques dynamically refine the partitions based on previous evaluations, progressively narrowing down the search space. Examples include methods like Hyperband, which uses successive halving to allocate resources adaptively across configurations, and bandit-based approaches that efficiently balance exploration and exploitation. Partition-based methods are especially effective when dealing with large search spaces and limited computational budgets.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{assets/img/chap_2/plots/soo.jpg}
+    \caption{Example of a Partition Based Optimization on 2D himmelblau}
+    \label{fig:soo_ex}
+\end{figure}
+
+\FloatBarrier
+\paragraph{Surrogate-Model Based Optimization}  
+Surrogate models, such as those employed in Bayesian Optimization (BO), offer a powerful framework for hyperparameter optimization. Instead of directly evaluating the objective function for every configuration, which can be computationally expensive, surrogate models approximate the objective function based on a limited number of evaluations. Gaussian Processes (GP), commonly used in BO, provide a probabilistic model of the objective function, capturing uncertainty and guiding the search toward the most promising regions of the hyperparameter space. Other surrogate models, such as tree-structured Parzen estimators (TPE), are also effective in optimizing complex, high-dimensional spaces. These methods are particularly advantageous when each evaluation of the objective function (e.g., training a machine learning model) is time-consuming or resource-intensive.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{assets/img/chap_2/plots/gaussian_process.jpg}
+    \caption{Gaussian Process example}
+    \label{fig:gp_eg}
+\end{figure}
+
+
+
+
+%%-------------------- SUBSECTION : Parallel and HPC ---------------------%%
+\subsection{Parallel Optimization and High Performance Computing}
+
+Parallel computation and high-performance computing (HPC) are fundamental to advancing artificial intelligence (AI). The complexity of optimization problems and resource demands of AI models necessitate parallel architectures, from multicore processors to distributed systems. Techniques like algorithmic and solution-level parallelism enable efficient exploration of massive search spaces, speeding up tasks such as evolutionary computation and deep learning optimization. Specialized hardware, such as GPUs and FPGAs, further accelerates matrix operations critical to AI workloads.
+
+HPC platforms connect distributed clusters and grids, enabling scalable solutions to real-world challenges, including large-scale neural network training and hyperparameter optimization. NumPEx, through its Exa-MA (Methods and Algorithms for Exascale) subprogram, addresses computational challenges of exascale systems by developing scalable algorithms and architectures. Your work aligns with Exa-MA’s goals of advancing energy-efficient methods and leveraging HPC for predictive modeling, strengthening the synergy between AI innovation and exascale computing.
+
+
+%%-------------------- SECTION : LLM to manufacturing ---------------------%%
+\section{LLMs application to manufacturing context}
+\label{sec:llm_manufacturing}
+To link this internship to my engineering curriculum, I will explore the application for LLMs to manufacturing. The application can be split in three : quality control, Supply-chain management, predictive maintenance. Among these application, the two key-point of LLMs are the extensive reasoning, that can be used for prediction or analysis, and the performance in NLP problems, proving itself to be able to simply interact with any operators.
+
+%%-------------------- SUBSECTION : LLM Quality Control ---------------------%%
+\subsection{LLMs-based quality control}
+\label{sec:llm_quality}
+Quality control can be defined as \say{procedure or set of procedures intended to ensure that a manufactured product or performed service adheres to a defined set of quality criteria or meets the requirements of the client or customer} \cite{whatis_QC}. In this field, the last decades was really interesting from a data management point of view, since it's was the emergence of a lot of data collection : product measurement along manufacturing executive system (MES), customer feedbacks... Since a lot of unstructured data is collected, deep learning can be a way to use all of these to manage quality control. We can extract few specific ways : 
+
+\begin{itemize}
+    \item Automated Inspection : LLM are more and more multimodals, and it's possible to achieve computer vision along the reasoning capacities. It's now possible to go further and use camera to control every products on a conveyor. 
+    \item Customer Feedback : LLM can be used to summarize and prioritize feedback, to be able to use precise insight on the manufacturing process.
+\end{itemize}
+
+%%-------------------- SUBSECTION : LLM Supply ---------------------%%
+\subsection{LLMs-based supply chain management}
+\label{sec:llm_scm}
+Since decades, \textbf{demand forecast} is a hot field of supply chain management, with many methods considering means and data collection of the company. LLMs, and in specific time-LLM \cite{timeLLM_2024}, achieve a new step in automated reasoning, and to the corpus of data taken into account. From the first method using only historical sales, it's now possible to use a wider historical data, like climate, economical situation ... LLM can also be used for \textbf{supplier evaluation}. When considering a relationship with a supplier, many information can be used to characterise it : prices, delay, defaults, reactivity ... And LLM can summarize all of this to provide insight for the choice of a supplier on a specific project.   
+
+
+%%-------------------- SUBSECTION : LLM Predictive Maintenace-----------------%%
+\subsection{LLMs-based predictive maintenance}
+\label{sec:llm_pred_maint}
+By combining keys aspect of automated inspection and demand forecast, LLM could be a great asset in \textbf{maintenance scheduling}. One key point of these model is that they could use every possible inputs : machine logs, humain report, captures... With this, they could reach the best of humain (multi-modality) and machine (long, tedious tasks) to achieve state-of-the-art performance on these subject. More over, LLMs can be used for \textbf{root cause analysis}, to find the root of anomaly or failure and reduce the down time of the manufacture. 
+
+%%-------------------- SECTION : Search Problematic ---------------------%%
+\section{Search problematic}
+My first two weeks were focus on understanding the context of the internship, mainly by reading articles, and working on extracting only one search problematic. To do this, my main concerns were : 
+\begin{itemize}
+    \item Feasibility : 24 weeks can be short for a too long research plan, all the more with long experiments. I need to be able to understand and assess the problem, try and implement methods.
+    \item Costs : can't buy or build supercomputer just for this, and the cost of long computing of the resource can't be ignored 
+    \item Research team expertise : the team is firstly optimization oriented, so problematic only oriented to LLMs won't be the priority
+\end{itemize}
+
+After a first week, the possible fields was narrowed to two tracks. The first one is based on article \cite{klein_structural_2023}, and involve the pruning of a large pre-trained model, in order to reduce latency without losing to much accuracy. The other one \cite{tribes_hyperparameter_2024} is Hyper-parameter Optimization (HPO) applied to Instruction tuning.  
+
+Eventually, after reflection and discussion with my tutor, we choose to address the \acrshort{hpo} of \acrshort{llm} \gls{fine_tuning}. This choice was made to reduce the uncertainty on an already very exploratory fields, since \acrshort{hpo} was already tackled on different type of \acrshort{nn}. 
+
+The objective of my internship is then to work on \acrshort{hpo} methods like apply to \acrshort{llm} \gls{fine_tuning}. This work includes : 
+\begin{itemize}
+    \item \textbf{Reproduce the objective function :} on a given library, implement the black box function of training and evaluate a \acrshort{llm}.
+    \item \textbf{Definition of the search space : }balancing between curse of dimensionnality and research ambition, find pertinent \glspl{hyperparameter} to work with, and define theirs properties.
+    \item \textbf{Selection and Implementation of Optimization algorithm :} considering litterature and available frameworks, choose relevant algorithms and implement it to the problem
+    \item \textbf{Make experiments :} following a rigorous protocol, make experiments to determine the effects of the optimization, and analysis it
+    \item \textbf{Formalize the contribution :} With this report and a scientific article, explicit the contribution, and formalize for furthers works
+\end{itemize}
+
