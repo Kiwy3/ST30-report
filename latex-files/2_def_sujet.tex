@@ -5,7 +5,7 @@
 
 In a research internship, or indeed in any research activity, it's crucial to properly define the subject of the research, and to extract a precise problematic. That's why, during my first few weeks as an intern, and in this chapter of the report, I've endeavored to define this framework. To do so, I begin by recalling the subject as defined in my agreement: 
 
-\noindent\hrulefill\\
+\noindent\hbox to \textwidth{\hrulefill}
 
 \acrshort{nas} for \acrshort{llm} architectures is computationally prohibitive. In this work, we will investigate the use of efficient optimization algorithms (example: parallel fractal optimization) to reduce the latency of real-world commercial web-scale text prediction system. The goal of this work is to solve the \acrshort{nas} problem to find an architecture that when trained with data D and training algorithm A, produces a model that has similar accuracy but significantly reduced latency.
 The tasks composting this work are summarized below:
@@ -15,16 +15,15 @@ The tasks composting this work are summarized below:
     \item Application to well known \acrshort{llm} such as GPT
     \item Application to logistics/transports problems
 \end{itemize}
-\noindent\hrulefill\\
-
+\noindent\hbox to \textwidth{\hrulefill}
 
 
 From there, to understand fully the problems, it's important to define what are \acrshort{llm}, and what are the stakes of this fields. Then, we will take a look about the application to manufacturing or logistics contexts. Alike we will look at the \acrshort{autodnn} fields, with focus to \acrshort{nas} and \acrshort{hpo} problems, to locate the further work in a global litterature. With this, I can finally close this part with a precise search problematic, to drive my contribution.
 
 %%--------------------SECTION : LLM---------------------%%
-\section{\acrfull{llm}}
+\section{Large Langage Models (LLM)}
 \label{sec:llm}
-\acrshort{llm} can be defined as Neural Networks using the \Gls{transformer} bloc for \acrfull{nlp} problems. For the next parts, it's important to understand the architecture of the \acrshort{llm}, after a brief reminder about \acrshort{dnn}. Due to computation limitation, a lot of research contribution are about the \Gls{fine_tuning}, defined in \ref{sec:fine_tune}. To pursue to the next section, I will finish with a light review and taxonomy of \acrshort{llm}. 
+\acrshort{llm} can be defined as \acrfull{dnn} using the \Gls{transformer} bloc for \acrfull{nlp} problems. For the next parts, it's important to understand the architecture of the \acrshort{llm}, after a brief reminder about \acrshort{dnn}. Due to computation limitation, a lot of research contribution are about the \Gls{fine_tuning}, defined in \ref{sec:fine_tune}. To pursue to the next section, I will finish with a light review and taxonomy of \acrshort{llm}. 
 
 %%--------------------SUBSECTION : DNN---------------------%%
 \subsection{\acrfull{dnn}}
@@ -32,41 +31,44 @@ From there, to understand fully the problems, it's important to define what are 
 Like many fields, \acrshort{dnn} comes from biology-inspired design. In 1943,  Warren Mcculloch and Walter Pitts introduced the idea of logical calculus and computation, based on neural network, in article \cite{mcculloch_logical_1943}. The \acrfull{ann} aims to reproduce the cells of the brain to make a reasoning : the brain neuron is a node using a function to "activate" and the synapse is edge linking neurons to each others.  
 
 
-The figure \ref{fig:artifical_neuron} show the structure of an artifical neuron, including the trainable weights $\omega_n$ and the bias $b$. The output of the neuron can be write as : $\hat{y} = f(x,\omega) =  \sigma(\sum_i^n x_i \omega_i +b)$, with $x_n$ the input, and $\sigma(.)$ the activation function.
+The figure \ref{fig:artifical_neuron} show the structure of an artifical neuron, taking input $x_i$ and trainable weights $\omega_i$, including the biais $\omega_0$. The output of the neuron is expressed as : $\hat{y} = f(x,\omega) =  \sigma(\sum_{i=1}^n x_i \omega_i +\omega_0)$, with $\sigma(.)$ the activation function.
 
 \begin{figure}[h]
     \centering
     \input{assets/img/chap_2/art_neuron}
-    \caption{Illustration of an artifical neuron\cite{these_DNN}}
+    \caption{Illustration of an artifical neuron}
     \label{fig:artifical_neuron}
 \end{figure}
 
 
-The activation function is the key of the \acrshort{ann}. The function need to make an output adapted to the use case (e.g. value between 0 and 1 for a probability), and differentiable to be able to use gradient-based optimization, the most efficient optimization method when possible. Approaches using \acrfull{ea} to update weights were studied \cite{X,X}, and called \textit{meta-learning}, but were deprecated by gradient-based methods. 
+The activation function is the key of the \acrshort{ann}. The function need to make an output adapted to the use case (e.g. value between 0 and 1 for a probability), and to be differentiable to be able to use gradient-based optimization, the most efficient optimization method when possible. Approaches using \acrfull{ea} to update weights were studied and called \textit{meta-learning}\cite{hospedales_meta-learning_2022}, but were deprecated in favor of gradient-based methods. 
 
-With notation of figure \ref{fig:artifical_neuron}, and $\omega$ being the matrix of all parameters, the training of the \acrshort{ann} can be expressed as equation \ref{eq : ann_opt}. The loss $\mathcal L$ is the expression of the difference between the wanted output $y$ and the predicted output $\hat y$. Many formulas can be used the compute the loss, such as cross-entropy \cite{X} or \acrfull{mse}.
+With the notation of figure \ref{fig:artifical_neuron}, and $\omega$ being the matrix of all parameters, the training of the \acrshort{ann} can be expressed as equation \ref{eq : ann_opt}. The loss $\mathcal L$ is the expression of the difference between the wanted output $y$ and the predicted output $\hat y$. Many formulas can be used the compute the loss, such as cross-entropy\cite{zhang_generalized_2018} or \acrfull{mse}.
 
 \begin{equation}
     \omega \in \arg \min_{\omega \in \mathbb R^n} \mathcal L(\hat{y},y)
     \label{eq : ann_opt}
 \end{equation}
 
-The optimization of equation \ref{eq : ann_opt} is done using gradient descent, and especially \acrfull{sgd}. For each parameter, the gradient is expressed as \ref{eq : Gradient_descent}. Based on this, the parameter is updated with $\omega_{i} \gets \omega_i - \eta * \Delta_{\omega_i}$
+The optimization of equation \ref{eq : ann_opt} is done using gradient descent, and especially \acrfull{sgd}. For each parameter, the gradient is expressed as \ref{eq : Gradient_descent}. Based on this, the parameter is updated with $\omega_{i} \gets \omega_i - \eta * \Delta_{\omega_i}$.
+
 \begin{equation}
     \Delta_{\omega_i}=\Delta_{\omega_i}(x,y)=\frac{\partial \mathcal L(f(x,\omega),y)}{\partial \omega_i}
 \label{eq : Gradient_descent}
 \end{equation}
 
-To accelerate the gradient descent, some optimization algorithm like \acrfull{adam} \cite{kingma_adam_2017} use the momentum of the function, replacing $\Delta \omega_i$ with $m_t = \beta m_{t-1}+(1-\beta)[\Delta \omega_i]$. In this formula, $m_t$ is the moment of the function $L$ at the instant $t$, and $\beta = [\beta_1, \beta_2]$ an hyperparameters of the method, with $\beta_i \in \{0,1\}$. In this internship, I will mostly use \acrshort{adam} or \acrshort{sgd}. 
-With larger and larger networks, along diversity of neural cells, neural networks achieved to be the \acrfull{sota} in many tasks : classification, computer vision, prediction, \acrshort{nlp} ...
+To accelerate the gradient descent, some optimization algorithm like \acrfull{adam} \cite{kingma_adam_2017} use the momentum of the function, replacing $\Delta \omega_i$ with $m_t = \beta m_{t-1}+(1-\beta)[\Delta \omega_i]$. In this formula, $m_t$ is the moment of the function $L$ at the instant $t$, and $\beta = [\beta_1, \beta_2]$ an hyperparameters of the method, with $\beta_i \in \{0,1\}$. In this internship, I will mostly use \acrshort{adam} or \acrshort{sgd}.
+
+From simple \acrfull{mlp} to more complexe architecture (\acrfull{cnn}, \Glspl{transformer},\acrfull{vae}... ), from dozen to bilions of parameters, the \acrshort{dnn} are became over the years the \acrfull{sota} in many tasks : classification\cite{zhang_neural_2000}, computer vision\cite{rawat_deep_2017}, prediction \cite{khosravi_comprehensive_2011}, \acrshort{nlp}\cite{goldberg_primer_2016} etc.
+
 %%--------------------SUBSECTION : Self Attention Mechanism---------------------%%
 \subsection{Self Attention Mechanism}
 \label{sec:self_att}
 
 
-To understand how \acrshort{llm} works, it's crucial to understand the self attention mechanism. The key feature of \acrshort{llm} is the understanding of the context of a words to perform a prediction, or even a translation. Using \acrfull{mha}, the \textit{transformers} cells will define the importance of each words for the prediction of the next one. On the example of figure \ref{fig:self_att}, to predict the word "garden", the important words are "children" and "playing". The multiplicity of the attention head allow to understand different context with each, like the color on the example. 
+To understand how \acrshort{llm} works, it's crucial to understand the self attention mechanism. The key feature of \acrshort{llm} is the understanding of the context of a words to perform a prediction, or even a translation. Using \acrfull{mha}, the \textit{transformers} cells will define the importance of each words for the prediction of the next one. On the example of figure \ref{fig:self_att}, to predict the word "garden", the important words are "children" and "playing". The multiplicity of the attention head allow to understand different context with each one, like the color on the example. 
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \input{assets/img/chap_2/self_attention}
     \caption{Illustration of self attention}
@@ -76,7 +78,7 @@ To understand how \acrshort{llm} works, it's crucial to understand the self atte
 
 To perform this feat, Vaswani in article \cite{vaswani_attention_2017} present the scaled dot-product attention, used to build \acrshort{mha}. \Glspl{transformer} use a scaled dot-product attention, shown in figure \ref{fig:mha}, between a queries(Q)/Keys(K) pair, and a value (V) vector. With $d_k$ the dimension of the queries and keys,the attention function can be written as $Attention = \text{softmax} ( \frac{Q K^T}{\sqrt{d_k}})V$.
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \input{assets/img/chap_2/mha}
     \caption{\acrfull{mha} illustration }
@@ -100,21 +102,22 @@ softmax(x_i) = \frac{e^{x_i}}{\sum_{j=1}^n e^{x_j}}$.
 
 \subsection{LLM Architecture}
 \label{sec:llm_arch}
-For many years, \acrshort{nlp} problems were approached by statistical and rules models, but they weren't able to capture the context of a whole sentence to generate a word. In 2016, Google published \textit{Google's Neural Machine Translation System} \cite{Google_translation_2016}, a \acrfull{lstm} neural network, trained on a big corpus of text datas, making it like the first \acrlong{llm}. This was an important break-through, and a proof-of-concept that the neural networks can be the key of \acrshort{nlp} Problems.
+For many years, \acrshort{nlp} problems were approached by statistical and rules models, but they weren't able to capture the context of a whole sentence to generate a word. In 2016, Google published \textit{Google's Neural Machine Translation System} \cite{wu_googles_2016}, a \acrfull{lstm} neural network, trained on a big corpus of text datas, making it like the first \acrlong{llm}. This was an important break-through, and a proof-of-concept that neural networks can be the key of \acrshort{nlp} Problems.
 
-Once we looked at the \acrshort{mha} in section \ref{sec:self_att}, we can take a step back and look at the whole \gls{transformer} architecture, figure \ref{fig:Transformers}. The first step of it is the Embedding, transforming words and sentences into token based on statistical distribution. Along with it, the positional encoding allow the model to keep the position of the token inside the model. A sinusoidal function is used for this, to stay on a relative position and not an absolute.
+To perform further, what \acrshort{nlp} needed was the ability to understand a context, to predict or understand a sentence. To do that, the \Gls{transformer} architecture was published in 2017 \cite{vaswani_attention_2017}, and was using the self attention mechanism presented in section \ref{sec:self_att}. 
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \input{assets/img/chap_2/transformer}
     \caption{\Glspl{transformer} topology (inspired by \cite{vaswani_attention_2017}}
-    \label{fig:enc_dec}
+    \label{fig:transformers}
 \end{figure}
 
-At left is the \textbf{Encoder}, a stack of $N=6$  identical layers, made of two sub-layer. One is the \acrshort{mha}, and the other is a standard Feed-Forward Layer. Normalisation layer are added between each layers, to avoid exploding gradients. At the left is the \textbf{Decoder}, also a stack of $N=6$ layers. In addition of the two sub-layer of the encoder, the encoder add a second \acrshort{mha}, using the outputs of the encoder and the output of the first decoder's \acrshort{mha}.The masking of the first decoder's \acrshort{mha} is used to only take into account previous word, and not generate word based on next words, since it won't be possible for text generation.
+\Gls{transformer} architecture, as shown in figure \ref{fig:transformers}, is composed of 3 main components : embedding (including positional encoding), encoder and decoder. The embedding consist of representing the words in a vector space, using \textit{tokenizer} to encode the sentence.  Along with it, the positional encoding allow the model to keep the position of the token inside the model. A sinusoidal function is used for this, to stay on a relative position and not an absolute.
 
-After attention cells, a linear transformation (like inside the \acrshort{mha}) and a softmax are used, in order to have probabilities output of the right dimension size. With this, the model can generate words based on the highest probability of generation. 
+The encoder is a stack of \acrshort{mha} with feed-forward layers, with the addition of a residual connection and a normalization layer between the two. The output of the encoder is used as the input of second \acrshort{mha} of the decoder. Like the encoder, the decoder is a stack of \acrshort{mha} with feed-forward layers, but is composed of two \acrshort{mha}. The first one is masked, to learn only the part before the word to predict, and the second one is not masked to learn the whole sentence.
 
+This topology is the base of \acrshort{llm}, with diversification on the number of layer, the number of head and the size of the embedding vector. It will be further discussed in section \ref{sec:llm_review}, but some model are using only part of the \gls{transformer} architecture, with the rise of \textit{encoder-only} and \textit{decoder-only} models.
 
 \subsection{Fine-Tuning}
 \label{sec:fine_tune}
@@ -167,6 +170,7 @@ In the litterature, somes articles before the emergence of \acrshort{llm} are us
 
 
 \subsection{Review and taxonomy of LLMs}
+\label{sec:llm_review}
 Exhaustive review of LLMs can be found, like the article \cite{review_llm}, with details on training, datasets, architectures... On this part, I will focus on key concept and details needed to achieve sufficient understanding for this report. 
 
 \paragraph{LLMs Taxonomy}
