@@ -1,15 +1,18 @@
+%%-------------------- CHAPTER : Methodology ---------------------%%
 \chapter{Methodology}
 \label{chap:methodo}
 \epigraph{Everyone by now presumably knows about the danger of premature optimization. I think we should be just as worried about premature design - designing too early what a program should do.}{Paul Graham}
 
 The methodology is a cornerstone of any research or project, providing a structured framework to achieve objectives systematically and effectively. It ensures clarity, reproducibility, and reliability by defining the steps, tools, and techniques used to address specific problems. A well-defined methodology not only aligns the research process with its goals but also facilitates critical evaluation by external audiences, allowing them to assess the validity and generalization of the results. In the context of this work, the chosen methodology was pivotal in navigating complex challenges, optimizing processes, and ensuring that outcomes are both credible and relevant.
 
-To ensure my sincere approach, and contribute to open-source domain, all the code of this report is readable on  \href{https://github.com/Kiwy3/LLM_HPO_BO__st30}{my github account}\footnote{link : https://github.com/Kiwy3/LLM\_HPO\_BO\_\_st30}. It include every code snippet used in this report (like figure \ref{fig:soo_ex}), every experiments of chapter \ref{chap:results} and all implementation of \acrshort{hpo}.
+To ensure my sincere approach, and contribute to open-source domain, all the code of this report is readable on  \href{https://github.com/Kiwy3/}{my github account}\footnote{link : https://github.com/Kiwy3/}. It include every code snippet used in this report (like figure \ref{fig:random_search}), every experiments of chapter \ref{chap:results} and all implementation of \acrshort{hpo}.
 
 In this chapter, I will talk about the contextualization in academic literature, then tackle the elaboration of the blackbox function. The definition of the search space being one of the most crucial step in global optimization, the section \ref{sec:search_space} will focus on this. After this preliminary work, we will enter the core of this report : optimization algorithms. A section about experimental setup, to explore resource and scientific integrity, will precede the conclusion section, approaching insight about the realization of this part.
 
+%%-------------------- SECTION : Literature ---------------------%%
 
 \section{A Literature-Based Approach}
+\label{sec:litterature}
 In industrial field of works, the goal is to be better than competitor, or at least be better than the past of the company. In research fields, a contribution must aims to be better than existing, at least by one facet. In order to do this, the first step of every research project is to make an exhaustive bibliography of the domain, to understand what's already done, and what could be the contribution of the project. 
 
 Chapter \ref{chap:subject_def} was the result of a first stage of bibliography, to define what's the context of this internship. With this, we have insights and contexts about \acrshort{dnn},\acrshort{llm},\gls{fine_tuning} and \acrshort{peft}, and a first look at global optimization fields. In this chapter, a complementary approach will be done about specific optimization algorithm, frameworks and implementation specific details. 
@@ -18,33 +21,60 @@ At the beginning of this internship, I started my bibliography using few article
 
 To manage my bibliography, in a first time I used Notion App\footnote{\href{https://www.notion.so}{https://www.notion.so}} to make a table for my bibliography, with papers charateristics (title, authors, year ...), an export of bibtex from original site and my notes. The table can be found on this \href{https://ribbon-crown-5f6.notion.site/6539799af4a24b32b6d4b91c4e07de49?v=b1542338391647aaa38cc8bb4ad1d5d8&pvs=4}{link}. When I started writing my article, I thought that it's wasn't pratical to copy bibtex export one by one, and I looked at others tools to manage this. It's how I found \href{https://www.zotero.org/}{Zotero}\footnote{link : \href{https://www.zotero.org/}{https://www.zotero.org/}}, with many options to ease my life like collecting article from web with only one click, and export a collection.
 
+%%-------------------- SECTION : Blackbox Elaboration ---------------------%%
 \section{Blackbox Elaboration}
 \label{sec:blackbox}
-My internship can be seen as global optimization applied to an expensive blackbox function. A blackbox function is a process that receive an input (here a set of hyperparameters), and return one (or multiple) value(s) (here the accuracy). The blackbox process here is described by figure \ref{fig:hpo_workflow}. This process start by the \gls{fine_tuning} of the model, using training dataset, and then evaluating the model, using the validation dataset. Next sections will explore in details the action box of figure \ref{fig:hpo_workflow}.
+My internship can be seen as global optimization applied to a noisy, mixed-variables, expensive blackbox function. A blackbox function is a process that receive an input (here a set of hyperparameters), and return one (or multiple) value(s) (here the accuracy), without any information about the internal process. 
 
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \input{assets/img/chap_3/hpo_workflow}
     \caption{HPO workflow}
     \label{fig:hpo_workflow}
 \end{figure}
 
+The blackbox process here is described by figure \ref{fig:hpo_workflow}. This process start by the \gls{fine_tuning} of the model, using training dataset, and then evaluating the model, using the validation dataset. Next sections will explore in details the action box of figure \ref{fig:hpo_workflow}. The reproduction of the blackbox function using Python is done with a \textit{ModelEvaluator} class, reproducing the nexts parts.
+
+%%-------------------- SUBSECTION : Fine Tuning ---------------------%%
 \subsection{Fine-Tuning of the Model}
-Choose the model : TinyLlama and then LlaMa 3.2-3B
-Choose the dataset
+\label{sec:fine_tuning}
 
-For the fine-tuning, I use \acrshort{lora} as defined in section \ref{sec:fine_tune}
+For \gls{fine_tuning}, the first step is to choose the model to work with. For this choice, the first element was the kind of tasks we want to work with. For the biggest use case and impact, the focus is done on \textit{Decoder-only} model. Then, based on article \cite{tribes_hyperparameter_2024}, and open-source model availability, I choose to work with a model of LlaMa family.
 
-Add lora figure
+The LlaMa family, launched on February 24, 2023 with the publication of \say{LLaMA: Open and Efficient Foundation Language Models}\cite{touvron_llama_2023}, is a family of open-source (topology and weights values) \textit{decoder-only} fundational models produced and maintained by Meta AI. Latest releases from september 2024, LlaMa 3\cite{grattafiori_llama_2024} set, include model from one billion of parameters (\textit{LlaMa 3.2-1B}) to 405 billions of parameters (\textit{LLaMA 3.1-405B}), and achieved \acrlong{sota} performances on benchmarks. During the first phase of the elaboration of the fine-tuning, I work with \textit{TinyLlama-1.1B}, a lightweight model based on LlaMa architecture. After this phase, I upgraded to \textit{LlaMa 3.2-3B} for a better fidelity compared to high performance models, but compatible with hardware constraints described in section \ref{sec:exp_setup}.
 
-Fine tuning process is like general nn training, following algo X
+After the model, the next step is the training dataset. The reference in fine-tuning training dataset is the \textit{Alpaca} dataset\cite{hashimoto_stanford_2024}. It's an AI-generated dataset of 52k examples of instruction-based dialogues from the \textit{Stanford Alpaca} project. The dataset is composed of 3 fields : \textit{input}, \textit{output},\textit{instruction} and \textit{text}. At first, I used \textit{Alpaca-2K} datasets, a small subset of \textit{Alpaca} dataset composed of 2k examples. Then, I used the full \textit{Alpaca} dataset, to later use \textit{Alpaca-cleaned} dataset. \textit{Alpaca-cleaned} contain only \textit{input}, \textit{instruction} and \textit{output} fields, and correct small issues in the original dataset : hallucinations, duplicated instructions, and missing entries.
 
-Add algo of fine tuning
+In this part, I used \acrfull{lora} as a \acrfull{peft} methods, as defined in section \ref{sec:fine_tune}. The fine-tuning follow the generic \acrshort{ann} training process, except only \acrshort{lora} are trainable. 
 
-For the implementation : model from hf, class from litgpt, automation from lightning, with hooks
+For the implementation, I focus on a small number of intercompatible librairies. The first is \gls{pytorch}, a tensor based framework for efficient computation in Python. All computations frameworks of this works with be based on it. Then, for the training, \gls{lightning} is used to automate the training process, with \gls{pytorch} as backend, providing \textit{LightningModule} and \textit{LightningDataModule} classes. It manage loops and stopping conditions for the training process. \acrshort{gpt} specific function and classes are implemented in \gls{litgpt} librairy. For loading models, \gls{hf}, the standard hub for model and datasets, is used to manage token with Meta interface. 
 
+
+\begin{algorithm}[h]
+    \caption{Fine-Tuning(model, hyperparameters)}\label{alg:fine_tuning_workflow}
+    \KwIn{model, hyperparameters}
+    model $ \gets$ load ("LlaMa")\ \Comment*[r]{load \gls{lightning} model using \gls{hf} lib}
+    model $\gets$ lora(model, hyperparameters)\ \Comment*[r]{apply \gls{lora} to model using \gls{litgpt} lib}
+    $x, y \gets $ load("Alpaca") \Comment*[r]{load dataset using \gls{hf} lib}
+    \ 
+    \
+    \Comment*[l]{automated by \gls{lightning}}
+    \ForEach{$(x_i,y_i) \in (x,y)$}{ 
+        $\hat y \gets$ model.forward($x$)\ \Comment*[r]{forward pass}
+        loss $\gets \mathcal L(\hat{y},y)$\ \Comment*[r]{compute loss}
+        model $\gets$ backpropagation(loss)\ \Comment*[r]{backward pass}
+    }
+    \Return model
+\end{algorithm}
+
+
+Figure \ref{alg:fine_tuning_workflow} summarize the fine-tuning process, to understand global process of this part. The process in taking model and hyperparameters as input, to load model and dataset from \gls{hf} librairy. Then \acrshort{lora} is implemented according to hyperparameters, using \gls{litgpt} librairy. After that, the model is trained using \gls{lightning}, with the classical \acrshort{ann} training process. 
+
+
+%%-------------------- SUBSECTION : Fine Tuning ---------------------%%
 \subsection{Evaluation of the model}
+\label{sec:model_evaluation}
 
 To evaluate, two ways : loss or accuracy => why I choose acc, and even acc\_norm
 => fine tune model are zero shot learners
@@ -61,18 +91,22 @@ Final result (eval + training) : a class
 
 class diagramm ???
 
+%%-------------------- SECTION : Search Space ---------------------%%
 \section{Search Space Definition}
-\label{search space}
+\label{sec:search_space}
 
 
-
+%%-------------------- SECTION : Optimization ---------------------%%
 \section{Optimization}
 \label{sec:opt}
 To address the challenges of optimizing the black-box function, this research introduces two complementary approaches: Bayesian Optimization (BO) and a Partition-based method. BO is employed for its ability to efficiently navigate continuous hyperparameter spaces by balancing exploration and exploitation through surrogate modeling and acquisition functions. The Partition-based method divides the search space into regions, enabling parallel optimization and reducing redundancy in evaluations. By combining these methods, the framework achieves robust performance across diverse benchmarks. This integration is further enhanced by incorporating techniques such as multi-fidelity optimization and FlashAttention to improve computational efficiency and scalability.
 
+%%-------------------- SECTION : Experimental Setup ---------------------%%
 \section{experiments setup}
 \label{sec:exp_setup}
 
 
+%%-------------------- SECTION : Difficulties ---------------------%%
 \section{Difficulties}
+\label{sec:opt_difficulties}
 Several challenges were encountered during the development and implementation of this optimization framework. The foremost difficulty is the high computational expense of evaluating LLMs, which necessitates the careful allocation of resources and the adoption of efficient evaluation strategies. Handling mixed-type hyperparameters, particularly the interplay between continuous and discrete variables, posed additional complexities. Existing optimization techniques often struggle with these mixed spaces, requiring innovative solutions such as relaxation and partitioning to ensure convergence. Finally, ensuring the generalizability of the fine-tuning results across different benchmarks and datasets proved challenging, as model performance is highly dependent on task-specific characteristics and dataset quality.

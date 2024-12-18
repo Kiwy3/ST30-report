@@ -109,14 +109,24 @@
     %% --------------------- Tableaux et figures ----------------------
     {
         \phantomsection
-        %\listoftables
+        \listoftables
         \addcontentsline{toc}{chapter}{Tables and Figures}
-        %\listoffigures
+        \listoffigures
         %\addcontentsline{toc}{chapter}{\listfigurename}
         \markleft{Tables and figures}    
     }
     \clearpage
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%     
+    
+    %% --------------------- Lists of algorithms ----------------------
+    {
+        \phantomsection
+        \addcontentsline{toc}{chapter}{Algorithms}
+        \markleft{Algorithms}   
+        \listofalgorithms 
+    }
+    \clearpage
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     %% --------------------- Glossaire et acronymes ----------------------
     {

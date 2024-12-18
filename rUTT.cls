@@ -11,9 +11,14 @@
 \usepackage{dirtytalk}
 \usepackage{pdfpages}
 \usepackage{epigraph}
-\usepackage{algpseudocode}
-
-%TC:fileinclude \import dir,file
+%\usepackage{algpseudocode}
+%\usepackage{algorithmicx}
+\usepackage[linesnumbered,algochapter]{algorithm2e}
+\RestyleAlgo{ruled}
+\SetKwComment{Comment}{$\triangleright$}{}
+\newcommand\mycommfont[1]{\footnotesize\textcolor{gray}{#1}}
+\SetCommentSty{mycommfont}
+\DontPrintSemicolon
 
 
 
