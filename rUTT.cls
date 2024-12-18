@@ -11,6 +11,7 @@
 \usepackage{dirtytalk}
 \usepackage{pdfpages}
 \usepackage{epigraph}
+\usepackage{algpseudocode}
 
 %TC:fileinclude \import dir,file
 
