@@ -5,15 +5,16 @@ def himmelblau(x) :
 import matplotlib.pyplot as plt
 import numpy as np
 
-fig,ax = plt.subplots()
-x = np.linspace(-4,4,200)
-X,Y = np.meshgrid(x,x)
-Z = himmelblau([X,Y])
+def himmel_plot():
+    fig,ax = plt.subplots()
+    x = np.linspace(-4,4,200)
+    X,Y = np.meshgrid(x,x)
+    Z = himmelblau([X,Y])
 
-map = ax.contourf(X,Y,Z,cmap="plasma",levels=1000)
-fig.colorbar(map)
+    map = ax.contourf(X,Y,Z,cmap="plasma",levels=1000)
+    fig.colorbar(map)
 
-plt.title("Random Search on Himmelblau 2D function")
+    plt.title("Random Search on Himmelblau 2D function")
 
 n = 25
 
