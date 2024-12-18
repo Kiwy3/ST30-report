@@ -340,17 +340,20 @@ Metaheuristic methods, including \acrfull{sa} and \acrfull{ea}, are designed to 
 
 Metaheuristic can be classed on two main categories, population-based and solution-based. The first one like \acrshort{ga} are methods working on a population of candidate solutions, while the second one like \acrshort{sa} or \acrfull{ils} are methods working on a single solution. These approaches are particularly useful for complex, non-convex hyperparameter spaces where simpler methods like \acrshort{gs} or \acrshort{rs} might struggle.
 
+Even if theses methods are effective, they can be computationally expensive when dealing with expensive objective function evaluations, especially population-based methods. This characteristic makes them less suitable for high-dimensional hyperparameter spaces, and especially for \acrshort{hpo}.
 
-\paragraph{Partition-Based Optimization}  
+\paragraph{\acrfull{pbo}}  
 
-Partition-based optimization methods aim to divide the hyperparameter search space into smaller, manageable subspaces, focusing the search on the most promising regions. These techniques dynamically refine the partitions based on previous evaluations, progressively narrowing down the search space. Examples include methods like Hyperband, which uses successive halving to allocate resources adaptively across configurations, and bandit-based approaches that efficiently balance exploration and exploitation. Partition-based methods are especially effective when dealing with large search spaces and limited computational budgets.
+\acrfull{pbo} methods aim to divide the hyperparameter search space into smaller, manageable subspaces, focusing the search on the most promising regions. This division can be done either by penalizing less promising regions or by favorizing. Famous \acrshort{pbo} methods are FDA, DiRect or even \acrfull{soo}. One of the biggest advantages of \acrshort{pbo} methods is their intrinsicly parallelism abilities, enabling the scalibility of the optimization process when working with large hardware resources.
 
 \begin{figure}[h]
     \centering
     %\includegraphics[width=0.5\linewidth]{assets/img/chap_2/plots/soo.jpg}
     \caption{Example of a Partition Based Optimization on 2D himmelblau}
-    \label{fig:soo_ex}
+    \label{fig:pbo}
 \end{figure}
+
+Figure \ref{fig:pbo} shows an example of \acrshort{pbo} algorithm, FDA using Hypersphere Decomposition, on the \textit{himmelblau} function with a 2D search space. Article \cite{X} provides an exhaustive review and taxonomy of \acrshort{pbo} methods.
 
 
 \paragraph{Surrogate-Model Based Optimization}  
