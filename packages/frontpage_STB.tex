@@ -1,0 +1,121 @@
+\begin{titlepage}
+    \thispagestyle{empty}
+
+    \input{packages/overlay_STB.tikz}
+
+    % L'intitulé du stage
+    \begin{textblock*}{12cm}(4.5cm,2.5cm)
+        \begin{LARGE}
+            \makeatletter
+            \justifying
+            \begin{center}
+                \textbf{\textcolor{white}{\jobposition}}
+                \\
+                \textbf{\textcolor{white}{\thetitle}}
+            \end{center}
+            \makeatother
+        \end{LARGE}
+    \end{textblock*}
+
+    % Nom Prénom
+    \begin{textblock*}{10cm}(2.5cm, 7.5cm)
+        \raggedright
+        \large
+        \textbf{\textcolor{white}{Student}}
+        \\
+        \textbf{\textcolor{white}{\theauthor}}
+    \end{textblock*}
+
+    % Responsable Pédagogique
+    \begin{textblock*}{10cm}(2.5cm, 9.5cm)
+        \raggedright
+        \large
+        \textbf{\textcolor{white}{School Representative}}
+        \\
+        \textbf{\textcolor{white}{\theRPeda}}
+    \end{textblock*}
+
+
+    % Branche
+    \begin{textblock*}{10cm}(12cm,7.5cm)
+        \raggedright
+        \large
+        \textbf{\textcolor{white}{Academics Programs}}
+        \\
+        \begin{raggedleft}
+            \textcolor{white}{\theUE}
+        \end{raggedleft}
+    \end{textblock*}
+
+    % Semestre
+    \begin{textblock*}{10cm}(12cm,9.5cm)
+        \large
+        \raggedright
+        \textbf{\textcolor{white}{Semester}}
+        \\
+        \textcolor{white}{\theSemestre}
+    \end{textblock*}
+
+    % Titre du résumé du stage
+    \begin{textblock*}{18cm}(1.5cm,11cm)
+        \begin{center}
+            \normalsize
+            \textbf{\textcolor{bleuRoiUTT}{Abstract (150 words)}}
+        \end{center}
+    \end{textblock*}
+
+    % Résumé du stage
+    \begin{textblock*}{16cm}(2.54cm,13cm)
+        {
+            \normalsize
+            \makeatletter
+            \setlength{\parindent}{0pt}
+            \titletext
+        }
+    \end{textblock*}
+
+    % Mots clés (Thésaurus)
+    \begin{textblock*}{9cm}(10cm,21.5cm)
+        \normalsize
+        \centering
+        \textbf{\textcolor{white}{Keywords}}
+    \end{textblock*}
+
+    \begin{textblock*}{10cm}(9.5cm,21.5cm)
+        \small
+        \textcolor{white}{
+            \begin{itemize}[label=\textcolor{white}{\textbullet}]
+                \item \textbf{\theKone}
+                \item \textbf{\theKtwo}
+                \item \textbf{\theKthree}
+                \item \textbf{\theKfourth}
+                \item \textbf{\theKfive}
+            \end{itemize}
+        }
+    \end{textblock*}
+
+    % Entreprise / Lieu / Responsable
+    \begin{textblock*}{6.5cm}(2.5cm,21cm)
+        \small
+        \raggedright
+        \justify
+        \textbf{\textcolor{bleuRoiUTT}{Company :} \theEntreprise}
+    \end{textblock*}
+
+    \begin{textblock*}{6.5cm}(2.5cm,22cm)
+        \small
+        \raggedright
+        \justify 
+        \textbf{\textcolor{bleuRoiUTT}{Adress :} \theLieu}
+    \end{textblock*}
+
+    \begin{textblock*}{6.5cm}(2.5cm, 23cm)
+        \small
+        \raggedright
+        \justify
+        \textbf{\textcolor{bleuRoiUTT}{Tutor :} \theREntre}
+    \end{textblock*}
+
+\end{titlepage}
+
+\clearpage % flushes out all floats that have been deferred

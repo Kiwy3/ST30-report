@@ -1,0 +1,104 @@
+\begin{titlepage}
+    \thispagestyle{empty}
+
+    \input{packages/overlay_STC.tikz}
+
+    % L'intitulé du stage
+    \begin{textblock*}{15cm}(3cm,1.75cm)
+        \begin{LARGE}
+            \makeatletter
+            \justifying
+
+            \begin{center}
+                \textbf{\textcolor{white}{\jobposition}}
+                \\
+                \textbf{\textcolor{white}{\thetitle}}
+            \end{center}
+
+            \makeatother
+        \end{LARGE}
+    \end{textblock*}
+
+    % Nom Prénom
+    \begin{textblock*}{10cm}(1cm,6cm)
+        \begin{flushleft}
+            \large
+            \textbf{\textcolor{white}{NOM Prénom :}}
+            \\
+            \textbf{\textcolor{white}{\theauthor}}
+        \end{flushleft}
+    \end{textblock*}
+
+    % Conseiller UTT
+    \begin{textblock*}{9cm}(1cm,8.5cm)
+        \begin{flushleft}
+            \large
+            \textbf{\textcolor{white}{Conseiller UTT :}}
+            \\
+            \textbf{\textcolor{white}{\theRPeda}}
+        \end{flushleft}
+    \end{textblock*}
+
+
+    % TC
+    \begin{textblock*}{7cm}(13cm,6cm)
+        \begin{flushleft}
+            \large
+            \textbf{\textcolor{white}{Tronc Commun}}
+        \end{flushleft}
+    \end{textblock*}
+
+    % Semestre
+    \begin{textblock*}{7cm}(13cm,8.5cm)
+        \begin{flushleft}
+            \large
+            \textbf{\textcolor{white}{Semestre :}}
+            \\
+            \textcolor{white}{\theSemestre}
+        \end{flushleft}
+    \end{textblock*}
+
+
+    % Titre du résumé du stage
+    \begin{textblock*}{18cm}(1.5cm,11cm)
+        \begin{center}
+            \normalsize
+            \textbf{\textcolor{bleuRoiUTT}{Résumé (150 mots)}}
+        \end{center}
+    \end{textblock*}
+
+    % Résumé du stage
+    \begin{textblock*}{18cm}(1.5cm,12.5cm)
+        {
+            \normalsize
+            \setlength{\parindent}{0pt}
+            \titletext
+        }
+    \end{textblock*}
+
+
+    % Entreprise / Lieu / Responsable
+    \begin{textblock*}{8.5cm}(6cm,21.5cm)
+        \normalsize
+        \raggedright
+        \justify
+        \textbf{\textcolor{bleuRoiUTT}{Entreprise :} \theEntreprise}
+    \end{textblock*}
+
+    \begin{textblock*}{8.5cm}(6cm,22.5cm)
+        \normalsize
+        \raggedright
+        \justify
+        \textbf{\textcolor{bleuRoiUTT}{Lieu :} \textit{\mapAddr{\theLieu}}}
+    \end{textblock*}
+
+    \begin{textblock*}{8.5cm}(6cm,23.5cm)
+        \normalsize
+        \raggedright
+        \justify
+        \textbf{\textcolor{bleuRoiUTT}{Responsable :} \theREntre}
+    \end{textblock*}
+
+\end{titlepage}
+
+\clearpage % flushes out all floats that have been deferred

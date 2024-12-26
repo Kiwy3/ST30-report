@@ -11,8 +11,6 @@
 *.cb
 *.cb2
 .*.lb
-
-packages
 *.ist
 ## Intermediate documents:
 *.dvi
