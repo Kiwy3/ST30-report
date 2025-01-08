@@ -1,5 +1,59 @@
 
 
+@inproceedings{wilson_efficiently_2020,
+	title = {Efficiently sampling functions from {Gaussian} process posteriors},
+	url = {https://proceedings.mlr.press/v119/wilson20a.html},
+	abstract = {Gaussian processes are the gold standard for many real-world modeling problems, especially in cases where a model’s success hinges upon its ability to faithfully represent predictive uncertainty. These problems typically exist as parts of larger frameworks, wherein quantities of interest are ultimately defined by integrating over posterior distributions. These quantities are frequently intractable, motivating the use of Monte Carlo methods. Despite substantial progress in scaling up Gaussian processes to large training sets, methods for accurately generating draws from their posterior distributions still scale cubically in the number of test locations. We identify a decomposition of Gaussian processes that naturally lends itself to scalable sampling by separating out the prior from the data. Building off of this factorization, we propose an easy-to-use and general-purpose approach for fast posterior sampling, which seamlessly pairs with sparse approximations to afford scalability both during training and at test time. In a series of experiments designed to test competing sampling schemes’ statistical properties and practical ramifications, we demonstrate how decoupled sample paths accurately represent Gaussian process posteriors at a fraction of the usual cost.},
+	language = {en},
+	urldate = {2025-01-07},
+	booktitle = {Proceedings of the 37th {International} {Conference} on {Machine} {Learning}},
+	publisher = {PMLR},
+	author = {Wilson, James and Borovitskiy, Viacheslav and Terenin, Alexander and Mostowsky, Peter and Deisenroth, Marc},
+	month = nov,
+	year = {2020},
+	note = {ISSN: 2640-3498},
+	pages = {10292--10302},
+	file = {Full Text PDF:/home/jan/snap/zotero-snap/common/Zotero/storage/2K2Q39ZC/Wilson et al. - 2020 - Efficiently sampling functions from Gaussian process posteriors.pdf:application/pdf;Supplementary PDF:/home/jan/snap/zotero-snap/common/Zotero/storage/3YL7QH7A/Wilson et al. - 2020 - Efficiently sampling functions from Gaussian process posteriors.pdf:application/pdf},
+}
+
+@article{borisut_adaptive_2023,
+	title = {Adaptive {Latin} {Hypercube} {Sampling} for a {Surrogate}-{Based} {Optimization} with {Artificial} {Neural} {Network}},
+	volume = {11},
+	copyright = {http://creativecommons.org/licenses/by/3.0/},
+	issn = {2227-9717},
+	url = {https://www.mdpi.com/2227-9717/11/11/3232},
+	doi = {10.3390/pr11113232},
+	abstract = {A significant number of sample points are often required for surrogate-based optimization when utilizing process simulations to cover the entire system space. This necessity is particularly pronounced in complex simulations or high-dimensional physical experiments, where a large number of sample points is essential. In this study, we have developed an adaptive Latin hypercube sampling (LHS) method that generates additional sample points from areas with the highest output deviations to optimize the required number of samples. The surrogate model used for the optimization problem is artificial neural networks (ANNs). The standard for measuring solution accuracy is the percent error of the optimal solution. The outcomes of the proposed algorithm were compared to those of random sampling for validation. As case studies, we chose three different chemical processes to illustrate problems of varying complexity and numbers of variables. The findings indicate that for all case studies, the proposed LHS optimization algorithm required fewer sample points than random sampling to achieve optimal solutions of similar quality. To extend the application of this methodology, we recommend further applying it to fields beyond chemical engineering and higher-dimensional problems.},
+	language = {en},
+	number = {11},
+	urldate = {2025-01-07},
+	journal = {Processes},
+	author = {Borisut, Prapatsorn and Nuchitprasittichai, Aroonsri},
+	month = nov,
+	year = {2023},
+	note = {Number: 11
+Publisher: Multidisciplinary Digital Publishing Institute},
+	keywords = {adaptive Latin hypercube sampling, artificial neural network, design of experiment, process simulation, sequential sampling, simulation-based optimization},
+	pages = {3232},
+	file = {Full Text PDF:/home/jan/snap/zotero-snap/common/Zotero/storage/LMLXAKET/Borisut et Nuchitprasittichai - 2023 - Adaptive Latin Hypercube Sampling for a Surrogate-Based Optimization with Artificial Neural Network.pdf:application/pdf},
+}
+
+
+@unpublished{firmin_fractal-based_2022,
+	title = {A fractal-based decomposition framework for continuous optimization},
+	url = {https://hal.science/hal-04474444},
+	abstract = {In this paper, we propose a generic algorithmic framework which defines a unified view of fractal decomposition algorithms for continuous optimization. Fractals allow building a hierarchical decomposition of the decision space by using a self-similar geometrical object. The proposed generic framework is made of five distinct and independent search components: fractal geometrical object, tree search, scoring, exploration and exploitation. The genericity of the framework allowed the instantiation of popular algorithms from the optimization, machine learning and computational intelligence communities. Moreover, new optimization algorithms can be designed using various strategies of the search components. This shows the modularity of the proposed algorithmic framework. The computational experiments emphasize the behaviors of fractal-based approaches in terms of scalability, robustness, and the balance between exploitation and exploration in the search space. The obtained results show the significance of each search component of the fractal framework, and the necessity to build harder and well-defined benchmarks which can assess the performance of deterministic, axis-aligned and symmetrical decomposition-based algorithms.},
+	urldate = {2025-01-07},
+	author = {Firmin, Thomas and Talbi, El-Ghazali},
+	month = jul,
+	year = {2022},
+	keywords = {Continuous optimization, Decomposition, Fractal, High-dimensional optimization, Metaheuristic, Tree search},
+	annote = {working paper or preprint},
+	annote = {working paper or preprint},
+	file = {HAL PDF Full Text:/home/jan/snap/zotero-snap/common/Zotero/storage/LXP2FJ8Z/Firmin and Talbi - 2022 - A fractal-based decomposition framework for continuous optimization.pdf:application/pdf;HAL PDF Full Text:/home/jan/snap/zotero-snap/common/Zotero/storage/Y7SLEI8G/Firmin et Talbi - 2022 - A fractal-based decomposition framework for continuous optimization.pdf:application/pdf},
+}
+
+
 @article{srivastava_dropout_2014,
   title    = {Dropout: {A} {Simple} {Way} to {Prevent} {Neural} {Networks} from {Overﬁtting}},
   abstract = {Deep neural nets with a large number of parameters are very powerful machine learning systems. However, overﬁtting is a serious problem in such networks. Large networks are also slow to use, making it diﬃcult to deal with overﬁtting by combining the predictions of many diﬀerent large neural nets at test time. Dropout is a technique for addressing this problem. The key idea is to randomly drop units (along with their connections) from the neural network during training. This prevents units from co-adapting too much. During training, dropout samples from an exponential number of diﬀerent “thinned” networks. At test time, it is easy to approximate the eﬀect of averaging the predictions of all these thinned networks by simply using a single unthinned network that has smaller weights. This signiﬁcantly reduces overﬁtting and gives major improvements over other regularization methods. We show that dropout improves the performance of neural networks on supervised learning tasks in vision, speech recognition, document classiﬁcation and computational biology, obtaining state-of-the-art results on many benchmark data sets.},

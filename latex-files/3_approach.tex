@@ -136,10 +136,138 @@ For the 2 integers variables (LoRA rank and LoRA scale), to adapt to continuous 
 For the 2 variables with logarithmic scale (learning rate and weight decay), to explore with consistency the search space, the optimization algorithm will be bound between the exponential values of the bounds, and a logarithm will be applied when evaluating a solution.
 
 %%-------------------- SECTION : Optimization ---------------------%%
-\section{Optimization}
+\section{Optimization Algorithms}
 \label{sec:opt}
-To address the challenges of optimizing the black-box function, this research introduces two complementary approaches: Bayesian Optimization (BO) and a Partition-based method. BO is employed for its ability to efficiently navigate continuous hyperparameter spaces by balancing exploration and exploitation through surrogate modeling and acquisition functions. The Partition-based method divides the search space into regions, enabling parallel optimization and reducing redundancy in evaluations. By combining these methods, the framework achieves robust performance across diverse benchmarks. This integration is further enhanced by incorporating techniques such as multi-fidelity optimization and FlashAttention to improve computational efficiency and scalability.
+Linked with section \ref{sec : opt_algo}, this part aims to describe the implemented algorithms, and how they are applied to the optimization problem. It start from elements of section \ref{sec : opt_algo}, then describe algorithms and show examples of application.
 
+The first approach to explore is \acrfull{smbo}, and particularly \acrfull{bo} using \acrfull{gp} (\acrshort{bo}-\acrshort{gp}). Then considering the dimensionnality of the problem, and the \acrshort{pbo} performance benchmark in article \cite{firmin_fractal-based_2022}, I went with \acrfull{soo} algorithm as representative of \acrshort{pbo} methods. After theses two approachs, section \ref{sec:bamsoo} present an hybrid approach, combining the intrinsic parallel abilities of \acrshort{pbo} combined to the efficiency and exploitation of \acrshort{bo}.
+
+\subsection{\acrfull{bo}}
+\label{sec:bo}
+
+Bayesian Optimization is often defined as a "sequential model-based approach to solving problem" \cite{shahriari_taking_2016}. A surrogate model is used to build a posterior considering a prior knowledge formed on known points. On this posterior, an acquisition function is compute to act as the surrogate function for the function to optimize. On this work, a focus is done on \acrshort{gp} for the \acrshort{bo} surrogate. \acrshort{gp} use the kernel trick to build a bayesian nonparametric regression model. It use a mean vector $m_i$ and a covariance matrix $K_{i,j}$ to define the prior function : 
+
+\begin{equation}
+    \text{f} | X \sim  \mathcal N (m,K)
+    \label{eq:prior_gp}
+\end{equation}
+
+From the prior function and the data points $\mathcal D$, the \acrshort{gp} build a posterior. On this posterior is build an acquisition function used as a surrogate for the objective function.
+
+\begin{algorithm}[h]
+    \caption{BO}
+    \label{algo:bo}
+    \KwIn{$\Omega$, $f$, $K_D$, $\mathcal{O}$, $f_{\text{acq}}$, $n_{\text{init}}$, $n_{\text{opt}}$}
+    
+    \For{$i \gets 1$ \KwTo $n_{\text{init}}$}{
+        $\lambda' \gets \text{LHS}(\Omega, \mathcal{D})$ \tcp{Sample one point}
+        $\mathcal{D} \gets \mathcal{D} \cup \{(\lambda', f(\lambda'))\}$ \tcp{Add solution and evaluation to set of data}
+    }
+    
+    \For{$i \gets 1$ \KwTo $n_{\text{opt}}$}{
+        $\mu_D, K_D \gets \text{Update}(K_D, \mathcal{D})$ \;
+        $K_D \gets \text{Fit}(\text{GP}(K_D), \mathcal{D})$ \;
+        $\lambda' \gets \text{Optimize}(f_{\text{acq}}(K_D), \mathcal{O})$ \tcp{Generate new point}
+        $\mathcal{D} \gets \mathcal{D} \cup \{(\lambda', f(\lambda'))\}$ \tcp{Evaluate new point}
+    }
+    
+    \Return best of $\{(\lambda^*, f(\lambda^*)) \in \mathcal{D}\}$
+\end{algorithm}
+    
+
+Algorithm \ref{algo:bo} offer an overview of the BO process. To ease the first build of the surrogate, it's crucial, as proven in article \cite{wilson_efficiently_2020}, to sample efficiently the search space. This sampling provides information for the Gaussian Process to estimation the function. Like article \cite{borisut_adaptive_2023}, \acrfull{lhs} is used as a sampling method, for a defined budget called $n\_init$. 
+
+After this preliminary phase, a second phase is done with on loop containing the update of the Gaussian Process, the optimization of the acquisition function to obtain a new points to evaluate. After the evaluation of the point, the point is added to the history $\mathcal D$ and so on. The loop end based on a budget $n_{opt}$. 
+
+For this algorithm, the first requirements is the search space, and the objective function already described in \ref{sec:search_space} and \ref{sec:obj_fun} respectively. On the \acrshort{gp} part, we need to define a Kernel function $K_\mathcal D$, an acquisition function $f_{acq}$ and an Inner Optimizer $\mathcal O$. The acquisition function is logEI, more reliable than EI, based on article \cite{ament_unexpected_2024}. The kernel and the inner optimizer are the standard implementation of Botorch, introduced in the next paragraph, with a radial basis function kernel and multi-start optimization method. 
+
+BoTorch \cite{balandat_botorch_2020} is a Bayesian Optimization library built on PyTorch, designed for efficient and scalable optimization of expensive black-box functions. Leveraging PyTorch's GPU acceleration and integration with GPyTorch \cite{gardner_gpytorch_2021} for Gaussian Processes, BoTorch enables advanced surrogate modeling and optimization. Botorch is used on this work for all tasks including \acrshort{gp}, this part and section \ref{sec:bamsoo}
+
+\subsection{\acrfull{soo}}
+\label{sec:soo}
+
+In global optimization, a lot of methods are based on the partition of the search space \cite{nakib_deterministic_2017,jones_lipschitzian_1993,munos_optimistic_2011}. Theses approaches are mostly deterministic, and enhance intrinsic parallelization ability. For theses methods, the dimensionality of the problem is a key to choose the specific algorithm. With a dimensionality around 5, based on benchmarks at the end of article \cite{firmin_fractal-based_2022}, the \acrfull{soo} \cite{munos_optimistic_2011} algorithm seems a good way to start. 
+
+\begin{algorithm}[h]
+    \caption{SOO}
+    \label{algo:soo}
+    \KwIn{$\Omega$, $f$, $K$, $n_{\text{max}}$}
+    
+    $x_{0,0} \gets \text{center}(\Omega)$ \;
+    $f_{0,0} \gets f(x_{0,0})$ \;
+    $\mathcal{T}_1 \gets \{x_{0,0}, f_{0,0}, \Omega\}$ \;
+    $n \gets 1$ \;
+    
+    \While{$n < n_{\text{max}}$}{
+        $\nu_{\text{max}} \gets -\infty$ \;
+        \For{$h \gets 0$ \KwTo $\text{depth}(\mathcal{T}_n)$}{
+            $j \gets \arg\max_{j \in \{j \mid (h,j) \in L_n\}} f(x_{h,j})$ \;
+            \If{$f(x_{h,j}) > \nu_{\text{max}}$}{
+                $\Omega_{h+1,j+1}, \dots, \Omega_{h+1,j+K} \gets \text{section}(\Omega_{h,j}, K)$ \;
+                \For{$i \gets 1$ \KwTo $K$}{
+                    $n \gets n+1$ \;
+                    $x_{h+1,j+i} \gets \text{center}(\Omega_{n})$ \;
+                    \textcolor{blue}{
+                    $f_{h+1,j+i} \gets f(x_{h+1,j+i})$  \tcp{Scoring function}
+                    }
+                    $\mathcal{T}_n \gets \{(x_{h+1,j+i}, f_{h+1,j+i}, \Omega_{n+1})\}$ \;
+                }
+                $\nu_{\text{max}} \gets f_{h,j}$ \;
+            }
+        }
+    }
+    \Return best of $x_{h,j}, f(x_{h,j})$ \;
+    \end{algorithm}
+    
+
+\acrshort{soo} is a tree-based space partitioning method for black-box optimization, inspired by \acrfull{mcts} methods. \acrshort{soo} is called optimistic since it assume the existence of $ l$ such that $f(x^*)-f(x) \leq l(x,x^*)$ where $x^*$ is the maximizer of $x$.The algorithm partition the space $\Omega$ by building a tree with smaller and smaller sub-space $\Omega_n$. A node $(h,j)$, the node number $j$ of depth $h$, is scored at the center of his space. 
+
+An expanded node have $K$ children, making the tree a $K$-nary tree. $L_n$ is the \textit{open list} of the tree, to avoid expanding the same nodes over and over. At each round, \acrshort{soo} expand a maximum of one node by depth, meaning that each round score a maximum of $depth*(K)$ solution, enhancing the parallel evaluation of the solution. Summary of \acrshort{soo} is present in algorithm \ref{algo:soo}
+
+The original algorithm manage the end of the loop with the $h_{max}(n)$ function, limiting the depth of the tree search. To compare different algorithm, the stopping criterion here is $n_{max}$, the evaluation budget. 
+
+\subsection{\acrfull{bamsoo}}
+\label{sec:bamsoo}
+
+\acrfull{smbo} algorithms harness the exploitation of the informations to define a cost-reduce function to optimize. This approach ensure exploitation but have several limitations, including the parallelization difficulties \cite{X,X}. On the other hand, Partition-based approach are massively parallel, but are computation costly in front of very expensive objective function. To overcome both limitations, hybrid methods, using surrogates and space partition, were developed.
+
+In this work, we focus on \acrshort{bamsoo}, a \acrshort{soo} based algorithm (algorithm \ref{algo:bamsoo}). Like \acrshort{soo}, \acrshort{bamsoo} performs a $K$-inary partitionning of the space, using the center of the partition to evaluate. 
+
+\begin{equation}
+    \begin{split}
+    \mathcal{UCB}(x| \mathcal D_t) = \mu(x|\mathcal D_t) +  B_N * \sigma(x|\mathcal D_t) 
+    \\ \text{with } B_N = \sqrt{2 \log (\pi^2 N^2/6 \eta)} , \eta \in (0,1)      
+    \end{split}  
+    \label{eq:ucb}
+\end{equation}
+
+The difference lies primarily in the scoring $g(.)$ of the partitions (lines 25 to 30). In the face of an expensive objective function, \acrshort{bamsoo} leverages a \acrshort{gp} surrogate to estimate the potential of a point, using the \acrshort{ucb} as a measure of expected performance. Given a partition with center $x$ and existing evaluations $\mathcal{D}_t$, the \acrshort{ucb} of $x$, defined in Equation \ref{eq:ucb}, is compared against the best evaluation so far, $f^+$. If the \acrshort{ucb} is higher than $f^+$, the algorithm evaluates $x$ directly using the objective function $f(.)$. Otherwise, the partition is scored using the \acrshort{lcb} of $x$, reflecting the lower bound of potential improvement.
+
+
+\begin{algorithm}[h]
+    \caption{BamSOO scoring}
+    \label{algo:bamsoo_scoring}    
+                    \If{$\mathcal{UCB}(x_{h+1,j+i}, \mu, \sigma) \geq f^+$}{
+                        $g_{h+1,j+i} \gets f(x_{h+1,j+i})$ \;
+                        $t \gets t+1$ \;
+                    }\Else{
+                        $g_{h+1,j+i} \gets \mathcal{LCB}(x_{h+1,j+i}, \mu, \sigma)$ \;
+                    }
+    
+                    \If{$g_{h+1,j+i} > f^+$}{
+                        $f^+ \gets g_{h+1,j+i}$ \;
+                    }
+                    $n \gets n+1$ \;
+                    $\mathcal{T}_n \gets \{(x_{h+1,j+i}, f_{h+1,j+i}, \Omega_{h+1,j+i})\}$ \;
+                
+    \Return best of $x_{h,j}, g(x_{h,j})$ \;
+    \end{algorithm}
+
+To sum up, this algorithm efficiently navigates the search space by leveraging partition-based exploration and utilizing the gathered information to prioritize regions with higher potential. By balancing exploration of untested partitions and exploitation of known promising areas, \acrshort{bamsoo} optimally allocates the evaluation budget, ensuring that computational resources are directed toward regions most likely to contain optimal solutions. This hybrid approach significantly mitigates the limitations of traditional methods, combining the global scalability of partitioning with the precision of \acrshort{gp}-based surrogate modeling.
+
+For the implementation of the GP components, including the calculation of \acrshort{lcb} and \acrshort{ucb} scores, the BoTorch library was employed. This choice ensures computational efficiency and robustness, as BoTorch provides a modular framework for Bayesian optimization and GP modeling, seamlessly integrating with the partition-based structure of BamSOO. By adhering to the methodology outlined in section \ref{sec:bo}, the framework ensures consistency in surrogate modeling and acquisition function computation, further enhancing the effectiveness of the algorithm in high-dimensional, continuous search spaces.
+
+\FloatBarrier
 
 %%-------------------- SECTION : Concrete implentation ---------------------%%
 \section{Concrete Implementation}
