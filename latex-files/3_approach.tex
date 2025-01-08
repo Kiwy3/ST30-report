@@ -44,11 +44,15 @@ For \gls{fine_tuning}, the first step is to choose the model to work with. For t
 
 The LlaMa family, launched on February 24, 2023 with the publication of \say{LLaMA: Open and Efficient Foundation Language Models}\cite{touvron_llama_2023}, is a family of open-source (topology and weights values) \textit{decoder-only} fundational models produced and maintained by Meta AI. Latest releases from september 2024, LlaMa 3\cite{grattafiori_llama_2024} set, include model from one billion of parameters (\textit{LlaMa 3.2-1B}) to 405 billions of parameters (\textit{LLaMA 3.1-405B}), and achieved \acrlong{sota} performances on benchmarks. During the first phase of the elaboration of the fine-tuning, I work with \textit{TinyLlama-1.1B}, a lightweight model based on LlaMa architecture. After this phase, I upgraded to \textit{LlaMa 3.2-3B} for a better fidelity compared to high performance models, but compatible with hardware constraints described in section \ref{sec:exp_setup}.
 
-After the model, the next step is the training dataset. The reference in fine-tuning training dataset is the \textit{Alpaca} dataset\cite{hashimoto_stanford_2024}. It's an AI-generated dataset of 52k examples of instruction-based dialogues from the \textit{Stanford Alpaca} project. The dataset is composed of 3 fields : \textit{input}, \textit{output},\textit{instruction} and \textit{text}. At first, I used \textit{Alpaca-2K} datasets, a small subset of \textit{Alpaca} dataset composed of 2k examples. Then, I used the full \textit{Alpaca} dataset, to later use \textit{Alpaca-cleaned} dataset. \textit{Alpaca-cleaned} contain only \textit{input}, \textit{instruction} and \textit{output} fields, and correct small issues in the original dataset : hallucinations, duplicated instructions, and missing entries.
+After the model, the next step is the training dataset. The reference in fine-tuning training dataset is the \textit{Alpaca} dataset\cite{hashimoto_stanford_2024}. It's an AI-generated dataset of 52k examples of instruction-based dialogues from the \textit{Stanford Alpaca} project. The dataset is composed of 3 fields : \textit{input}, \textit{output},\textit{instruction} and \textit{text}. At first, I used \textit{Alpaca-2K} datasets, a small subset of \textit{Alpaca} dataset composed of 2k examples. Then, I used the full \textit{Alpaca} dataset when I reached a stable version. 
 
-In this part, I used \acrfull{lora} as a \acrfull{peft} methods, as defined in section \ref{sec:fine_tune}. The fine-tuning follow the generic \acrshort{ann} training process, except only \acrshort{lora} are trainable. 
+For the training of the weights, as described in \ref{sec:dnn}, I use \acrshort{adamw}, a variant of \acrshort{adam} decoupling weigth decay \cite{krogh_simple_1991} from learning rate. Along with the optimizer, the training went with \acrfull{lora} as a \acrfull{peft} methods, as defined in section \ref{sec:fine_tune}. The fine-tuning follow the generic \acrshort{ann} training process, except only \acrshort{lora} are trainable. \acrshort{lora} is applied to all weights inside \acrlong{mha}, i.e. keys, weights, queries and output weights, so the linear layers outside \acrshort{mha} are not affected.
 
-For the implementation, I focus on a small number of intercompatible librairies. The first is \gls{pytorch}, a tensor based framework for efficient computation in Python. All computations frameworks of this works with be based on it. Then, for the training, \gls{lightning} is used to automate the training process, with \gls{pytorch} as backend, providing \textit{LightningModule} and \textit{LightningDataModule} classes. It manage loops and stopping conditions for the training process. \acrshort{gpt} specific function and classes are implemented in \gls{litgpt} librairy. For loading models, \gls{hf}, the standard hub for model and datasets, is used to manage token with Meta interface. 
+For the implementation, at first I started from example from \gls{lightning} documentation, then I adapted it to my needs. This approach used \gls{pytorch} as backend, providing \textit{LightningModule} and \textit{LightningDataModule} classes. \acrshort{gpt} specific function and classes were implemented in \gls{litgpt} librairy. For loading models, \gls{hf}, the standard hub for model and datasets, is used to manage token with Meta interface. 
+After few adaptations, I had python code almost usable for fine-tuning, but the file input and output at each step (after training, merging with \acrshort{lora} weights, conversion for evaluation) was prone to error and file corruption. 
+
+In the last half of December, I decided to restart this part from scratch, using solely \gls{litgpt} library with it's \acrfull{cli}. This approach was easier to implement, and provided a more stable workflow although it reduced the training performance, using another parallel strategy. In this approach, I managed long string corresponding to \acrshort{cli} commands, and I used python \textit{subprocess} to execute them.
+
 
 
 \begin{algorithm}[h]
@@ -72,7 +76,7 @@ For the implementation, I focus on a small number of intercompatible librairies.
 Figure \ref{alg:fine_tuning_workflow} summarize the fine-tuning process, to understand global process of this part. The process in taking model and hyperparameters as input, to load model and dataset from \gls{hf} librairy. Then \acrshort{lora} is implemented according to hyperparameters, using \gls{litgpt} librairy. After that, the model is trained using \gls{lightning}, with the classical \acrshort{ann} training process. 
 
 
-%%-------------------- SUBSECTION : Fine Tuning ---------------------%%
+%%-------------------- SUBSECTION : Evaluation ---------------------%%
 \subsection{Evaluation of the model}
 \label{sec:model_evaluation}
 
@@ -87,9 +91,7 @@ Only one for HPO, but can eval on others to look at overfitting
 
 implementation with lm\_eval
 
-Final result (eval + training) : a class 
 
-class diagramm ???
 
 %%-------------------- SECTION : Search Space ---------------------%%
 \section{Search Space Definition}
@@ -106,6 +108,10 @@ To address the challenges of optimizing the black-box function, this research in
 \section{Concrete Implementation}
 \label{sec:concrete_impl}
 Talk about OOP, which class I designed, with UML class diagramm
+
+Final result (eval + training) : a class 
+
+class diagramm ???
 
 %%-------------------- SECTION : Experimental Setup ---------------------%%
 \section{experiments setup}
