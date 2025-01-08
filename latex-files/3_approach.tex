@@ -94,6 +94,46 @@ The implementation of this part is done with \gls{litgpt} library, as a \acrshor
 \section{Search Space Definition}
 \label{sec:search_space}
 
+The search space is defined with the choice of hyperparameters, theirs bounds, theirs types and even the scale of theirs steps.  Well-defined search space is crucial for a correct application of \acrshort{hpo} : if the space is too high-dimensional, the \acrshort{hpo} algorithm will need too many shots to converge to a good solution, if it's too small, we are missing it's relevance. 
+
+The search space is composed of 5 hyperparameters, from classical training hyperparameters to \acrshort{lora} specific ones. A detailed presentation of hyperparameters is just below, but one can look at table \ref{tab:hyperparam_table} for a summary.
+\begin{itemize}
+    \item LoRA rank : with LoRA methods, the fine-tuning weights matrix $\Delta W \in \mathbb{R}^{n*p}$ is replaced by two matrices $A \in \mathbb{R}^{r*p}$ and $B \in \mathbb{R}^{n*r}$ with $\Delta W = B*A$. $r$ is called the LoRA rank, and scale the reduction of the weights matrix. It's an integer, and it's value range from 1 to 512, following article \cite{tribes} indication.
+    \item LoRA scale ($\alpha$) : when merging pre-trained weights $W_0$ and Lora fine-tuned weights $B*A$, the scale $\alpha$ is weighting the influence of fine-tuning, with $W = W_0 + \frac{\alpha}{r} * (B*A)$. It's a continuous value, from $1$ to $100$.
+    \item Learning rate : the learning rate is a classical hyperparameter used in \acrshort{hpo}, weighting the gradient of each weight when doing backpropagation. It is often tuned in a logarithmic scale, to manage effectively the exploration. 
+    \item Dropout probability : based on article \cite{srivastava_dropout_2014}, dropout is a method used to prevent over-fitting, by randomly fixing cells/layers to zeroes during one iteration. Being a probability, it's bounds by 0 and 1.
+    \item Weight decay : weight decay is used to improve generalization capacity, as proved in article \cite{krogh_simple_1991}, by reducing the weights at each iterations by a small value, to force the model to use new inputs. Typically, the parameter for weight decay is set on a logarithmic scale between $10^{-3}$ and $10^{-1}$.
+\end{itemize}
+
+
+
+
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \multirow{2}{*}{\textbf{Hyper-parameter}} & \multicolumn{2}{|c|}{\textbf{Optimization range}} & \multirow{2}{*}{\textbf{Conversion}} \\
+        \cline{2-3}
+         & \textbf{Lower Bound} & \textbf{Upper Bound} &  \\
+        \hline
+        \textbf{Learning Rate} & $-10$ & $-1$ & $f(x) = 10^{x}$ \\
+        \hline
+        \textbf{LoRA Rank} & 2 & 32 & $f(x) = \text{round}(x)$ \\
+        \hline
+        \textbf{LoRA scale ($\alpha$)} & 16 & 64 & $f(x) = \text{round}(x)$ \\
+        \hline
+        \textbf{LoRA Dropout} & 0 & 0.5 & $f(x) = x$ \\
+        \hline
+        \textbf{Weight Decay} & $-3$ & $-1$ & $f(x) = 10^{x}$  \\
+        \hline
+    \end{tabular}
+    \caption{Summary of Hyperparameter Search Space}
+    \label{tab:hyperparam_table}
+\end{table}
+
+For the 2 integers variables (LoRA rank and LoRA scale), to adapt to continuous optimization algorithms, the relax and round methods will be applied. It mean that the integers constraints is relaxed when generating a solution, and is rounded when evaluating a solution. Others methods like computing with lower and upper discrete value can be used, but this one was kept for simplicity and computation costs.
+For the 2 variables with logarithmic scale (learning rate and weight decay), to explore with consistency the search space, the optimization algorithm will be bound between the exponential values of the bounds, and a logarithm will be applied when evaluating a solution.
 
 %%-------------------- SECTION : Optimization ---------------------%%
 \section{Optimization}
