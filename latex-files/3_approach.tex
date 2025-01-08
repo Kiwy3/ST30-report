@@ -294,11 +294,17 @@ Along these part, all experiments are also stored as a subpackage of the whole, 
 %%-------------------- SECTION : Experimental Setup ---------------------%%
 \section{experiments setup}
 \label{sec:exp_setup}
+The experiments are done with Grid5000 \cite{balouek_adding_2012}, " a large-scale and flexible testbed for experiment-driven research in all areas of computer science, with a focus on parallel and distributed computing including Cloud, HPC and Big Data and AI." In specific, the \textit{chuc} cluster, in the Lille center, composed of node of 4 GPU A100 with 40G of VRAM was used. 
 
-Grid5000, chuc etc.
+Apart from aforementioned hyperparameters (learning rate, \acrshort{lora} rank ... ) and configuration (weights to apply \acrshort{lora}) , along with the number of epochs, all arguments of litgpt CLI is used with default value. The number of epochs will be fixed with a first experiment to determine the sufficient number to be representative of a full training. 
+
+Using this configuration, one epoch of fine-tuning is taking XX hours/minutes. For the evaluation, it's taking between X and XX minutes, depending on the dataset. Based on previous articles, and evaluations durations, the total evaluation budget for experiments is 50 evaluations by each algorithms, including a sampling budget of 10 for \acrlong{bo}. 
+
+The implementation of the previous algorithm, the objective function and next experiments are all stored in github, following this link : \href{https://github.com/Kiwy3/Scalable_HPO_LLM}{https://github.com/Kiwy3/Scalable\_HPO\_LLM}.
 
 
 %%-------------------- SECTION : Difficulties ---------------------%%
 \section{Difficulties}
 \label{sec:opt_difficulties}
-Several challenges were encountered during the development and implementation of this optimization framework. The foremost difficulty is the high computational expense of evaluating LLMs, which necessitates the careful allocation of resources and the adoption of efficient evaluation strategies. Handling mixed-type hyperparameters, particularly the interplay between continuous and discrete variables, posed additional complexities. Existing optimization techniques often struggle with these mixed spaces, requiring innovative solutions such as relaxation and partitioning to ensure convergence. Finally, ensuring the generalizability of the fine-tuning results across different benchmarks and datasets proved challenging, as model performance is highly dependent on task-specific characteristics and dataset quality.
+blackbox inside blackbox inside blackbox
+learning together theory and practise
