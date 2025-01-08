@@ -159,16 +159,16 @@ From the prior function and the data points $\mathcal D$, the \acrshort{gp} buil
     \label{algo:bo}
     \KwIn{$\Omega$, $f$, $K_D$, $\mathcal{O}$, $f_{\text{acq}}$, $n_{\text{init}}$, $n_{\text{opt}}$}
     
+    \tcp{initiate function}
     \For{$i \gets 1$ \KwTo $n_{\text{init}}$}{
         $\lambda' \gets \text{LHS}(\Omega, \mathcal{D})$ \tcp{Sample one point}
         $\mathcal{D} \gets \mathcal{D} \cup \{(\lambda', f(\lambda'))\}$ \tcp{Add solution and evaluation to set of data}
     }
-    
-    \For{$i \gets 1$ \KwTo $n_{\text{opt}}$}{
+    \For{$i \gets 1$ \KwTo $n_{\text{opt}}$}{ 
         $\mu_D, K_D \gets \text{Update}(K_D, \mathcal{D})$ \;
         $K_D \gets \text{Fit}(\text{GP}(K_D), \mathcal{D})$ \;
         $\lambda' \gets \text{Optimize}(f_{\text{acq}}(K_D), \mathcal{O})$ \tcp{Generate new point}
-        $\mathcal{D} \gets \mathcal{D} \cup \{(\lambda', f(\lambda'))\}$ \tcp{Evaluate new point}
+        $\mathcal{D} \gets \mathcal{D} \cup \{(\lambda', f(\lambda'))\}$ \tcp{scoring function}
     }
     
     \Return best of $\{(\lambda^*, f(\lambda^*)) \in \mathcal{D}\}$
@@ -192,16 +192,16 @@ In global optimization, a lot of methods are based on the partition of the searc
     \caption{SOO}
     \label{algo:soo}
     \KwIn{$\Omega$, $f$, $K$, $n_{\text{max}}$}
-    
+    \tcp{initiate }
     $x_{0,0} \gets \text{center}(\Omega)$ \;
     $f_{0,0} \gets f(x_{0,0})$ \;
     $\mathcal{T}_1 \gets \{x_{0,0}, f_{0,0}, \Omega\}$ \;
     $n \gets 1$ \;
-    
+
     \While{$n < n_{\text{max}}$}{
         $\nu_{\text{max}} \gets -\infty$ \;
         \For{$h \gets 0$ \KwTo $\text{depth}(\mathcal{T}_n)$}{
-            $j \gets \arg\max_{j \in \{j \mid (h,j) \in L_n\}} f(x_{h,j})$ \;
+            $j \gets \arg\max_{j \in \{j \mid (h,j) \in L_n\}} f(x_{h,j})$ \tcp{select function}
             \If{$f(x_{h,j}) > \nu_{\text{max}}$}{
                 $\Omega_{h+1,j+1}, \dots, \Omega_{h+1,j+K} \gets \text{section}(\Omega_{h,j}, K)$ \;
                 \For{$i \gets 1$ \KwTo $K$}{
@@ -210,9 +210,9 @@ In global optimization, a lot of methods are based on the partition of the searc
                     \textcolor{blue}{
                     $f_{h+1,j+i} \gets f(x_{h+1,j+i})$  \tcp{Scoring function}
                     }
-                    $\mathcal{T}_n \gets \{(x_{h+1,j+i}, f_{h+1,j+i}, \Omega_{n+1})\}$ \;
+                    $\mathcal{T}_n \gets \{(x_{h+1,j+i}, f_{h+1,j+i}, \Omega_{n+1})\}$ \tcp{add\_leaf function
                 }
-                $\nu_{\text{max}} \gets f_{h,j}$ \;
+                $\nu_{\text{max}} \gets f_{h,j}$ \;}
             }
         }
     }
@@ -272,7 +272,7 @@ For the implementation of the GP components, including the calculation of \acrsh
 %%-------------------- SECTION : Concrete implentation ---------------------%%
 \section{Concrete Implementation}
 \label{sec:concrete_impl}
-To implement what's described in section \ref{sec:blackbox} to ref{sec:opt}, I used Python as my main language. After a first phase of coding only with function on a small number of file, I started to rethink everything as \acrfull{oop}. When the rework from scratch happened in December, I used this opportunity to structure my code with \acrshort{oop}. 
+To implement what's described in section \ref{sec:blackbox} to \ref{sec:opt}, I used Python as my main language. After a first phase of coding only with function on a small number of file, I started to rethink everything as \acrfull{oop}. When the rework from scratch happened in December, I used this opportunity to structure my code with \acrshort{oop}. 
 
 \begin{figure}[h]
     \centering
@@ -281,11 +281,15 @@ To implement what's described in section \ref{sec:blackbox} to ref{sec:opt}, I u
     \label{fig:class_diag}
 \end{figure}
 
-Talk about OOP, which class I designed, with UML class diagramm
+Figure \ref{fig:class_diag} is an UML class diagramm presenting the whole framework of my internship, split in tree parts : the optimization part, including all optimization algorithm seen in section \ref{sec:opt}, the search space part, and evaluation part/
 
-Final result (eval + training) : a class 
+At the left, the optimization part includes a base class for optimization algorithm, managing all recurrent tasks, especially scoring and extracting the best result. From this class is built \acrshort{soo} and \acrshort{bo} classes. All theirs attributes and functions are described in section \ref{sec:soo} and \ref{sec:bo} respectively, with comment in algorithms to precise which function is used for which line. \acrshort{soo} being a tree-based algorithm, a leaf class in create to manage the leaf of the tree, and especially the decomposition of the space. From \acrshort{soo} class, \acrshort{bamsoo} is built, add especially the \acrshort{gp} surrogate, and updating the scoring function with \acrshort{ucb} and \acrshort{lcb} to adapt to algorithm \ref{algo:bamsoo_scoring}.
 
-class diagramm ???
+At the top right, the search space part is firstly composed with a search space class. This class is composed on multiple var class, use to automate all function used by each variables. Then, it's used to manage the space, like section to split the space for \acrshort{soo}, or other functions to deal with algorithms and compatibility needs. Then, the Solution class inherit the search space class, to force a solution to be define in a search space, and then manage the conversion of the solution, with the conversion function of table \ref{tab:hyperparam_table}.
+
+The last part is the eval class, use to store the model id, the experiment folder, the task and then call the \textit{train\_and\_eval} function when the scoring function is called. The whole structure allow an easy understanding of the framework, an easier testing and debuging process and a better reusability of each part of the code. 
+
+Along these part, all experiments are also stored as a subpackage of the whole, and then called from the main file. This method ease the reproducibility of the experiments, and avoid import or module error from python package management. 
 
 %%-------------------- SECTION : Experimental Setup ---------------------%%
 \section{experiments setup}

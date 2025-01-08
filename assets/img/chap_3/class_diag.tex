@@ -33,19 +33,20 @@
             }
 
 
-        \umlclass[below right  = 0.5cm and 0.5cm of SOO.south, anchor = north]{BaMSOO}{
-                eta : float = 0.5 \\
-                gp : GP\\
+        \umlclass[below right  = 0.5cm and 0.3cm of SOO.south, anchor = north]{BaMSOO}{
+                eta:float = 0.5 \\
+                gp:GP\\
             }{
                 update\_gp()\\
                 UCB(Solution):float\\
                 LCB(Solution):float\\
             } 
 
-        \umlclass[right = 0.5cm of BaMSOO]{leaf}{
-                depth : int\\
-                depth\_id : int\\
-                score : float\\
+        \umlclass[right = 0.2cm of BaMSOO]{leaf}{
+                depth:int\\
+                depth\_id:int\\
+                score:float\\
+                space:SearchSpace\\
             }{
             }
 

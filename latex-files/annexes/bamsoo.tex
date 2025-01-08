@@ -18,7 +18,7 @@
             \If{$g_{h,j} > \nu_{\text{max}}$}{
                 $\Omega_{h+1,j+1}, \dots, \Omega_{h+1,j+K} \gets \text{section}(\Omega_{h,j}, K)$ \;
                 \For{$i \gets 1$ \KwTo $K$}{
-                    $\mu, \sigma \gets \text{GP}(\mathcal{D}_t, K_D)$ \;
+                    $\mu, \sigma \gets \text{GP}(\mathcal{D}_t, K_D)$ \tcp{update\_gp function}
                     $N \gets N+1$ \;
                     $x_{h+1,j+i} \gets \text{center}(\Omega_{n})$ \;
     
