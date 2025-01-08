@@ -80,16 +80,13 @@ Figure \ref{alg:fine_tuning_workflow} summarize the fine-tuning process, to unde
 \subsection{Evaluation of the model}
 \label{sec:model_evaluation}
 
-To evaluate, two ways : loss or accuracy => why I choose acc, and even acc\_norm
-=> fine tune model are zero shot learners
+To evaluate an \acrshort{ann}, the standard way is to split the dataset into training and validation datasets. The training dataset is used to train the model, and the validation dataset is used to evaluate the model. The evaluation metric can be the loss, a metric about the difference between the predicted output and the true output, or the accuracy, a metric about the percentage of correct predictions. There exists differents kind of loss, link cross-entropy, or mean-square error, to adapt to the datasets and the problem.
 
-generic evaluation with algo X
+With \acrshort{llm}, the diversity of the tasks, even with a \textit{decoder}-only model, is crucial. During the training, the loss or the accuracy is done with the prediction of the next word, compared to the true one. It does not represent the generalization capability of the model. To deal with it, challenge benchmarks, often using \acrfull{mcq} on diverses thematics, were rising. It's was enhanced by article like \cite{wei_finetuned_2022}, proving the advantage of fine-tuning in terms of generalization. 
 
-I choose MMLU/HELLASWAG
+Among those challenge benchmark datasets, I choose two of them : one to use during \acrshort{hpo} and the other to look at overfitting. The Hellaswag \cite{zellers_hellaswag_2019} dataset is composed of 40k lines of text and 4 choice of answers, meaning random pick lead to 25\% of accuracy. I use this first during \acrshort{hpo}. The MMLU dataset \cite{hendrycks_measuring_2021} is a dataset over multiples subjects, use to prevent overfitting.
 
-Only one for HPO, but can eval on others to look at overfitting
-
-implementation with lm\_eval
+The implementation of this part is done with \gls{litgpt} library, as a \acrshort{cli} like for training. Under the \gls{litgpt} part, it's using lm\_eval library from \gls{hf} to manage the evaluation of the accuracy. 
 
 
 
