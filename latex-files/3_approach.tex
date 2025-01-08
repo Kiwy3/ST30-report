@@ -272,6 +272,15 @@ For the implementation of the GP components, including the calculation of \acrsh
 %%-------------------- SECTION : Concrete implentation ---------------------%%
 \section{Concrete Implementation}
 \label{sec:concrete_impl}
+To implement what's described in section \ref{sec:blackbox} to ref{sec:opt}, I used Python as my main language. After a first phase of coding only with function on a small number of file, I started to rethink everything as \acrfull{oop}. When the rework from scratch happened in December, I used this opportunity to structure my code with \acrshort{oop}. 
+
+\begin{figure}[h]
+    \centering
+    \input{assets/img/chap_3/class_diag.tex}
+    \caption{Class diagramm of the optimization framework}
+    \label{fig:class_diag}
+\end{figure}
+
 Talk about OOP, which class I designed, with UML class diagramm
 
 Final result (eval + training) : a class 

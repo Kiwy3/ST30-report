@@ -1,0 +1,112 @@
+\begin{tikzpicture}
+    \tikzumlset{
+        class width = 15ex,
+    }
+    \begin{umlpackage}{Optimization}
+        \umlclass[]{OptAlgo}{
+                maximizer : boolean\\
+                search\_space : SearchSpace\\
+                n\_eval : int = 0\\
+                obj\_function : function
+            }{
+                scoring(solution : Solution):float\\
+                bestof():list,float
+            }
+        \umlclass[ below right = 0.5cm and 2cm of OptAlgo.south, anchor = north]{BO}{
+            points : list[list] = []\\
+            scores : list = []\\
+
+            }{
+            initiate($n_{init}$)\\
+            new\_point():Solution\\
+            run(budget: int)\\
+            }
+        \umlclass[below left = 0.5cm and 2cm of OptAlgo.south, anchor = north]{SOO}{
+                K : int = 3\\
+                tree : dict = \{\}\\
+            }{
+            initiate()\\
+            add\_leaf()\\
+            select(depth):int\\
+            run(budget: int)\\
+
+            }
+
+
+        \umlclass[below right  = 0.5cm and 0.5cm of SOO.south, anchor = north]{BaMSOO}{
+                eta : float = 0.5 \\
+                gp : GP\\
+            }{
+                update\_gp()\\
+                UCB(Solution):float\\
+                LCB(Solution):float\\
+            } 
+
+        \umlclass[right = 0.5cm of BaMSOO]{leaf}{
+                depth : int\\
+                depth\_id : int\\
+                score : float\\
+            }{
+            }
+
+        \umlcompo{SOO}{leaf}
+        \umlinherit{BO}{OptAlgo}
+        \umlinherit{SOO}{OptAlgo}
+        \umlinherit{BaMSOO}{SOO}
+    \end{umlpackage}
+
+
+
+
+
+    \begin{umlpackage}{Search space}
+        \umlclass[right = 8.2cm of OptAlgo.north, anchor = north]{SearchSpace}{
+            variables : dict of \textit{var} \\
+
+        }{  
+            add\_variables(dict)\\
+            get\_center():Solution\\
+            section(K):list\\
+            get\_bounds():list\\
+            get\_solution(x):Solution\\
+
+        }
+        \umlclass[below right = 0.5cm and 0.2cm of SearchSpace.south]{var}{
+                name : str\\
+                type : str\\
+                min : float\\
+                max : float\\
+                coef : float\\
+            }{
+                get\_center():float\\
+                convert(x):float\\
+                init\_coef()\\
+
+            }
+        \umlclass[below left = 0.5cm and 0.2cm of SearchSpace.south]{Solution}{
+            value:list\\
+            conv\_value:list\\
+            score : float\\
+
+        }{
+            save()\\
+            add\_score(y)\\
+        }
+
+        \umlinherit{Solution}{SearchSpace}
+        \umlcompo{SearchSpace}{var}
+    \end{umlpackage}
+
+    \umlclass[below = 0.5cm of Search space.south]{EvalClass}{
+        model\_id : str\\
+        space : SearchSpace\\
+        folder : str\\
+        task : str\\
+    }{
+        train\_and\_eval(Solution):float
+    }
+
+    \umluniassoc[geometry = -|-, weight = 0.47]{SearchSpace}{OptAlgo}
+    \umluniassoc{SearchSpace}{EvalClass}
+    \umluniassoc[geometry = -|-, weight = 0.47]{EvalClass}{OptAlgo}
+\end{tikzpicture}

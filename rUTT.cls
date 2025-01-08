@@ -5,7 +5,7 @@
 % Il serait intéressant de regarder ce package un jour : https://ctan.org/pkg/memoir
 
 \usepackage{emptypage}
-
+\usepackage{packages/tikz-uml}
 % Personnal use of package
 \usepackage{multicol}
 \usepackage{dirtytalk}
