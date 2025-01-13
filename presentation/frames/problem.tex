@@ -1,5 +1,6 @@
 %---------------------------------- Problem definition -------------------------------
 \begin{frame}{Problem Definition}
+    This problem can be characterized the optimization of an \textbf{expensive, mixed-variable, noisy, blackbox} function.
 
     \begin{columns}
     
@@ -7,14 +8,13 @@
         \begin{block}{Problem Formulation}
             The HPO problem can be defined as 
             \begin{equation}
-               \eta^* = \arg\min_{\eta \in \mathcal{H}} \mathcal{F}(\eta) 
+               \eta^* \in \arg\min_{\eta \in \mathcal{H}} \mathcal{F}(\eta) 
             \end{equation}
-            Litterature often define theses problems and their solution with 3 stages : search space, search strategy, performance evaluation strategy.
 
         \end{block}
 
-        \begin{block}{Search Space}
-            $\mathcal{H}$ is the search space, i.e. the set of all values the solution tuple $\eta$ can take. This stage includes method to handle the mixed-variables aspect of the problems.   
+        \begin{block}{Search Space $\mathcal{H}$}
+            $\mathcal{H}$ is the set of all values the solution tuple $\eta$ can take. This stage includes method to handle the mixed-variables aspect of the problems.   
         \end{block}
         \end{column}
         
@@ -40,30 +40,31 @@
     \begin{block}{Hyper-parameters}
     
         \begin{table}[h!]
-        \centering
-        \begin{tabular}{lcccccc}
-        \toprule
-        \textbf{Name} & \textbf{Lower Bound} & \textbf{Upper Bound} & \textbf{Type} & \textbf{Steps} & \textbf{Field} \\
-        \midrule
-        Learning Rate  & exp(-10) & exp(-1)  & float & exp  & Optimizer \\
-        Weight Decay   & exp(-5)  & exp(1)   & float & exp & Optimizer \\
-        LoRA Rank      & 2        & 500      & int   & int    & model \\
-        LoRA alpha (scale) & 1    & 64       & float   & cont    & model \\
-        LoRA Dropout   & 0        & 1        & float & cont    & model \\        
-        grad\_batches  & 1        & 32       & int   & int    & Trainer \\
-        \bottomrule
-        \end{tabular}
+            \centering
+            \begin{tabular}{|c|c|c|c|}
+                \hline
+                \multirow{2}{*}{\textbf{Hyper-parameter}} & \multicolumn{2}{|c|}{\textbf{Optimization range}} & \multirow{2}{*}{\textbf{Conversion}} \\
+                \cline{2-3}
+                 & \textbf{Lower Bound} & \textbf{Upper Bound} &  \\
+                \hline
+                \textbf{Learning Rate} & $-10$ & $-1$ & $f(x) = 10^{x}$ \\
+                \hline
+                \textbf{LoRA Rank} & 2 & 512 & $f(x) = \text{round}(x)$ \\
+                \hline
+                \textbf{LoRA scale ($\alpha$)} & 1 & 64 & $f(x) = \text{round}(x)$ \\
+                \hline
+                \textbf{LoRA Dropout} & 0 & 0.5 & $f(x) = x$ \\
+                \hline
+                \textbf{Weight Decay} & $-5$ & $-1$ & $f(x) = 10^{x}$  \\
+                \hline
+            \end{tabular}
+            \caption{Summary of Hyperparameter Search Space}
+            \label{tab:hyperparam_table}
         \end{table}
         
     \end{block}
-
-    \begin{block}{Mixed-variables handling}
-        \begin{itemize}
-            \item Exponential steps : variables defined as a float between $log(U_{bound}$ and $log(L_{bound})$, the exponential is applied when it's used for evaluation.
-            \item Integers variables : variables are relaxed during the generation of the solution, and then round when evaluating. 
-        \end{itemize}
-    \end{block}
     
+    Conversion and naming convention is taken from litgpt framework.
 \end{frame}
 
 
@@ -134,11 +135,9 @@
     \begin{columns}
         % Left Column (Text)
         \begin{column}{0.5\textwidth}
-            \begin{block}{Surrogate-Model Based Optimization (SMBO)}
-                Methods based on creating a surrogate model of the objective function, using the knowledge from already evaluated solutions. The acquisition function, i.e., the function of the surrogate model, is used to balance exploration and exploitation. \\
+                Methods based on creating a \textbf{surrogate} model of the objective function, using the knowledge from already evaluated solutions. The acquisition function, i.e. the function of the surrogate model, is used to balance exploration and exploitation. \\
                 
                 E.g.: Bayesian Modeling, Gaussian Process (GP), Tree Parzen Estimator (TPE).\\
-            \end{block}
         \end{column}
 
         % Right Column (Image)
@@ -158,9 +157,8 @@
     \begin{columns}
         % Left Column (Text)
         \begin{column}{0.5\textwidth}
-            \begin{block}{Partition and Surrogate-Model based optimization : the hybridation}
         The partition based methods are by nature parallel, by the generation of a tree-search of possible solutions. The SMBO achieve to reduce the number of evaluation by using an acquisition function to discard or favor a possible solution. The hybridation would result in a parallelization-able Bayesian modeling, allowing to extract the best of the two fields. \\
-            \end{block}
+           
         \end{column}
 
         % Right Column (Image)
@@ -168,7 +166,7 @@
             \begin{figure}
                 \centering
                 \includegraphics[width=\linewidth]{imgs/bamsoo.png}
-                \caption{BaMSOO}
+                \caption{BaMSOO \cite{wang2014bamsoo}}
             \end{figure}
         \end{column}
     \end{columns}
