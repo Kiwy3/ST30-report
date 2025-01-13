@@ -51,16 +51,23 @@
     \framebreak
 
     \begin{columns}
-        \begin{column}{0.3\textwidth}
+        \begin{column}{0.5\textwidth}
             \textbf{Hybridation : Bayesian Multi-Scale Optimistic Optimization(BaMSOO)}
 
             Replace the scoring of SOO with a BO-GP based approximation to determine if it's relevant to evaluate the point.
+            \begin{equation}
+                \begin{split}
+                \mathcal{UCB}(x| \mathcal D_t) = \mu(x|\mathcal D_t) +  B_N * \sigma(x|\mathcal D_t) 
+                \\ \text{with } B_N = \sqrt{2 \log (\pi^2 N^2/6 \eta)} , \eta \in (0,1)      
+                \end{split}  
+                \label{eq:ucb}
+            \end{equation}
             
         \end{column}        
-        \begin{column}{0.7\textwidth}
+        \begin{column}{0.5\textwidth}
             \begin{figure}[h]
                 \centering
-                \includegraphics[height = 6cm]{imgs/algo/bamsoo_score.png}
+                \includegraphics[height = 5cm]{imgs/algo/bamsoo_score.png}
             \end{figure}
         \end{column}
     \end{columns}
