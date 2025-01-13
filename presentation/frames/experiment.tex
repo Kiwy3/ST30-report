@@ -1,132 +1,139 @@
-%---------------------------------- Exp1 : 72direct -------------------------------
-\begin{frame}[allowframebreaks]{Experiment 1 : Proof of concept using DiRect with Zellij}
-    \begin{block}{Experimental setup}
-        23 hours of run : 72 complete iterations using direct implementation of Zellij.\\
-        Fixed HP : 1 epochs by training\\
+\begin{frame}{Experimental Setup}
+    Experiments presented in this paper were carried out using the Grid'5000 testbed, supported by a scientific interest group hosted by Inria and including CNRS, RENATER and several Universities as well as other organizations (see https://www.grid5000.fr).\\
+
+    One evaluation on chuc cluster, using 4*A100 40G of VRAM GPU, is taking around 1 hour. Each algorithms have a budget of 50 evaluations, including the 10 sampling evaluation of BO. 
+
+    \begin{block}{Hellaswag bounds}
+        \begin{itemize}
+            \item Upper bound : best accuracy on Hellaswag : 95.3\%. Done with GPT4 model, with 10-shot evaluation
+            \item Lower bound : Sampling without exploitation : 55,7\%. Using one-shot LHS, with 10 picks to evaluate.
+        \end{itemize}
+        
         
     \end{block}
+    
+\end{frame}
+%---------------------------------- Optimization -------------------------------
+\begin{frame}[allowframebreaks]{BO}
+    
     \begin{columns}
     
-        \begin{column}[t]{0.6\textwidth}
-            \begin{block}{Variable one by one}
-            
-                \includegraphics[width = 7.5cm]{imgs/individual_results.png}
+        \begin{column}{0.6\textwidth}
+            \begin{block}{Score evolution}
+                
+                \includegraphics[width = 7.5cm]{imgs/plots/exp12_score_over_time.png}
             
             \end{block}   
         \end{column}
 
-        \begin{column}[t]{0.4\textwidth}
-            \begin{block}{Convergence}
-            Best MMLU result : 26,94\%
-            
-        \includegraphics[width = 5cm]{imgs/mmlu_evolution.png}
-            
-            \end{block}  
-            
+        \begin{column}{0.4\textwidth}
+            \begin{block}{Results}
+                Best score : 62.3\%               
+            \end{block}
+             
         \end{column}
     \end{columns}    
+
+
+    \framebreak
+
+    \begin{columns}
+    
+        \begin{column}{0.65\textwidth}
+            \textbf{Score by variables and Varibles over iterations}
+                \begin{figure}[h]
+                    \includegraphics[width = \textwidth]{imgs/plots/exp12_score_by_hp.png}
+                \end{figure}     
+        \end{column}
+
+        \begin{column}{0.4\textwidth}
+            \includegraphics[height = 7cm]{imgs/plots/exp12_variables_over_time.png}
+            
+            
+        \end{column}
+    \end{columns}  
 \end{frame}
 
 %---------------------------------- Optimization -------------------------------
-\begin{frame}[allowframebreaks]{Experiment 2 : First step with Bayesian Optimization}
-    \begin{block}{Experimental setup}
-        50 complete iterations with BoTorch implementation\\
-        Hardware : single node with 4*A100 40G
-    \end{block}
-
-    \begin{block}{Gaussian Process parameter}
-    \begin{itemize}
-        \item Acquisition function : Log EI
-        \item model : MixedSingleTaskGP
-        \item likelihood : ExactMarginalLogLikelihood
-    \end{itemize}
-        
-    \end{block}
-
-    \framebreak
+\begin{frame}[allowframebreaks]{SOO}
     
     \begin{columns}
     
         \begin{column}[t]{0.6\textwidth}
-            \begin{block}{Variable one by one}
-            
-                \includegraphics[width = 7.5cm]{imgs/exp2-bo_individual.png}
+            \begin{block}{Score evolution}
+                
+                \includegraphics[width = 7.5cm]{imgs/plots/exp10_score_over_time.png}
             
             \end{block}   
         \end{column}
 
         \begin{column}[t]{0.4\textwidth}
-            \begin{block}{Convergence}
-            Best MMLU result : 26,94\%
+            \begin{block}{Results}
+                Best score : 58.4\%\\
+                Slow convergence               
+            \end{block}
             
-        \includegraphics[width = 5cm]{imgs/exp2-bo_mmlu.png}
-        TO DO : look if there is convergence at some point
-            
-            \end{block}  
             
         \end{column}
-    \end{columns}    
+    \end{columns}   
+    
+    \framebreak
+
+    \begin{columns}
+    
+        \begin{column}{0.65\textwidth}
+            \textbf{Score by variables and Varibles over iterations}
+                \begin{figure}[h]
+                    \includegraphics[width = \textwidth]{imgs/plots/exp10_score_by_hp.png}
+                \end{figure}     
+        \end{column}
+
+        \begin{column}{0.4\textwidth}
+            \includegraphics[height = 7cm]{imgs/plots/exp10_variables_over_time.png}
+            
+            
+        \end{column}
+    \end{columns}  
 \end{frame}
 
 %---------------------------------- Optimization -------------------------------
-\begin{frame}[allowframebreaks]{Experiment 3 : Bayesian Optimization with Latin Hypercube Sampling}
-
-
+\begin{frame}[allowframebreaks]{BaMSOO}
+    
     \begin{columns}
     
         \begin{column}[t]{0.6\textwidth}
-    \begin{block}{Experimental setup}
-        57 complete iterations with BoTorch implementation\\
-        Training : one epoch on alpaca cleaned dataset\\
-        Evaluation : Hellaswag dataset\\
-        Hardware : single node with 4*A100 40G
-    \end{block}
-
-    \begin{block}{Gaussian Process parameter}
-    \begin{itemize}
-        \item Acquisition function : Log EI
-        \item model : MixedSingleTaskGP
-        \item likelihood : ExactMarginalLogLikelihood
-    \end{itemize}
-        
-    \end{block}  
+            \begin{block}{Score evolution}
+                
+                \includegraphics[width = 7.5cm]{imgs/plots/exp11_score_over_time.png}
+            
+            \end{block}   
         \end{column}
 
         \begin{column}[t]{0.4\textwidth}
-            \begin{block}{Convergence}
-            Best Hellaswag result : 53,02\%
+            \begin{block}{Results}
+                Best score : 58.5\%\\
+                Not so much approximations, need to increase $\eta $ in equation \ref{eq:ucb} to speed the convergence              
+            \end{block}
             
-        \includegraphics[width = 5cm]{imgs/exp03/score_by_iteration.png}
-            
-            \end{block}  
             
         \end{column}
     \end{columns}    
 
     \framebreak
-    
+
     \begin{columns}
     
-        \begin{column}[t]{0.45\textwidth}
-            \begin{block}{Variable one by one}
-            
-                \includegraphics[width = 7cm]{imgs/exp03/score_by_variable.png}
-            
-            \end{block}   
+        \begin{column}{0.65\textwidth}
+            \textbf{Score by variables and Varibles over iterations}
+                \begin{figure}[h]
+                    \includegraphics[width = \textwidth]{imgs/plots/exp11_score_by_hp.png}
+                \end{figure}     
         \end{column}
 
-        \begin{column}[t]{0.45\textwidth}
-            \begin{block}{Variable iteration}
+        \begin{column}{0.4\textwidth}
+            \includegraphics[height = 7cm]{imgs/plots/exp11_variables_over_time.png}
             
-        \includegraphics[width = 7cm]{imgs/exp03/variable_over_time.png}
-            
-            \end{block}  
             
         \end{column}
-    \end{columns}    
-
-    \begin{block}{Results}
-        Need to enlarge search space, since 5 hyperparameters are constrained by bounds.
-    \end{block}
-    
+    \end{columns}  
 \end{frame}
