@@ -2,25 +2,27 @@
 \begin{frame}{Large Language Models}
 \begin{columns}
       
-    \begin{column}[t]{0.5\textwidth}
+    \begin{column}[t]{0.4\textwidth}
     \begin{block}{Summary}
     
         \begin{itemize}
             \item State-of-the-art of Natural Language Processing (NLP) problems
             \item Architecture : Transformers\cite{NIPS2017_3f5ee243} block, mixed with classical layers (MLP, Conv)
+            \item 2 phases of training : pre-training and fine-tuning
         \end{itemize}
             
 
     \end{block}
     \end{column}
         
-    \begin{column}[t]{0.5\textwidth}
-    \begin{block}{Self Attention cell}
+    \begin{column}[t]{0.6\textwidth}
+    \begin{block}{Self Attention }
 
         \begin{figure}
             \centering
-            \input{imgs/dot_prod_att}
+            \input{imgs/self_attention.tex}
             \caption{Scaled dot product attention}
+            \hfill
         \end{figure}
     
 
@@ -30,59 +32,12 @@
 \end{columns}
 \end{frame}
 
-%---------------------------------- Self attention mecanism -------------------------------
-
-\begin{frame}{mha}
-    \begin{figure}
-        \centering
-        \input{imgs/mha}
-        \caption{MHA}
-    \end{figure}  
-        
-
-    
-\end{frame}
-
-
-%---------------------------------- Self attention mecanism -------------------------------
-
-\begin{frame}{self attention}
-    \begin{figure}
-        \centering
-        \input{imgs/self_attention}
-        \caption{self attention mecanism}
-    \end{figure}  
-        
-
-    
-\end{frame}
-
-
-%---------------------------------- Transformers -------------------------------
-
-\begin{frame}{Pre-training and Fine-tuning}
-    \begin{figure}
-        \centering
-        \input{imgs/pre_training}
-        \caption{Pre-training and Fine-tuning generic workflow}
-    \end{figure}  
-        
-
-    
-\end{frame}
-
 
 %---------------------------------- Fine Tuning Frame -------------------------------
 \begin{frame}{Fine Tuning}
 
-   \begin{block}{Instruction Tuning}
-       fine-tunes models to follow specific user instructions effectively. Consists of using specific fine-tuning datasets (Alpaca \cite{alpaca}, Databrick's Dolly\cite{DatabricksBlog2023DollyV2})   
-    \end{block}
-
-
-
     \begin{block}{Parameters Efficient Fine-Tuning (PEFT)}
-    Set of methods aims to reduce the computation cost of fine-tuning. Can change the structure like the 2 following, or just reduce the cost like Quantization (reduce the precision of calculus). These methods are often hyperparameter-dependent.     
+    Set of methods aims to reduce the computation cost of fine-tuning. Can change the structure like the 2 following, or just reduce the cost like Quantization (reduce the precision of calculus). These methods are often hyperparameter-dependent.
     \end{block}
     
     \begin{columns}  
@@ -102,6 +57,20 @@
       
     \end{columns}
 
+\end{frame}
+
+%---------------------------------- Fine-tuning Workflow -------------------------------
+
+\begin{frame}{Fine-Tuning workflow}
+    
+    \begin{figure}
+        \centering
+        \input{imgs/pre_training}
+        \caption{Pre-training and Fine-tuning generic workflow}
+    \end{figure}  
+        
+
+    
 \end{frame}
 
 %---------------------------------- LoRA -------------------------------
