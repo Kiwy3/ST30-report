@@ -1,0 +1,26 @@
+\begin{tikzpicture}[node distance=2cm]
+
+% Define block styles
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=green!30]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!20]
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=red!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+% Nodes
+\node (start) [startstop] {Training Data};
+\node (preprocess) [process, below of=start] {Preprocessing};
+\node (stop) [decision, below of=preprocess] {Stop?};
+\node (hpo) [process, right of=stop, xshift=3cm] {Hyperparameter Optimization (HPO)};
+\node (finalmodel) [startstop, below of=stop] {Final Model};
+\node (validation) [startstop, above of=hpo] {Validation Data};
+
+% Arrows
+\draw [arrow] (start) -- (preprocess);
+\draw [arrow] (preprocess) -- (stop);
+\draw [arrow] (stop) -- node[anchor=south] {No} (preprocess);
+\draw [arrow] (stop) -- node[anchor=south] {Yes} (finalmodel);
+\draw [arrow] (finalmodel) -- (hpo);
+\draw [arrow] (validation) -- (hpo);
+\draw [arrow] (hpo) -- (finalmodel);
+\end{tikzpicture}
