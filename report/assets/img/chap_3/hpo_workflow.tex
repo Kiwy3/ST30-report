@@ -40,8 +40,8 @@
 
 \node (val_data) [class, right of=evaluate,xshift=2cm]
     {
-        \textbf{Validation Dataset}
-        \nodepart{second} MMLU};
+        \textbf{Validation/Testing Dataset}
+        \nodepart{second} Hellaswag, MMLU };
 
 % decision
 \node (decision)[decision,below of = evaluate,yshift=-1cm,align=center]{if \\ $n_{eval} \leq$ budget};

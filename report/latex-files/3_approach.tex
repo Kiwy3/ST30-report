@@ -1,11 +1,16 @@
 %%-------------------- CHAPTER : Methodology ---------------------%%
 \chapter{Methodology}
 \label{chap:methodo}
+
+% //TODO - Find another epigraph
+
 \epigraph{Everyone by now presumably knows about the danger of premature optimization. I think we should be just as worried about premature design - designing too early what a program should do.}{Paul Graham}
 
 The methodology is a cornerstone of any research or project, providing a structured framework to achieve objectives systematically and effectively. It ensures clarity, reproducibility, and reliability by defining the steps, tools, and techniques used to address specific problems. A well-defined methodology not only aligns the research process with its goals but also facilitates critical evaluation by external audiences, allowing them to assess the validity and generalization of the results. In the context of this work, the chosen methodology was pivotal in navigating complex challenges, optimizing processes, and ensuring that outcomes are both credible and relevant.
 
-To ensure my sincere approach, and contribute to open-source domain, all the code of this report is readable on  \href{https://github.com/Kiwy3/}{my github account}\footnote{link : https://github.com/Kiwy3/}. It include every code snippet used in this report (like figure \ref{fig:random_search}), every experiments of chapter \ref{chap:results} and all implementation of \acrshort{hpo}.
+% //TODO - rename article repo if needed
+
+To ensure my sincere approach, and contribute to open-source domain, all the code of my internship is readable on \href{https://github.com/Kiwy3/}{my github account}\footnote{link : https://github.com/Kiwy3/}. It's split in two parts : \textit{Scalable\_HPO\_LLM} for everything linked to the article (code, data, experiments...) and \textit{ST30-deliverable} for every deliverable of this internship (presentation, report, defence).
 
 In this chapter, I will talk about the contextualization in academic literature, then tackle the elaboration of the blackbox function. The definition of the search space being one of the most crucial step in global optimization, the section \ref{sec:search_space} will focus on this. After this preliminary work, we will enter the core of this report : optimization algorithms. A section about experimental setup, to explore resource and scientific integrity, will precede the conclusion section, approaching insight about the realization of this part.
 
@@ -36,6 +41,8 @@ My internship can be seen as global optimization applied to a noisy, mixed-varia
 
 The blackbox process here is described by figure \ref{fig:hpo_workflow}. This process start by the \gls{fine_tuning} of the model, using training dataset, and then evaluating the model, using the validation dataset. Next sections will explore in details the action box of figure \ref{fig:hpo_workflow}. The reproduction of the blackbox function using Python is done with a \textit{ModelEvaluator} class, reproducing the nexts parts.
 
+% //TODO - rename ModelEvaluator if needed
+
 %%-------------------- SUBSECTION : Fine Tuning ---------------------%%
 \subsection{Fine-Tuning of the Model}
 \label{sec:fine_tuning}
@@ -52,28 +59,6 @@ For the implementation, at first I started from example from \gls{lightning} doc
 After few adaptations, I had python code almost usable for fine-tuning, but the file input and output at each step (after training, merging with \acrshort{lora} weights, conversion for evaluation) was prone to error and file corruption. 
 
 In the last half of December, I decided to restart this part from scratch, using solely \gls{litgpt} library with it's \acrfull{cli}. This approach was easier to implement, and provided a more stable workflow although it reduced the training performance, using another parallel strategy. In this approach, I managed long string corresponding to \acrshort{cli} commands, and I used python \textit{subprocess} to execute them.
-
-
-
-\begin{algorithm}[h]
-    \caption{Fine-Tuning(model, hyperparameters)}\label{alg:fine_tuning_workflow}
-    \KwIn{model, hyperparameters}
-    model $ \gets$ load ("LlaMa")\ \Comment*[r]{load \gls{lightning} model using \gls{hf} lib}
-    model $\gets$ lora(model, hyperparameters)\ \Comment*[r]{apply \gls{lora} to model using \gls{litgpt} lib}
-    $x, y \gets $ load("Alpaca") \Comment*[r]{load dataset using \gls{hf} lib}
-    \ 
-    \
-    \Comment*[l]{automated by \gls{lightning}}
-    \ForEach{$(x_i,y_i) \in (x,y)$}{ 
-        $\hat y \gets$ model.forward($x$)\ \Comment*[r]{forward pass}
-        loss $\gets \mathcal L(\hat{y},y)$\ \Comment*[r]{compute loss}
-        model $\gets$ backpropagation(loss)\ \Comment*[r]{backward pass}
-    }
-    \Return model
-\end{algorithm}
-
-
-Figure \ref{alg:fine_tuning_workflow} summarize the fine-tuning process, to understand global process of this part. The process in taking model and hyperparameters as input, to load model and dataset from \gls{hf} librairy. Then \acrshort{lora} is implemented according to hyperparameters, using \gls{litgpt} librairy. After that, the model is trained using \gls{lightning}, with the classical \acrshort{ann} training process. 
 
 
 %%-------------------- SUBSECTION : Evaluation ---------------------%%
@@ -98,8 +83,8 @@ The search space is defined with the choice of hyperparameters, theirs bounds, t
 
 The search space is composed of 5 hyperparameters, from classical training hyperparameters to \acrshort{lora} specific ones. A detailed presentation of hyperparameters is just below, but one can look at table \ref{tab:hyperparam_table} for a summary.
 \begin{itemize}
-    \item LoRA rank : with LoRA methods, the fine-tuning weights matrix $\Delta W \in \mathbb{R}^{n*p}$ is replaced by two matrices $A \in \mathbb{R}^{r*p}$ and $B \in \mathbb{R}^{n*r}$ with $\Delta W = B*A$. $r$ is called the LoRA rank, and scale the reduction of the weights matrix. It's an integer, and it's value range from 1 to 512, following article \cite{tribes} indication.
-    \item LoRA scale ($\alpha$) : when merging pre-trained weights $W_0$ and Lora fine-tuned weights $B*A$, the scale $\alpha$ is weighting the influence of fine-tuning, with $W = W_0 + \frac{\alpha}{r} * (B*A)$. It's a continuous value, from $1$ to $100$.
+    \item LoRA rank : with LoRA methods, the fine-tuning weights matrix $\Delta W \in \mathbb{R}^{n*p}$ is replaced by two matrices $A \in \mathbb{R}^{r*p}$ and $B \in \mathbb{R}^{n*r}$ with $\Delta W = B*A$. $r$ is called the LoRA rank, and scale the reduction of the weights matrix. It's an integer, and it's value range from 1 to 512, following article \cite{tribes_hyperparameter_2024} indication.
+    \item LoRA scale ($\alpha$) : when merging pre-trained weights $W_0$ and Lora fine-tuned weights $B*A$, the scale $\alpha$ is weighting the influence of fine-tuning, with $W = W_0 + \frac{\alpha}{r} * (B*A)$. It's an integer value, from $1$ to $64$ as guided by \acrshort{lora} article and LitGpt framework.
     \item Learning rate : the learning rate is a classical hyperparameter used in \acrshort{hpo}, weighting the gradient of each weight when doing backpropagation. It is often tuned in a logarithmic scale, to manage effectively the exploration. 
     \item Dropout probability : based on article \cite{srivastava_dropout_2014}, dropout is a method used to prevent over-fitting, by randomly fixing cells/layers to zeroes during one iteration. Being a probability, it's bounds by 0 and 1.
     \item Weight decay : weight decay is used to improve generalization capacity, as proved in article \cite{krogh_simple_1991}, by reducing the weights at each iterations by a small value, to force the model to use new inputs. Typically, the parameter for weight decay is set on a logarithmic scale between $10^{-3}$ and $10^{-1}$.
@@ -133,7 +118,8 @@ The search space is composed of 5 hyperparameters, from classical training hyper
 \end{table}
 
 For the 2 integers variables (LoRA rank and LoRA scale), to adapt to continuous optimization algorithms, the relax and round methods will be applied. It mean that the integers constraints is relaxed when generating a solution, and is rounded when evaluating a solution. Others methods like computing with lower and upper discrete value can be used, but this one was kept for simplicity and computation costs.
-For the 2 variables with logarithmic scale (learning rate and weight decay), to explore with consistency the search space, the optimization algorithm will be bound between the exponential values of the bounds, and a logarithm will be applied when evaluating a solution.
+
+For the 2 variables with logarithmic scale (learning rate and weight decay), to explore with consistency the search space, the optimization algorithm will be bound between a larger range, and then convert with $f(x)=10^{x}$.
 
 %%-------------------- SECTION : Optimization ---------------------%%
 \section{Optimization Algorithms}
@@ -145,7 +131,7 @@ The first approach to explore is \acrfull{smbo}, and particularly \acrfull{bo} u
 \subsection{\acrfull{bo}}
 \label{sec:bo}
 
-Bayesian Optimization is often defined as a "sequential model-based approach to solving problem" \cite{shahriari_taking_2016}. A surrogate model is used to build a posterior considering a prior knowledge formed on known points. On this posterior, an acquisition function is compute to act as the surrogate function for the function to optimize. On this work, a focus is done on \acrshort{gp} for the \acrshort{bo} surrogate. \acrshort{gp} use the kernel trick to build a bayesian nonparametric regression model. It use a mean vector $m_i$ and a covariance matrix $K_{i,j}$ to define the prior function : 
+We saw in \ref{sec : opt_algo} that \acrshort{bo} use a surrogate model to perform optimization. On this work, a focus is done on \acrshort{gp} for the \acrshort{bo} surrogate. \acrshort{gp} use the kernel trick to build a bayesian nonparametric regression model. It use a mean vector $m_i$ and a covariance matrix $K_{i,j}$ to define the prior function : 
 
 \begin{equation}
     \text{f} | X \sim  \mathcal N (m,K)
@@ -154,7 +140,12 @@ Bayesian Optimization is often defined as a "sequential model-based approach to 
 
 From the prior function and the data points $\mathcal D$, the \acrshort{gp} build a posterior. On this posterior is build an acquisition function used as a surrogate for the objective function.
 
-\begin{algorithm}[h]
+
+    
+
+Algorithm \ref{algo:bo} offer an overview of the BO process. To ease the first build of the surrogate, it's crucial, as proven in article \cite{wilson_efficiently_2020}, to sample efficiently the search space. This sampling provides information for the Gaussian Process to estimation the function. Like article \cite{borisut_adaptive_2023}, \acrfull{lhs}\cite{mckay_comparison_1979} is used as a sampling method, for a defined budget called $n\_init$. 
+
+\begin{algorithm}[H]
     \caption{BO}
     \label{algo:bo}
     \KwIn{$\Omega$, $f$, $K_D$, $\mathcal{O}$, $f_{\text{acq}}$, $n_{\text{init}}$, $n_{\text{opt}}$}
@@ -173,23 +164,27 @@ From the prior function and the data points $\mathcal D$, the \acrshort{gp} buil
     
     \Return best of $\{(\lambda^*, f(\lambda^*)) \in \mathcal{D}\}$
 \end{algorithm}
-    
-
-Algorithm \ref{algo:bo} offer an overview of the BO process. To ease the first build of the surrogate, it's crucial, as proven in article \cite{wilson_efficiently_2020}, to sample efficiently the search space. This sampling provides information for the Gaussian Process to estimation the function. Like article \cite{borisut_adaptive_2023}, \acrfull{lhs} is used as a sampling method, for a defined budget called $n\_init$. 
 
 After this preliminary phase, a second phase is done with on loop containing the update of the Gaussian Process, the optimization of the acquisition function to obtain a new points to evaluate. After the evaluation of the point, the point is added to the history $\mathcal D$ and so on. The loop end based on a budget $n_{opt}$. 
 
-For this algorithm, the first requirements is the search space, and the objective function already described in \ref{sec:search_space} and \ref{sec:obj_fun} respectively. On the \acrshort{gp} part, we need to define a Kernel function $K_\mathcal D$, an acquisition function $f_{acq}$ and an Inner Optimizer $\mathcal O$. The acquisition function is logEI, more reliable than EI, based on article \cite{ament_unexpected_2024}. The kernel and the inner optimizer are the standard implementation of Botorch, introduced in the next paragraph, with a radial basis function kernel and multi-start optimization method. 
+For this algorithm, the first requirements is the search space, and the objective function already described in \ref{sec:search_space} and \ref{sec:blackbox} respectively. On the \acrshort{gp} part, we need to define a Kernel function $K_\mathcal D$, an acquisition function $f_{acq}$ and an Inner Optimizer $\mathcal O$. The acquisition function is logEI, more reliable than EI, based on article \cite{ament_unexpected_2024}. The kernel and the inner optimizer are the standard implementation of Botorch, introduced in the next paragraph, with a radial basis function kernel and multi-start optimization method. 
 
 BoTorch \cite{balandat_botorch_2020} is a Bayesian Optimization library built on PyTorch, designed for efficient and scalable optimization of expensive black-box functions. Leveraging PyTorch's GPU acceleration and integration with GPyTorch \cite{gardner_gpytorch_2021} for Gaussian Processes, BoTorch enables advanced surrogate modeling and optimization. Botorch is used on this work for all tasks including \acrshort{gp}, this part and section \ref{sec:bamsoo}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\acrfull{soo}}
 \label{sec:soo}
 
-In global optimization, a lot of methods are based on the partition of the search space \cite{nakib_deterministic_2017,jones_lipschitzian_1993,munos_optimistic_2011}. Theses approaches are mostly deterministic, and enhance intrinsic parallelization ability. For theses methods, the dimensionality of the problem is a key to choose the specific algorithm. With a dimensionality around 5, based on benchmarks at the end of article \cite{firmin_fractal-based_2022}, the \acrfull{soo} \cite{munos_optimistic_2011} algorithm seems a good way to start. 
+\acrshort{soo} \cite{munos_optimistic_2011} is a tree-based space partitioning method for black-box optimization, inspired by \acrfull{mcts} methods. \acrshort{soo} is called optimistic since it assume the existence of $ l$ such that $f(x^*)-f(x) \leq l(x,x^*)$ where $x^*$ is the maximizer of $x$.The algorithm partition the space $\Omega$ by building a tree with smaller and smaller sub-space $\Omega_n$. A node $(h,j)$, the node number $j$ of depth $h$, is scored at the center of his space. 
+
+    
+An expanded node have $K$ children, making the tree a $K$-nary tree. $L_n$ is the \textit{open list} of the tree, to avoid expanding the same nodes over and over. At each round, \acrshort{soo} expand a maximum of one node by depth, meaning that each round score a maximum of $depth*(K)$ solution, enhancing the parallel evaluation of the solution. Summary of \acrshort{soo} is present in algorithm \ref{algo:soo}.
+
+The original algorithm manage the end of the loop with the $h_{max}(n)$ function, limiting the depth of the tree search. To compare different algorithm, the stopping criterion here is $n_{max}$, the evaluation budget. 
 
 \begin{algorithm}[h]
-    \caption{SOO}
+    \caption{SOO \hfill}
     \label{algo:soo}
     \KwIn{$\Omega$, $f$, $K$, $n_{\text{max}}$}
     \tcp{initiate }
@@ -218,20 +213,12 @@ In global optimization, a lot of methods are based on the partition of the searc
     }
     \Return best of $x_{h,j}, f(x_{h,j})$ \;
     \end{algorithm}
-    
-
-\acrshort{soo} is a tree-based space partitioning method for black-box optimization, inspired by \acrfull{mcts} methods. \acrshort{soo} is called optimistic since it assume the existence of $ l$ such that $f(x^*)-f(x) \leq l(x,x^*)$ where $x^*$ is the maximizer of $x$.The algorithm partition the space $\Omega$ by building a tree with smaller and smaller sub-space $\Omega_n$. A node $(h,j)$, the node number $j$ of depth $h$, is scored at the center of his space. 
-
-An expanded node have $K$ children, making the tree a $K$-nary tree. $L_n$ is the \textit{open list} of the tree, to avoid expanding the same nodes over and over. At each round, \acrshort{soo} expand a maximum of one node by depth, meaning that each round score a maximum of $depth*(K)$ solution, enhancing the parallel evaluation of the solution. Summary of \acrshort{soo} is present in algorithm \ref{algo:soo}
-
-The original algorithm manage the end of the loop with the $h_{max}(n)$ function, limiting the depth of the tree search. To compare different algorithm, the stopping criterion here is $n_{max}$, the evaluation budget. 
-
 \subsection{\acrfull{bamsoo}}
 \label{sec:bamsoo}
 
-\acrfull{smbo} algorithms harness the exploitation of the informations to define a cost-reduce function to optimize. This approach ensure exploitation but have several limitations, including the parallelization difficulties \cite{X,X}. On the other hand, Partition-based approach are massively parallel, but are computation costly in front of very expensive objective function. To overcome both limitations, hybrid methods, using surrogates and space partition, were developed.
+\acrfull{smbo} algorithms harness the exploitation of the informations to define a cost-reduce function to optimize. This approach ensure exploitation but have several limitations, including the parallelization difficulties.. On the other hand, Partition-based approach are massively parallel, but are computation costly in front of very expensive objective function. To overcome both limitations, hybrid methods, using surrogates and space partition, were developed.
 
-In this work, we focus on \acrshort{bamsoo}, a \acrshort{soo} based algorithm (algorithm \ref{algo:bamsoo}). Like \acrshort{soo}, \acrshort{bamsoo} performs a $K$-inary partitionning of the space, using the center of the partition to evaluate. 
+In this work, we focus on \acrshort{bamsoo}\cite{wang_bayesian_2014}, a \acrshort{soo} based algorithm (algorithm \ref{algo:bamsoo}). Like \acrshort{soo}, \acrshort{bamsoo} performs a $K$-inary partitionning of the space, using the center of the partition to evaluate. 
 
 \begin{equation}
     \begin{split}
@@ -241,7 +228,7 @@ In this work, we focus on \acrshort{bamsoo}, a \acrshort{soo} based algorithm (a
     \label{eq:ucb}
 \end{equation}
 
-The difference lies primarily in the scoring $g(.)$ of the partitions (lines 25 to 30). In the face of an expensive objective function, \acrshort{bamsoo} leverages a \acrshort{gp} surrogate to estimate the potential of a point, using the \acrshort{ucb} as a measure of expected performance. Given a partition with center $x$ and existing evaluations $\mathcal{D}_t$, the \acrshort{ucb} of $x$, defined in Equation \ref{eq:ucb}, is compared against the best evaluation so far, $f^+$. If the \acrshort{ucb} is higher than $f^+$, the algorithm evaluates $x$ directly using the objective function $f(.)$. Otherwise, the partition is scored using the \acrshort{lcb} of $x$, reflecting the lower bound of potential improvement.
+The difference with lies primarily in the scoring $g(.)$ of the partitions (blue line in algorithm \ref{algo:soo} is replaced by algorithm \ref{algo:bamsoo_scoring}). In the face of an expensive objective function, \acrshort{bamsoo} leverages a \acrshort{gp} surrogate to estimate the potential of a point, using the \acrshort{ucb} as a measure of expected performance. Given a partition with center $x$ and existing evaluations $\mathcal{D}_t$, the \acrshort{ucb} of $x$, defined in Equation \ref{eq:ucb}, is compared against the best evaluation so far, $f^+$. If the \acrshort{ucb} is higher than $f^+$, the algorithm evaluates $x$ directly using the objective function $f(.)$. Otherwise, the partition is scored using the \acrshort{lcb} of $x$, reflecting the lower bound of potential improvement. Full \acrshort{bamsoo} algorithm is presented in appendix \ref{ap:bamsoo_algo}.
 
 
 \begin{algorithm}[h]
@@ -267,8 +254,6 @@ To sum up, this algorithm efficiently navigates the search space by leveraging p
 
 For the implementation of the GP components, including the calculation of \acrshort{lcb} and \acrshort{ucb} scores, the BoTorch library was employed. This choice ensures computational efficiency and robustness, as BoTorch provides a modular framework for Bayesian optimization and GP modeling, seamlessly integrating with the partition-based structure of BamSOO. By adhering to the methodology outlined in section \ref{sec:bo}, the framework ensures consistency in surrogate modeling and acquisition function computation, further enhancing the effectiveness of the algorithm in high-dimensional, continuous search spaces.
 
-\FloatBarrier
-
 %%-------------------- SECTION : Concrete implentation ---------------------%%
 \section{Concrete Implementation}
 \label{sec:concrete_impl}
@@ -291,12 +276,13 @@ The last part is the eval class, use to store the model id, the experiment folde
 
 Along these part, all experiments are also stored as a subpackage of the whole, and then called from the main file. This method ease the reproducibility of the experiments, and avoid import or module error from python package management. 
 
-
-++ TALK ABOUT DOCUMENTATION, TYPE HINTING
+After this rework, I finished my work with documenting my code. There is various form of documenting my code. At first, I use \textit{type hinting}, to show for every fonction what are the type of input and outputs, like what's mandatory in c++ for instance. After this, I write a small description for each function, and I use \textit{docstring} to explain what each function does. On top of this, I concluded with adding small comment in specific part when needed. All of this aims to be able to reuse my code after the end of this internship.
 
 %%-------------------- SECTION : Experimental Setup ---------------------%%
 \section{experiments setup}
 \label{sec:exp_setup}
+%//TODO - finalize after article redaction
+
 The experiments are done with Grid5000 \cite{balouek_adding_2012}, " a large-scale and flexible testbed for experiment-driven research in all areas of computer science, with a focus on parallel and distributed computing including Cloud, HPC and Big Data and AI." In specific, the \textit{chuc} cluster, in the Lille center, composed of node of 4 GPU A100 with 40G of VRAM was used. 
 
 Apart from aforementioned hyperparameters (learning rate, \acrshort{lora} rank ... ) and configuration (weights to apply \acrshort{lora}) , along with the number of epochs, all arguments of litgpt CLI is used with default value. The number of epochs will be fixed with a first experiment to determine the sufficient number to be representative of a full training. 
@@ -309,5 +295,9 @@ The implementation of the previous algorithm, the objective function and next ex
 %%-------------------- SECTION : Difficulties ---------------------%%
 \section{Difficulties}
 \label{sec:opt_difficulties}
+
+%//TODO : Look if it's relevant to put this part in chapter 4
+
+
 blackbox inside blackbox inside blackbox
 learning together theory and practise
