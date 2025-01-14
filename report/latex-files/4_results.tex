@@ -10,13 +10,12 @@ Following this presentation, a section will discuss the valorisation of this wor
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Experiments Results %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Experiment Results}
 \label{sec:exp_results}
-The experimental results from Chapter 3 validate the efficacy of the proposed approaches for hyperparameter optimization (HPO) in fine-tuning Large Language Models (LLMs). Key performance metrics, including accuracy on benchmark datasets (e.g., MMLU, GLUE), computational efficiency, and scalability, demonstrate that the hybrid approach combining Bayesian Optimization (BO) and Partition-based methods achieves competitive results while significantly reducing evaluation costs.
+From what's discussed in chapter \ref{chap:methodo}, three main experiments have been carried out, one by each algorithms (\acrshort{bo}, \acrshort{soo} and \acrshort{bamsoo}). 
 
-The analysis highlights the following:
+To consider and compare experiments results, it's always relevant to define bounds for each metrics, such as unconstrained problem to define lower bound for maximizing combinatorial problem. For this work, I found two bounds : 
 \begin{itemize}
-    \item Bayesian Optimization effectively balances exploration and exploitation, enabling faster convergence in continuous hyperparameter spaces.
-    \item The Partition-based method complements BO by parallelizing the search process, enhancing scalability for larger hyperparameter spaces.
-    \item Techniques such as Low-Rank Adaptation (LoRA) and multi-fidelity evaluations improve computational efficiency without compromising performance.
+    \item Lower bound : experiment with a sampling algorithm (i.e. \acrshort{rs} or \acrshort{lhs}). If complex algorithm does not perform better than sampling ones, it's not worth the complexity. It's especially true in face of expensive objective function, since sampling algorithm are massively parallel.
+    \item Upper bound : from Llama-3.2-3B model card\footnote{\href{https://huggingface.co/meta-llama/Llama-3.2-3B}{https://huggingface.co/meta-llama/Llama-3.2-3B}}, \gls{fine_tuning} performance using complex methods (Supervised Fine-Tuning (SFT), Rejection Sampling (RS), and Direct Preference Optimization (DPO)) is available, and can be used as a reference.
 \end{itemize}
 This approach implied a forth experiment, in section \ref{sec:sampling}, perform a sampling approach with the same budget as other algorithms. As a callback, the evaluation budget of each algorithms is set to 50, including 10 for the sampling part of \acrshort{bo}. The upper and lower bounds values are summarized in table \ref{tab:bounds}, for clarity. This table includes validation and testing dataset, (i.e. Hellaswag and MMLU).
 
