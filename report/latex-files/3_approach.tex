@@ -94,7 +94,7 @@ The search space is composed of 5 hyperparameters, from classical training hyper
 
 
 
-\begin{table}[h!]
+\begin{table}[h]
     \centering
     \begin{tabular}{|c|c|c|c|}
         \hline
@@ -177,7 +177,6 @@ BoTorch \cite{balandat_botorch_2020} is a Bayesian Optimization library built on
 \label{sec:soo}
 
 \acrshort{soo} \cite{munos_optimistic_2011} is a tree-based space partitioning method for black-box optimization, inspired by \acrfull{mcts} methods. \acrshort{soo} is called optimistic since it assume the existence of $ l$ such that $f(x^*)-f(x) \leq l(x,x^*)$ where $x^*$ is the maximizer of $x$.The algorithm partition the space $\Omega$ by building a tree with smaller and smaller sub-space $\Omega_n$. A node $(h,j)$, the node number $j$ of depth $h$, is scored at the center of his space. 
-
     
 An expanded node have $K$ children, making the tree a $K$-nary tree. $L_n$ is the \textit{open list} of the tree, to avoid expanding the same nodes over and over. At each round, \acrshort{soo} expand a maximum of one node by depth, meaning that each round score a maximum of $depth*(K)$ solution, enhancing the parallel evaluation of the solution. Summary of \acrshort{soo} is present in algorithm \ref{algo:soo}.
 
