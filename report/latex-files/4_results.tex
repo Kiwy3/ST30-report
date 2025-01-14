@@ -38,11 +38,23 @@ This approach implied a forth experiment, in section \ref{sec:sampling}, perform
 \subsection{Sampling experiment}
 \label{sec:sampling}
 
+This experiment is done using \acrfull{lhs} algorithm. Figure \ref{fig:lhs} illustrate \acrshort{lhs}. In simple, it's a random sampling of the search space, with the warranty that each interval on each dimension is sampled. It can also be called \textit{non-attacking rook}, where picks are like rooks on a chessboard, where the maximum must be put without attacking other rooks.
 
+\begin{figure}[h]
+    \centering
+    \input{assets/img/chap_4/experiments/lhs.tex}
+    \caption{\acrshort{lhs} illustration}
+    \label{fig:lhs}
+\end{figure}
+
+%// TODO: wait for results
 
 %%%%%%%%%%%%%%%%%%%% BO Experiment %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\acrshort{bo} experiment}
 \label{sec:bo_exp}
+
+%// TODO: wait for results
+
 Figure \ref{fig:exp12_res} depicts the performance of Bayesian Optimization (BO) over 50 iterations, measured in terms of the normalized Hellaswag accuracy (acc\_norm). This visualization highlights the evolution of the optimization process as it transitions from sampling to the exploitation, and ultimately converges towards high-performing solutions.
 
 
@@ -50,7 +62,7 @@ Figure \ref{fig:exp12_res} depicts the performance of Bayesian Optimization (BO)
     \centering
     \begin{subfigure}[b]{.45\textwidth}
       \centering
-      \includegraphics[height = 6cm]{assets/img/chap_4/experiments/plots/exp12_score_over_time.png}
+      \includegraphics[height = 5cm]{assets/img/chap_4/experiments/plots/exp12_score_over_time.png}
       \caption{Score over time}
       \label{fig:exp12_score_time}
     \end{subfigure}%
@@ -77,8 +89,8 @@ To summarize, this experiment demonstrate the effectiveness of Bayesian Optimiza
 %%%%%%%%%%%%%%%%%%%% SOO Experiment %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\acrshort{soo} experiment}
 \label{sec:soo_exp}
-
-Figure \ref{fig:soo_score_time} depicts the performance of Simultaneous Optimistic Optimization (SOO) over 50 iterations, measured in terms of the normalized Hellaswag accuracy (acc\_norm). This visualization highlights the progression of the optimization process, showing limited improvement until later iterations, when a significant rise in performance is observed.
+%// TODO: wait for results
+Figure \ref{fig:exp11_res} depicts the performance of Simultaneous Optimistic Optimization (SOO) over 50 iterations, measured in terms of the normalized Hellaswag accuracy (acc\_norm). This visualization highlights the progression of the optimization process, showing limited improvement until later iterations, when a significant rise in performance is observed.
 
 \begin{figure}[h!]
     \centering
@@ -104,12 +116,12 @@ Between iterations 20 and 40, a gradual improvement is observed as the algorithm
 
 In the final stage, after iteration 40, a significant rise in performance is observed, with accuracy values increasing sharply and converging around 0.6. This stabilization phase indicates that SOO successfully identifies high-quality parameter configurations, albeit at a slower pace compared to BO.
 
-To summarize, Figure \ref{fig:soo_score_time} demonstrates that SOO is capable of finding high-performing solutions but requires a longer exploration phase and slower convergence compared to Bayesian Optimization. Despite its delayed success, the eventual convergence highlights the potential of SOO for hyperparameter tuning tasks.
+To summarize, Figure \ref{fig:exp11_res} demonstrates that SOO is capable of finding high-performing solutions but requires a longer exploration phase and slower convergence compared to Bayesian Optimization. Despite its delayed success, the eventual convergence highlights the potential of SOO for hyperparameter tuning tasks.
 
 %%%%%%%%%%%%%%%%%%%% BaMSOO Experiment %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\acrshort{bamsoo} experiment}
 \label{sec:bamsoo_exp}
-
+%// TODO: wait for results
 Figure \ref{fig:bamsoo_score_time} depicts the performance of Bamsoo over 50 iterations, measured in terms of the normalized Hellaswag accuracy (acc\_norm). This visualization highlights a hybrid approach that balances the rapid improvement seen in Bayesian Optimization (BO) and the thorough exploration typical of Simultaneous Optimistic Optimization (SOO).
 
 \begin{figure}[h!] \centering \includegraphics[width=0.4\linewidth]{assets/img/chap_4/experiments/plots/exp11_score_over_time.png} \caption{Score over time with \acrshort{bamsoo}} \label{fig:bamsoo_score_time} \end{figure}
@@ -122,25 +134,74 @@ In the final stage, after iteration 30, Bamsoo exhibits a stabilization phase wi
 
 To summarize, Figure \ref{fig:bamsoo_score_time} illustrates the hybrid nature of Bamsoo, which successfully balances exploration and exploitation across iterations. This behavior enables it to achieve competitive performance relative to BO and SOO, making Bamsoo a compelling alternative for optimization tasks requiring adaptability and robustness.
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%% Analysis %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Article Publication}
 \label{sec:article}
-The aforementioned results have led to the drafting of a research article aimed at disseminating the findings within the academic community. Publishing the article serves as a means of contributing to the broader field of optimization and machine learning research.
 
-The written article has been submitted to the International Conference on Optimization \& Learning (OLA2025). As of the submission of this report, the paper is under review, and the outcome is awaited.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%% Article Publication %%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Article Publication}
+\label{sec:article}
+
+After few weeks of my internship, when we were able to define cleary a subject and estimate the possible contribution, with my supervisor we decided to aim to write an article from what I worked on. This aims push me to refine clearly what would be my contribution, since a published paper should aim for this. 
+
+Under my supervisor guidance, what we aimed for was a conference article, for the International Conference on Optimization \& Learning (OLA2025). With this, a long paper will be published in \textit{Springer} indexed proceedings. At the time of writing and sending this report, the paper is under review, and the outcome is awaited.
+
+After a section on the contribution, I will adress in section \ref{sec:redaction} the redaction of the article, as it was also a crucial part of my internship.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% Contribution %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{The contribution}
 \label{sec:contribution}
+The first contribution of this work is direct and practical: the provision of usable \acrshort{hpo} algorithms and experiments specifically tailored for \acrshort{llm} \gls{fine_tuning}. The popularization of \acrshort{llm}s is a relatively recent development, and while these models are increasingly adopted by companies and end-users, the process of \gls{fine_tuning} remains somewhat inaccessible due to knowledge barriers and the lack of practical resources. By providing detailed experiments and insights into \acrshort{hpo} algorithms, this work aims to lower these barriers, enabling users to better understand and utilize \gls{fine_tuning} techniques. Furthermore, this contribution supports the selection of \glspl{hyperparameter}—a crucial step in achieving optimal performance without excessive trial and error.
 
+The second contribution lies in addressing the challenge of optimizing expensive functions. The development and training of \acrshort{ann}s are computationally intensive processes, underscoring the importance of efficient optimization methods. This has driven significant interest in \acrshort{bo} algorithms, originally developed for scenarios such as mechanical and aeronautical engineering, where simulations can take hours to run. However, other domains with similarly expensive functions stand to benefit from advancements in this area. Through this work, a comparative analysis was conducted between two approaches for optimization in settings with limited evaluations, providing valuable insights for both researchers and practitioners.
+
+Finally, this work contributes to the scalability of \acrshort{bo} algorithms. Given that this internship is part of an exascale computing project, the broader goal is to develop scalable and efficient algorithms capable of handling a wide variety of use cases. While the immediate focus has been on \acrshort{llm} \gls{fine_tuning}, the findings and methodologies have implications that extend to other computationally intensive tasks. By addressing scalability, this work lays the groundwork for future innovations in optimization methods that can leverage the full potential of high-performance computing infrastructure.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% Redaction %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Redaction}
 \label{sec:redaction}
 
+%// TODO - write this part
 
-\section{Strugles}
-\label{sec:strugles}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% Challenges %%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Challenges}
+\label{sec:challenge}
+%// TODO - write this part
+
+This section outlines the key challenges encountered during the internship and the strategies employed to address them. Undertaking a project situated at the intersection of multiple research domains presented unique difficulties, from defining and addressing a novel research problem to managing the technical complexities of implementation and resource constraints. Each of these challenges required a combination of critical thinking, adaptability, and collaboration to overcome. The following sections delve into these obstacles in detail, highlighting the learning process and the methods used to navigate the intricacies of both the theoretical and practical aspects of the work.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% Complex field %%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Adress a research problematic}
+\label{sec:adress_research}
+%// TODO - write this part
+The first significant challenge I faced during the initial weeks of my internship was adapting to a completely new environment and working on a subject rooted in research—a domain I had not fully encountered before. While my academic courses had involved numerous projects of varying complexity and levels of research ambition, this internship marked the first time I was required to address a genuine research problem in its entirety. This shift introduced me to the complexities of the research process and the skills necessary to navigate it effectively.
+
+One of the initial hurdles was managing the literature review. This involved handling numerous references, reading and analyzing complex academic articles, and extracting relevant information to identify a specific research problem. Estimating the right problematic to focus on proved particularly difficult at the outset, given the broad scope and technical depth of the subject. However, with the guidance of my supervisor, I was able to refine my understanding of the domain, define a clear and well-scoped research problem, and develop a structured approach to tackle it. This process laid the foundation for the rest of the project, ensuring that my efforts were focused and aligned with the goals of the internship.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% Complex field %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Work in a complex research field}
 \label{sec:complex_field}
+%// TODO - write this part
+The subject of my internship was as fascinating as it was complex, sitting at the intersection of several cutting-edge research fields. To approach this multidisciplinary challenge effectively, I began with a rapid yet thorough literature review of each relevant aspect. This step was essential to grasp the stakes of the subject and avoid wasting valuable time on unnecessary or redundant work. The fields I needed to familiarize myself with included \acrshort{llm}, encompassing \acrshort{ann}s and the specific nuances of \acrlong{peft}, as well as \acrlong{bo}, which required an understanding of probabilistic models and optimization rules. Additionally, I had to delve into \acrfull{hpc}, particularly the scalability of processes, which became increasingly relevant to my project’s objectives.
 
-\subsection{technical implementation}
+This endeavor was particularly challenging for me because my aim was to produce work comparable to that of well-established researchers or even research teams, despite having only a short internship period of six months to achieve it. Starting from scratch, I had to quickly acquire foundational knowledge and develop expertise in these domains. Balancing the demands of mastering multiple complex fields while striving to meet the high standards of professional research pushed me to adapt and learn at an accelerated pace. This experience, while demanding, was invaluable in helping me grow both academically and professionally.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% Technical implementation %%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Technical implementation}
 \label{sec:tech_impl}
+%// TODO - write this part
+
+
+The first significant difficulty I encountered was related to the development process itself. I lacked a well-structured approach to code development, including strategies for writing clean, efficient, and modular code, as well as systematic methods for testing it. This absence of an established process initially slowed down my progress and required me to learn best practices as I advanced through the project.
+
+Another major challenge was working with numerous libraries for implementing the black-box objective function. The codebase involved a complex network of libraries, classes, and functions, all deeply interconnected. It was initially overwhelming to understand how these components interacted and to adapt the existing code to fit my specific requirements. This was especially challenging because my use case—\acrlong{hpo}—was not a generic application of the libraries. As such, no pre-existing implementation was readily available to use \acrshort{hpo} as a black-box objective function, requiring significant effort to tailor the code.
+
+Resource limitations also posed a considerable obstacle. At the beginning of the project, I had to rely on Grid'5000 as the primary computational resource. While g5k provided an essential platform for experimentation, its limitations in terms of scalability and availability required careful management of resources and computational tasks. Overcoming these challenges not only helped me refine my problem-solving skills but also provided valuable experience in navigating the practical constraints of real-world computational research.
