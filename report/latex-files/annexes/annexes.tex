@@ -1,17 +1,23 @@
+\newcommand{\nocontentsline}[3]{}
+\newcommand{\tocless}[2]{\bgroup\let\addcontentsline=\nocontentsline#1{#2}\egroup}
+
+
+\newcommand{\SubAppendix}[1]{\tocless\section{#1}}
+
 \appendix
 \chapter{Appendix}
 
-\section{Official Documents}
+\SubAppendix{Official Documents}
 
-\subsection{Annexe 1 : Sujet de stage}
+\SubAppendix{Annexe 1 : Sujet de stage}
 \includepdf[pages=-]{latex-files/annexes/Internship.pdf}
 %\includegraphics[ scale = 0.75,page = 1]{latex-files/annexes/Internship.pdf}
 
-\section{Algorithm}
+\SubAppendix{Algorithm}
 \input{latex-files/annexes/bamsoo.tex}
 
-\section{Captures d'écran}
+\SubAppendix{Captures d'écran}
 
-\section{Formules chimiques}
+\SubAppendix{Formules chimiques}
 
-\section{Extraits de code source}
+\SubAppendix{Extraits de code source}
