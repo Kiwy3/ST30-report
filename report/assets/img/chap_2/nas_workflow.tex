@@ -1,0 +1,44 @@
+\begin{tikzpicture}[node distance=5cm]
+    
+\tikzstyle{rect} = [rectangle split, rectangle split parts = 2, rounded corners, minimum width=2cm ,text centered, draw=black, fill=blue!30]
+\tikzstyle {arrow} = [thick,->,>=stealth]
+
+
+% Define nodes
+\node (space) [rect, align = center]
+    {
+        \textbf{Search Space A }
+        \nodepart{second} 
+        nb of layers \\
+        nb of neurons \\
+        activation function $\sigma(.)$
+        };  
+
+\node (strategy) [rect, align = center, right of =  space]
+    {
+        \textbf{Search Strategy}
+        \nodepart{second} 
+        optimization algorithms \\
+        parallelism\\
+        budget $n_{eval}$
+        }; 
+
+\node (perf) [rect, align = center, right of = strategy]
+    {
+        \textbf{Perf. Est. Strat. }
+        \nodepart{second} 
+        objective function $f(.)$ \\
+        datasets $D$ \\
+        multi-fidelity
+        
+        }; 
+
+% arrows
+\draw [arrow] (space) -- (strategy);
+\draw [->, thick] (perf.north) to [out=150,in=30] (strategy.north);
+\draw [->, thick] (strategy.south) to [out=-30,in=-150] (perf.south);
+
+\node [above right of = strategy, yshift = -1.5cm, xshift = -1cm] {architecture $a$};
+\node [below right of = strategy, yshift = 1.5cm, xshift = -1cm] {performance $f(x,\omega)$};
+
+\end{tikzpicture}

@@ -1,7 +1,7 @@
 \chapter{Subject Definition}
 \label{chap:subject_def}
 
-\epigraph{Scientific inquiry starts with observation. The more one can see, the more one can investigate.}{Martin Chalfie}
+\epigraph{Research is formalized curiosity. It is poking and prying with a purpose.}{Zora Neale Hurston}
 
 In a research internship, or indeed in any research activity, it's crucial to properly define the subject of the research, and to extract a precise problematic. That's why, during my first few weeks as an intern, and in this chapter of the report, I've endeavored to define this framework. To do so, I begin by recalling the subject as defined in my agreement: 
 
@@ -258,7 +258,7 @@ The \acrshort{autodnn} problem is characterized, is the worst case, by theses pr
 \subsection{\acrfull{nas}}
 \label{sec : nas}
 
-The \acrshort{nas} problem is a sub-problem of the \acrshort{autodnn} problem, where the search space is the topology \( G \) as defined in the preceding section. For an exhaustive survey of \acrshort{nas}, one can refer to the article by T. Elsken, *Neural Architecture Search: A Survey* \cite{elsken_neural_2019}. Figure \ref{fig:nas} presents the generic workflow of \acrshort{nas}. My contribution in this part focuses on \acrshort{nas} applied to \acrshort{llm}. Due to computational demands, the problem can be addressed using two approaches:
+The \acrshort{nas} problem is a sub-problem of the \acrshort{autodnn} problem, where the search space is the topology \( G \) as defined in the preceding section. For an exhaustive survey of \acrshort{nas}, one can refer to the article by T. Elsken, *Neural Architecture Search: A Survey \cite{elsken_neural_2019}. Figure \ref{fig:nas} presents the generic workflow of \acrshort{nas}. My contribution in this part focuses on \acrshort{nas} applied to \acrshort{llm}. Due to computational demands, the problem can be addressed using two approaches:
 
 \begin{itemize}
     
@@ -273,8 +273,8 @@ The \acrshort{nas} problem is a sub-problem of the \acrshort{autodnn} problem, w
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.6\linewidth]{assets/img/chap_2/NAS-high-level.png}
-    \caption{Neural Architecture Search Workflow}
+    \input{assets/img/chap_2/nas_workflow.tex}
+    \caption{Neural Architecture Search Workflow, inspired by \cite{elsken_neural_2019}}
     \label{fig:nas}
 \end{figure}
 

@@ -24,8 +24,9 @@
     \draw[arrow] ([yshift=0.2cm]transformer.north) -- ([xshift= 1.3cm,yshift=0.2cm]transformer.north) -- ([xshift=1.3cm]plus.center) -- (plus.east);
 
     % legend block
-    \node (frozen)[transformers, right of = output, xshift = 3cm]{frozen};
-    \node (trainable)[adapter, below of = frozen, yshift = 0.2cm]{trainable};
+    \node (trainable)[adapter,right of = output,xshift = 3cm  ]{trainable};
+    \node (frozen)[transformers, below of = trainable,yshift = 0.2cm ]{frozen};
+    
 
     
 \end{tikzpicture}

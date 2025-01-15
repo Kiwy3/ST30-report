@@ -3,3 +3,12 @@ Ce stage s'est déroulé à l'INRIA Lille, au sein de l'équipe de recherche BON
 - Mise en œuvre des algorithmes : développer des algorithmes HPO et les relier au fine-tuning des GML.
 - Expériences : affiner l'implémentation au fur et à mesure des résultats, pour obtenir des résultats pertinents.
 Ce semestre a été une première immersion dans la recherche et les domaines académiques, me permettant de nourrir et d'affiner mon projet professionnel.
+
+
+Thésaurus : 
+
+\Kone{Recherche appliquée} % Nature de l'activité
+\Ktwo{Transport et Télécommunications} % Branche d'activité économique
+\Kthree{Informatique} % Domaines technologiques
+\Kfourth{Optimisation mathématique} % Application Physique directe
+\Kfive{Logiciels - Recherche}
