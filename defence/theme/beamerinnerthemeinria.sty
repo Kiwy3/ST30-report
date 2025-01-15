@@ -118,16 +118,25 @@
 
 \defbeamertemplate*{frametitle}{inria}[1][]{%
   % textblock 
-  \begin{textblock*}{\anglewidth}(\hmargin,\vmargin)
-      \anglepng
-  \end{textblock*}
-  \begin{textblock*}{\textwidth}(\hmargin+\anglewidth,\vmargin+\angleheight)
+
+  \hspace*{-\fullpageinnerhmargin}
+  \begin{tikzpicture}[%
+    mainlogo/.style={anchor=north west,
+                outer sep=0pt, inner sep=0pt},
+    ]
+    \useasboundingbox (+0.1cm,\paperheight-0.1cm) rectangle (\paperwidth,\paperheight- \banniereheight);
+    \node [mainlogo] at (0,\paperheight) {\titlelogo};
+    \end{tikzpicture}
+
+
+
+  \begin{textblock*}{\textwidth}(\hmargin+\anglewidth,\vmargin+\banniereheight-0.1cm)
       \textbf{\LARGE \insertframetitle}
   \end{textblock*}
 
 \settoheight{\titleH}{\insertframetitle}
 \addtolength{\titleH}{\angleheight}
-\vspace*{2\titleH} 
+\vspace*{1\titleH}
 
 }
 
