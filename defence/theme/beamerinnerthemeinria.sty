@@ -44,13 +44,17 @@
                      outer sep=0pt, inner sep=0pt},
      ]
    \useasboundingbox (0,0) rectangle (\paperwidth,\paperheight);
-   \node [mainlogo] at (\hmargin,\canvastop) {\titlelogo};
+   \node [mainlogo] at (0,\paperheight) {\titlelogo};
    \node [title] at (\fullpageinnerhmargin+0.15\textwidth,.66\paperheight) {%
-          {\Huge\textbf{\inserttitle}}\\
-          {\barrecouleur}\\[2ex]
+          {\Huge\textbf{\inserttitle}}\\[3ex]
+          %{\barrecouleur}\\[2ex]
           {\Large \insertsubtitle}\\[3ex]
           {\insertauthor}
     };
+
+    \shade[left color=bleu_utt_fonce, right color=bleu_utt_clair] 
+    (\fullpageinnerhmargin+0.15\textwidth,.66\paperheight - 1.25cm) 
+    rectangle (\fullpageinnerhmargin+0.15\textwidth+3cm,.66\paperheight - 1.35cm);
   \end{tikzpicture}
 }
 
