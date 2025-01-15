@@ -60,20 +60,28 @@
 %% - barre dégradée
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\logopremiere}{theme/imgs/RF-INria_Bloc-marque.png}
-\newcommand{\logobaspage}{theme/imgs/Inria-logo-rouge.png}
+%\newcommand{\logopremiere}{theme/imgs/RF-INria_Bloc-marque.png}
+\newcommand{\logopremiere}{theme/imgs/banniere_utt.png}
+\newcommand{\logobaspage}{theme/imgs/utt_logo.png}
 
 \newcommand{\pngangle}{theme/imgs/angle.png}
 \newcommand{\pngbarre}{theme/imgs/Filet-7pt.png}
 
 \newlength\titlelogowidth
-\setlength\titlelogowidth{.3\textwidth}
+\setlength\titlelogowidth{\paperwidth}
 \pgfdeclareimage[width=\titlelogowidth]{InriaTitle}{\logopremiere}
 \newcommand{\titlelogo}{\pgfuseimage{InriaTitle}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Slide title & decoration
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newcommand{\banniere}{\pgfuseimage{InriaTitle}}
+
+\newlength{\banniereheight}
+\settoheight{\banniereheight}{\pgfuseimage{InriaTitle}}
+
 
 \pgfdeclareimage[height=2ex]{Angle}{\pngangle}
 \newcommand{\anglepng}{\pgfuseimage{Angle}}
