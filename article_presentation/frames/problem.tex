@@ -72,110 +72,15 @@
 
 
 %---------------------------------- Search Strategy  -------------------------------
-\begin{frame}[allowframebreaks]{Search Strategy}
-    The search strategy of an optimization problem can be seen as a balance between the exploration, i.e. going to unexplored regions, and exploitation, i.e. going close to promising areas. Here are the fields of optimization to tackle HPO problems.
+\begin{frame}{Search Strategy}
+    The search strategy of an optimization problem can be seen as a balance between the exploration, i.e. going to unexplored regions, and exploitation, i.e. going close to promising areas. Here are the fields of optimization to tackle HPO problems. Standard optimization fields : 
+    \begin{itemize}
+        \item sampling/exploratory : Grid Search, Random Search, Latin Hypercube Sampling \\ \quad no exploitation, give a lower bound
+        \item Bayesian Optimization : use surrogate to approximate the objective function, and optimize it. \\ \quad weak parallel ability, strong exploitation
+        \item Partition-Based Optimization : FDA, SOO, DiRect \\ \quad innate parallel ability, slow convergence
+    \end{itemize}
 
 \end{frame}
-
-\begin{frame}{Exploratory Method}
-    \begin{columns}
-        % Left Column (Text)
-        \begin{column}{0.5\textwidth}
-            \begin{block}{Grid Search and Random Search}
-                These 2 methods are the simplest way possible of exploring the search space, without exploiting the acquired knowledge. Useful to assess the pertinence of the optimization algorithm.        
-            \end{block}
-        \end{column}
-
-        % Right Column (Image)
-        \begin{column}{0.5\textwidth}
-            \begin{figure}
-                \centering
-                \includegraphics[width=\linewidth]{imgs/plots/random_search.jpg}
-                \caption{Random Search}
-            \end{figure}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{Meta-heuristics}
-
-    \begin{block}{Meta-heuristics}
-        Meta-heuristics are mostly algorithms inspired by nature, divided in 2 approachs : population evolution or individual evolution. For the first one, methods like Genetic Algorithm (GA) allow the fitting of the population to a problem, with evolutionnary operators like crossover, mutation or selection. For the second one, like Intensive Local Search (ILS), the methods iterate through the search space with only one solution by iteration. \\
-        These methods aren't fit to HPO problems applied to LLM, due of their needs of numerous evaluations, begin computationally prohibitive. 
-        
-    \end{block}
-    
-\end{frame}
-
-    
-\begin{frame}{Partition Based Optimization}
-
-    \begin{columns}
-        % Left Column (Text)
-        \begin{column}{0.5\textwidth}
-            \begin{block}{Partition Based Optimization}
-                Sets of methods that apply partition to the search space, to favor (partition again) or penalize (discard region) these partitions.  E.g.: DIRECT\cite{jones1993direct}, Fractals\cite{firmin:hal-04474444}, SOO\cite{munos2011soo}\\
-
-                Useful for parallelization abilities
-            \end{block}
-        \end{column}
-
-        % Right Column (Image)
-        \begin{column}{0.5\textwidth}
-            \begin{figure}
-                \centering
-                \includegraphics[width=\linewidth]{imgs/plots/soo.jpg}
-                \caption{SOO}
-            \end{figure}
-        \end{column}
-    \end{columns}
-
-\end{frame}
-
-
-\begin{frame}{Surrogate-Model Based Optimization (SMBO)}
-
-    \begin{columns}
-        % Left Column (Text)
-        \begin{column}{0.5\textwidth}
-                Methods based on creating a \textbf{surrogate} model of the objective function, using the knowledge from already evaluated solutions. The acquisition function, i.e. the function of the surrogate model, is used to balance exploration and exploitation. \\
-                
-                E.g.: Bayesian Modeling, Gaussian Process (GP), Tree Parzen Estimator (TPE).\\
-        \end{column}
-
-        % Right Column (Image)
-        \begin{column}{0.5\textwidth}
-            \begin{figure}
-                \centering
-                \includegraphics[width=\linewidth]{imgs/plots/gaussian_process.jpg}
-                \caption{Gaussian Process}
-            \end{figure}
-        \end{column}
-    \end{columns}
-
-\end{frame}
-
-\begin{frame}{Partition and Surrogate-Model based optimization : the hybridation}
-
-    \begin{columns}
-        % Left Column (Text)
-        \begin{column}{0.5\textwidth}
-        The partition based methods are by nature parallel, by the generation of a tree-search of possible solutions. The SMBO achieve to reduce the number of evaluation by using an acquisition function to discard or favor a possible solution. The hybridation would result in a parallelization-able Bayesian modeling, allowing to extract the best of the two fields. \\
-           
-        \end{column}
-
-        % Right Column (Image)
-        \begin{column}{0.5\textwidth}
-            \begin{figure}
-                \centering
-                \includegraphics[width=\linewidth]{imgs/bamsoo.png}
-                \caption{BaMSOO \cite{wang2014bamsoo}}
-            \end{figure}
-        \end{column}
-    \end{columns}
-
-\end{frame}
-
 %---------------------------------- Performance Evaluation Strategy -------------------------------
 
 \begin{frame}{Performance Evaluation Strategy}
