@@ -33,23 +33,23 @@
 
 
 %---------------------------------- Fine Tuning Frame -------------------------------
-\begin{frame}{Fine Tuning}
+\begin{frame}{Parameters Efficient Fine-Tuning (PEFT)}
+    Set of methods aims to reduce the computation cost of fine-tuning. 2 approachs : \textit{Additive} and \textbf{reparametrization}.
 
-    \begin{block}{Parameters Efficient Fine-Tuning (PEFT)}
-    Set of methods aims to reduce the computation cost of fine-tuning. Can change the structure like the 2 following, or just reduce the cost like Quantization (reduce the precision of calculus). These methods are often hyperparameter-dependent.
-    \end{block}
+
+
     
     \begin{columns}  
   
         \begin{column}[t]{0.45\textwidth}
-        \begin{block}{Low Rank Adaptation (LoRA)\cite{hu2021loralowrankadaptationlarge}}
-                   Use of low rank matrices of the weights matrices, which will be the only ones trained, to reduce the cost of gradient computations.  
+        \begin{block}{Reparametrization}
+            Use lower-cost proxy as trainable weights, and merge at the end. Most famous method : LoRA \cite{hu2021loralowrankadaptationlarge}. These methods are hyperparameter-dependent.
         \end{block}
         \end{column}
     
         \begin{column}[t]{0.45\textwidth}
-        \begin{block}{Adapter Layer}
-            Add layer inside the model, and train only these. One con is to add inference for predicting.
+        \begin{block}{Addivitive}
+            Add part of the model, often linear layer, to train these.  One con is to add inference to generation.
             
         \end{block}
         \end{column}
