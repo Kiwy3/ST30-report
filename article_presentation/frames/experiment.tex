@@ -1,6 +1,7 @@
 \begin{frame}{Experimental Setup}
     Experiments presented in this paper were carried out using the Grid'5000 testbed, supported by a scientific interest group hosted by Inria and including CNRS, RENATER and several Universities as well as other organizations (see https://www.grid5000.fr).\\
 
+
     One evaluation on chuc cluster, using 4*A100 40G of VRAM GPU, is taking around 1 hour. Each algorithms have a budget of 50 evaluations, including the 10 sampling evaluation of BO. 
 
     \begin{block}{Hellaswag bounds}
@@ -13,6 +14,38 @@
     \end{block}
     
 \end{frame}
+%---------------------------------- Sampling experiment -------------------------------
+\begin{frame}{Sampling experiment : Latin Hypercube Sampling}
+    
+    \begin{columns}
+        \begin{column}{0.45\textwidth}
+        Objective : explore the search space and make a reference for other algorithms.
+        \begin{block}{Analysis}
+            \begin{itemize}
+                \item if looking at raw results (not normalized), results are between 0.15 and 0.55. 
+                \item Considering median bar, a lot of results are close to the top of the score.
+                \item Hellaswag and MMLU have 99.52\% of correlation, implying same solution are good for both
+            \end{itemize}
+            
+        Running time : arround 50 hours
+        
+        \end{block}   
+    \end{column}
+
+    \begin{column}{0.45\textwidth}
+        \begin{figure}
+            \centering
+            \includegraphics[width = \textwidth]{imgs/experiments/box_plot.png}     
+            \caption{Sampling experiment}         
+        \end{figure}
+         
+    \end{column}
+\end{columns}  
+    
+\end{frame}
+
+
+
 %---------------------------------- Optimization -------------------------------
 \begin{frame}[allowframebreaks]{BO}
     
