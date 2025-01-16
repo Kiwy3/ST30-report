@@ -8,7 +8,8 @@
         \begin{itemize}
             \item State-of-the-art of Natural Language Processing (NLP) problems
             \item Architecture : Transformers\cite{NIPS2017_3f5ee243} block, mixed with classical layers (MLP, Conv)
-            \item 2 phases of training : pre-training and fine-tuning
+            \item Huge size : Billions of parameters (1B to 405B for Llama 3)
+            \item 2 phases of training : pre-training and \textbf{fine-tuning}
         \end{itemize}
             
 
@@ -31,11 +32,26 @@
 \end{columns}
 \end{frame}
 
+%---------------------------------- Fine-tuning Workflow -------------------------------
+
+\begin{frame}{Fine-Tuning}
+    Fine-tuning is used to correct behavior or add in-domain data to a model, with limited ressources. 
+
+
+    \begin{figure}
+        \centering
+        \input{imgs/pre_training}
+        \caption{Pre-training and Fine-tuning generic workflow}
+    \end{figure}  
+        
+
+    
+\end{frame}
 
 %---------------------------------- Fine Tuning Frame -------------------------------
 \begin{frame}{Parameters Efficient Fine-Tuning (PEFT)}
     Set of methods aims to reduce the computation cost of fine-tuning. 2 approachs : \textit{Additive} and \textbf{reparametrization}.
-
+    
 
 
     
@@ -58,19 +74,7 @@
 
 \end{frame}
 
-%---------------------------------- Fine-tuning Workflow -------------------------------
 
-\begin{frame}{Fine-Tuning workflow}
-    
-    \begin{figure}
-        \centering
-        \input{imgs/pre_training}
-        \caption{Pre-training and Fine-tuning generic workflow}
-    \end{figure}  
-        
-
-    
-\end{frame}
 
 %---------------------------------- LoRA -------------------------------
 \begin{frame}{Low Rank Adaptation (LoRA)}
