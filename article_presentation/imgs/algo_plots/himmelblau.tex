@@ -1,0 +1,14 @@
+\begin{tikzpicture}%[scale = 0.7]
+    \begin{axis}[
+        colormap={pastel}{ rgb255=(0,91,172) rgb255=(215,35,217) rgb255=(120,172,78) rgb255=(255,255,255)rgb255=(255,255,255)rgb255=(255,255,255)} ,
+        view={0}{90},    % Top-down view
+        enlargelimits=false,
+        axis on top,
+        colorbar,        % Add a colorbar
+        xlabel=$x$, ylabel=$y$a,
+        title={Himmelblau Function},        
+    ]
+    \addplot3[surf,shader=flat,z buffer=sort,samples=100,domain=-5:5] 
+        { (x^2 + y - 11)^2 + (x + y^2 - 7)^2 };
+    \end{axis}
+\end{tikzpicture}
