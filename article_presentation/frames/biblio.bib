@@ -2,6 +2,51 @@
 
 
 
+@misc{hashimoto_stanford_2024,
+	title = {Stanford {Alpaca}: {An} {Instruction}-following {LLaMA} model},
+	copyright = {Apache-2.0},
+	url = {https://github.com/tatsu-lab/stanford_alpaca},
+	abstract = {Code and documentation to train Stanford's Alpaca models, and generate the data.},
+	urldate = {2024-12-18},
+	publisher = {GitHub},
+	author = {Hashimoto, Rohan Taori {and} Ishaan Gulrajani {and} Tianyi Zhang {and} Yann Dubois {and} Xuechen Li {and} Carlos Guestrin {and} Percy Liang {and} Tatsunori B.},
+	month = dec,
+	year = {2024},
+	note = {publisher : GitHub},
+	keywords = {deep-learning, instruction-following, language-model},
+}
+
+@misc{zellers_hellaswag_2019,
+	title = {{HellaSwag}: {Can} a {Machine} {Really} {Finish} {Your} {Sentence}?},
+	shorttitle = {{HellaSwag}},
+	url = {http://arxiv.org/abs/1905.07830},
+	doi = {10.48550/arXiv.1905.07830},
+	abstract = {Recent work by Zellers et al. (2018) introduced a new task of commonsense natural language inference: given an event description such as "A woman sits at a piano," a machine must select the most likely followup: "She sets her fingers on the keys." With the introduction of BERT, near human-level performance was reached. Does this mean that machines can perform human level commonsense inference? In this paper, we show that commonsense inference still proves difficult for even state-of-the-art models, by presenting HellaSwag, a new challenge dataset. Though its questions are trivial for humans ({\textgreater}95\% accuracy), state-of-the-art models struggle ({\textless}48\%). We achieve this via Adversarial Filtering (AF), a data collection paradigm wherein a series of discriminators iteratively select an adversarial set of machine-generated wrong answers. AF proves to be surprisingly robust. The key insight is to scale up the length and complexity of the dataset examples towards a critical 'Goldilocks' zone wherein generated text is ridiculous to humans, yet often misclassified by state-of-the-art models. Our construction of HellaSwag, and its resulting difficulty, sheds light on the inner workings of deep pretrained models. More broadly, it suggests a new path forward for NLP research, in which benchmarks co-evolve with the evolving state-of-the-art in an adversarial way, so as to present ever-harder challenges.},
+	urldate = {2024-12-05},
+	publisher = {arXiv},
+	author = {Zellers, Rowan and Holtzman, Ari and Bisk, Yonatan and Farhadi, Ali and Choi, Yejin},
+	month = may,
+	year = {2019},
+	note = {arXiv:1905.07830 [cs]},
+	keywords = {Computer Science - Computation and Language, dataset, hellaswag},
+	annote = {Comment: ACL 2019. Project page at https://rowanzellers.com/hellaswag},
+}
+
+@misc{hendrycks_measuring_2021,
+	title = {Measuring {Massive} {Multitask} {Language} {Understanding}},
+	url = {http://arxiv.org/abs/2009.03300},
+	doi = {10.48550/arXiv.2009.03300},
+	abstract = {We propose a new test to measure a text model's multitask accuracy. The test covers 57 tasks including elementary mathematics, US history, computer science, law, and more. To attain high accuracy on this test, models must possess extensive world knowledge and problem solving ability. We find that while most recent models have near random-chance accuracy, the very largest GPT-3 model improves over random chance by almost 20 percentage points on average. However, on every one of the 57 tasks, the best models still need substantial improvements before they can reach expert-level accuracy. Models also have lopsided performance and frequently do not know when they are wrong. Worse, they still have near-random accuracy on some socially important subjects such as morality and law. By comprehensively evaluating the breadth and depth of a model's academic and professional understanding, our test can be used to analyze models across many tasks and to identify important shortcomings.},
+	urldate = {2024-12-05},
+	publisher = {arXiv},
+	author = {Hendrycks, Dan and Burns, Collin and Basart, Steven and Zou, Andy and Mazeika, Mantas and Song, Dawn and Steinhardt, Jacob},
+	month = jan,
+	year = {2021},
+	note = {arXiv:2009.03300 [cs]},
+	keywords = {Computer Science - Machine Learning, Computer Science - Computation and Language, Computer Science - Artificial Intelligence, Computer Science - Computers and Society, dataset, mmlu},
+	annote = {Comment: ICLR 2021; the test and code is available at https://github.com/hendrycks/test},
+}
+
 @article{klein_structural_2023,
 	title = {Structural {Pruning} of {Large} {Language} {Models} via {Neural} {Architecture} {Search}},
 	url = {https://openreview.net/forum?id=VAwgL8kPvr},

@@ -36,12 +36,12 @@
     \node (train_data) [class, right of=training,xshift=2cm]
         {
             \textbf{Training Dataset}
-            \nodepart{second} Alpaca};
+            \nodepart{second} Alpaca \cite{hashimoto_stanford_2024}};
     
     \node (val_data) [class, right of=evaluate,xshift=2cm]
         {
             \textbf{Validation Dataset}
-            \nodepart{second} Hellaswag, MMLU};
+            \nodepart{second} Hellaswag\cite{zellers_hellaswag_2019}, MMLU\cite{hendrycks_measuring_2021}};
     
     % decision
     \node (decision)[decision,below of = evaluate,yshift=-1cm,align=center]{if \\ $n_{eval} \leq$ budget};
