@@ -1,0 +1,105 @@
+%---------------------------------- Large Language Models -------------------------------
+\begin{frame}{Large Language Models}
+\begin{columns}
+      
+    \begin{column}[t]{0.4\textwidth}
+    \begin{block}{Summary}
+    
+        \begin{itemize}
+            \item State-of-the-art of Natural Language Processing (NLP) problems
+            \item Architecture : Transformers\cite{NIPS2017_3f5ee243} block, mixed with classical layers (MLP, Conv)
+            \item 2 phases of training : pre-training and fine-tuning
+        \end{itemize}
+            
+
+    \end{block}
+    \end{column}
+        
+    \begin{column}[t]{0.6\textwidth}
+    \begin{block}{Self Attention }
+
+        \begin{figure}
+            \centering
+            \input{imgs/self_attention.tex}
+            \caption{Scaled dot product attention}
+            \hfill
+        \end{figure}
+    
+
+    \end{block}
+    \end{column}
+         
+\end{columns}
+\end{frame}
+
+
+%---------------------------------- Fine Tuning Frame -------------------------------
+\begin{frame}{Fine Tuning}
+
+    \begin{block}{Parameters Efficient Fine-Tuning (PEFT)}
+    Set of methods aims to reduce the computation cost of fine-tuning. Can change the structure like the 2 following, or just reduce the cost like Quantization (reduce the precision of calculus). These methods are often hyperparameter-dependent.
+    \end{block}
+    
+    \begin{columns}  
+  
+        \begin{column}[t]{0.45\textwidth}
+        \begin{block}{Low Rank Adaptation (LoRA)\cite{hu2021loralowrankadaptationlarge}}
+                   Use of low rank matrices of the weights matrices, which will be the only ones trained, to reduce the cost of gradient computations.  
+        \end{block}
+        \end{column}
+    
+        \begin{column}[t]{0.45\textwidth}
+        \begin{block}{Adapter Layer}
+            Add layer inside the model, and train only these. One con is to add inference for predicting.
+            
+        \end{block}
+        \end{column}
+      
+    \end{columns}
+
+\end{frame}
+
+%---------------------------------- Fine-tuning Workflow -------------------------------
+
+\begin{frame}{Fine-Tuning workflow}
+    
+    \begin{figure}
+        \centering
+        \input{imgs/pre_training}
+        \caption{Pre-training and Fine-tuning generic workflow}
+    \end{figure}  
+        
+
+    
+\end{frame}
+
+%---------------------------------- LoRA -------------------------------
+\begin{frame}{Low Rank Adaptation (LoRA)}
+    \begin{block}{Principle}
+        Merging Fine-tuning layers with pre-trained ones can be written as $W = W_0 + \Delta W$, with $W_0$ the pre-trained weights and $\Delta W$ the fine-tuned ones.         
+    \end{block}
+
+    \begin{columns}
+        \begin{column}[t]{0.45\textwidth}
+        \begin{figure}
+            \centering
+            %\includegraphics[width=0.5\linewidth]{imgs/lora.png}
+            \input{imgs/lora}
+            \caption{LoRA Decomposition}
+        \end{figure}
+            
+        \end{column}
+        
+        \begin{column}[t]{0.3\textwidth}
+            \begin{block}{LoRA hyperparameters}
+            \begin{itemize}
+                \item rank : the common dimension between $A$ and $B$.
+                \item alpha : apply a weighting between fine-tuning and pre-trained weights
+            \end{itemize}
+                
+            \end{block}
+            
+        \end{column}
+    \end{columns}
+    
+\end{frame}
