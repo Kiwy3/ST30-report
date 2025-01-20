@@ -16,10 +16,10 @@
     % Define nodes
     
     % black box function
-    \node (model) [class]
+    \node (model) [class, align=center]
         {
-            \textbf{Model}
-            \nodepart{second} hyperparameters};  
+            \textbf{Model }
+            \nodepart{second} Llama-3.2-1B \\ hyperparameters };  
     
     \node (trainer) [class, below of=model]
         {
@@ -40,11 +40,11 @@
     
     \node (val_data) [class, right of=evaluate,xshift=2cm]
         {
-            \textbf{Validation Dataset}
+            \textbf{Validation/Testing Dataset}
             \nodepart{second} Hellaswag\cite{zellers_hellaswag_2019}, MMLU\cite{hendrycks_measuring_2021}};
     
     % decision
-    \node (decision)[decision,below of = evaluate,yshift=-1cm,align=center]{if \\ $n_{eval} \leq$ budget};
+    \node (decision)[decision,below of = evaluate,yshift=-1cm,align=center]{if \\ $n_{eval} \leq n_{max}$ };
     
     \node (final)[final,right of = decision,xshift=2cm]{return best point};
     
