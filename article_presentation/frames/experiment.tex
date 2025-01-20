@@ -15,19 +15,18 @@
     
 \end{frame}
 %---------------------------------- Sampling experiment -------------------------------
-\begin{frame}{Sampling experiment : Latin Hypercube Sampling}
+\begin{frame}[allowframebreaks]{Sampling experiment : Latin Hypercube Sampling}
     
     \begin{columns}
         \begin{column}{0.45\textwidth}
         Objective : explore the search space and make a reference for other algorithms.
         \begin{block}{Analysis}
             \begin{itemize}
-                \item if looking at raw results (not normalized), results are between 0.15 and 0.55. 
-                \item Considering median bar, a lot of results are close to the top of the score.
-                \item Hellaswag and MMLU have 99.52\% of correlation, implying same solution are good for both
+                \item Top scores : \\ \quad Hellaswag : 47.9\% \\ \quad MMLU : 37.6\%
+                \item High range for Hellaswag, allowing to discriminate efficiently between solutions.
             \end{itemize}
             
-        Running time : arround 50 hours
+        Running time : arround 36 hours
         
         \end{block}   
     \end{column}
@@ -35,13 +34,35 @@
     \begin{column}{0.45\textwidth}
         \begin{figure}
             \centering
-            \includegraphics[width = \textwidth]{imgs/experiments/box_plot.png}     
-            \caption{Sampling experiment}         
+            \includegraphics[width = \textwidth]{imgs/experiments/lhs_box_plot.png}     
+            \caption{Distribution of score for sampling experiment}         
         \end{figure}
          
     \end{column}
 \end{columns}  
-    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BREAK %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \framebreak
+
+    \begin{columns}
+        \begin{column}{0.3\textwidth}
+        \begin{figure}
+            \centering
+            \includegraphics[width = \textwidth]{imgs/experiments/lhs_correlation.png}     
+            \caption{Correlation between variables and metrics}         
+        \end{figure}
+         
+        \end{column}
+        \begin{column}{0.6\textwidth}
+            \begin{block}{Correlation between metrics}
+                With 79\% of correlation, Hellaswag and MMLU accuracy are relevant as validation/testing metrics.
+            \end{block}
+            \begin{block}{Correlation between variables and metrics}
+                High factor variables : LoRA alpha the Lora rank / weight decay.\\
+                TO DO : verify with other experiment the relevance of using dropout and learning rate.
+            \end{block}
+        \end{column}
+    \end{columns}
+
 \end{frame}
 
 
